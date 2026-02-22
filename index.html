@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Signage - Masjid As-Sunnah Hekinan</title>
     <style>
-        /* Desain Bersih dan Tanpa Gambar Makhluk Hidup */
         :root {
-            --bg-color: #0f172a; /* Biru malam gelap */
-            --primary: #10b981; /* Hijau zamrud */
+            --bg-color: #0f172a; 
+            --primary: #10b981; 
+            --accent: #fbbf24; /* Kuning emas untuk wakaf */
             --text-main: #f8fafc;
             --text-sub: #cbd5e1;
         }
@@ -17,59 +17,87 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden; /* Mencegah scroll di layar TV */
+            overflow: hidden; 
             display: flex; flex-direction: column; height: 100vh;
         }
         
-        /* Header */
+        /* Header dengan Logo */
         header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 40px; background-color: rgba(0,0,0,0.3);
+            padding: 20px 40px; background-color: rgba(0,0,0,0.4);
             border-bottom: 4px solid var(--primary);
         }
-        .masjid-name h1 { margin: 0; font-size: 2.5rem; letter-spacing: 2px; }
-        .masjid-name p { margin: 5px 0 0 0; color: var(--primary); font-size: 1.5rem; font-weight: bold; }
-        .clock-container { text-align: right; }
-        #time { font-size: 3.5rem; font-weight: bold; margin: 0; line-height: 1; }
-        #date { font-size: 1.5rem; color: var(--text-sub); margin-top: 5px; }
-
-        /* Main Content Grid */
-        main {
-            display: flex; flex: 1; padding: 30px; gap: 30px;
+        .header-left {
+            display: flex; align-items: center; gap: 20px;
         }
-
-        /* Jadwal Sholat Sidebar */
-        .prayer-times {
-            flex: 1; background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 15px;
+        .logo {
+            width: 90px; height: auto;
+            object-fit: contain;
         }
-        .prayer-title { text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 10px;}
-        .prayer-title h2 { margin: 0; font-size: 1.8rem; }
-        .prayer-title p { margin: 0; color: var(--primary); font-size: 1.2rem; }
+        .masjid-name h1 { margin: 0; font-size: 2.2rem; letter-spacing: 2px; }
+        .masjid-name p { margin: 2px 0; color: var(--primary); font-size: 1.2rem; font-weight: bold; }
+        .website { display: inline-block; margin-top: 5px; font-size: 1.1rem; color: var(--accent); background: rgba(255,255,255,0.1); padding: 2px 10px; border-radius: 5px; }
         
+        .clock-container { text-align: right; }
+        #time { font-size: 3.2rem; font-weight: bold; margin: 0; line-height: 1; }
+        #date { font-size: 1.3rem; color: var(--text-sub); margin-top: 5px; }
+
+        /* Main Content Grid (3 Kolom) */
+        main {
+            display: grid;
+            grid-template-columns: 320px 1fr 350px;
+            flex: 1; padding: 25px; gap: 25px;
+        }
+
+        /* Box Style Umum */
+        .box {
+            background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            display: flex; flex-direction: column;
+        }
+        .box-title { text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 15px;}
+        .box-title h2 { margin: 0; font-size: 1.6rem; }
+        .box-title p { margin: 0; color: var(--primary); font-size: 1.1rem; }
+
+        /* Jadwal Sholat */
+        .prayer-list { display: flex; flex-direction: column; gap: 12px; }
         .prayer-item {
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0,0,0,0.4); padding: 15px 25px; border-radius: 10px;
+            background: rgba(0,0,0,0.4); padding: 12px 20px; border-radius: 10px;
         }
-        .prayer-name { font-size: 1.8rem; font-weight: bold; }
-        .prayer-name span { display: block; font-size: 1rem; color: var(--text-sub); font-weight: normal; }
-        .prayer-time { font-size: 2.5rem; color: var(--primary); font-weight: bold; }
+        .prayer-name { font-size: 1.5rem; font-weight: bold; }
+        .prayer-name span { display: block; font-size: 0.9rem; color: var(--text-sub); font-weight: normal; }
+        .prayer-time { font-size: 2.2rem; color: var(--primary); font-weight: bold; }
 
         /* Pengumuman Center */
         .announcements {
-            flex: 2; background: rgba(255,255,255,0.05); border-radius: 15px; padding: 40px;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            justify-content: center; align-items: center; text-align: center;
+            background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2);
         }
-        .announcement-text { font-size: 3rem; line-height: 1.4; margin-bottom: 20px; }
-        .announcement-jp { font-size: 2rem; color: var(--primary); }
+        .announcement-text { font-size: 2.8rem; line-height: 1.4; margin-bottom: 20px; }
+        .announcement-jp { font-size: 1.8rem; color: var(--primary); }
+
+        /* Laporan Wakaf */
+        .waqf-box { background: rgba(251, 191, 36, 0.05); border: 1px solid rgba(251, 191, 36, 0.2); }
+        .waqf-box .box-title { border-bottom: 2px solid var(--accent); }
+        .waqf-box .box-title p { color: var(--accent); }
+        .waqf-stats { margin-top: 10px; display: flex; flex-direction: column; gap: 15px; }
+        .waqf-item p { margin: 0 0 5px 0; font-size: 1.1rem; color: var(--text-sub); }
+        .waqf-item h3 { margin: 0; font-size: 2rem; color: var(--accent); }
+        
+        .progress-container { margin-top: 20px; background: rgba(0,0,0,0.5); border-radius: 10px; height: 30px; width: 100%; overflow: hidden; position: relative; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0%; transition: width 1s ease-in-out; }
+        .progress-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold; font-size: 1rem; color: #fff; text-shadow: 1px 1px 2px #000; }
 
         /* Footer Running Text */
         footer {
-            background-color: var(--primary); color: #000; padding: 15px;
-            font-size: 1.8rem; font-weight: bold; white-space: nowrap; overflow: hidden;
+            background-color: var(--primary); color: #000; padding: 12px;
+            font-size: 1.6rem; font-weight: bold; white-space: nowrap; overflow: hidden;
+            display: flex; align-items: center;
         }
+        .marquee-wrapper { flex: 1; overflow: hidden; }
         .marquee-content {
-            display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite;
+            display: inline-block; padding-left: 100%; animation: marquee 30s linear infinite;
         }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
     </style>
@@ -77,9 +105,13 @@
 <body>
 
     <header>
-        <div class="masjid-name">
-            <h1>MASJID AS-SUNNAH</h1>
-            <p>ヘキナン アスンナ モスク (Hekinan As-Sunnah Mosque)</p>
+        <div class="header-left">
+            <img src="logohekinan.jpeg" alt="Logo Masjid" class="logo" onerror="this.style.display='none'">
+            <div class="masjid-name">
+                <h1>MASJID AS-SUNNAH</h1>
+                <p>ヘキナン アスンナ モスク</p>
+                <span class="website">assunnahhekinan.org</span>
+            </div>
         </div>
         <div class="clock-container">
             <div id="time">00:00:00</div>
@@ -88,108 +120,135 @@
     </header>
 
     <main>
-        <div class="prayer-times">
-            <div class="prayer-title">
+        <div class="box">
+            <div class="box-title">
                 <h2>Jadwal Sholat</h2>
-                <p>礼拝の時間 (Reihai no Jikan)</p>
+                <p>礼拝の時間</p>
             </div>
-            <div class="prayer-item"><div class="prayer-name">Subuh <span>ファジル (Fajr)</span></div><div class="prayer-time" id="pt-fajr">--:--</div></div>
-            <div class="prayer-item"><div class="prayer-name">Syuruq <span>日の出 (Sunrise)</span></div><div class="prayer-time" id="pt-sunrise">--:--</div></div>
-            <div class="prayer-item"><div class="prayer-name">Dzuhur <span>ズフール (Dhuhr)</span></div><div class="prayer-time" id="pt-dhuhr">--:--</div></div>
-            <div class="prayer-item"><div class="prayer-name">Ashar <span>アスル (Asr)</span></div><div class="prayer-time" id="pt-asr">--:--</div></div>
-            <div class="prayer-item"><div class="prayer-name">Maghrib <span>マグリブ (Maghrib)</span></div><div class="prayer-time" id="pt-maghrib">--:--</div></div>
-            <div class="prayer-item"><div class="prayer-name">Isya <span>イシャー (Isha)</span></div><div class="prayer-time" id="pt-isha">--:--</div></div>
+            <div class="prayer-list">
+                <div class="prayer-item"><div class="prayer-name">Subuh <span>ファジル</span></div><div class="prayer-time" id="pt-fajr">--:--</div></div>
+                <div class="prayer-item"><div class="prayer-name">Syuruq <span>日の出</span></div><div class="prayer-time" id="pt-sunrise">--:--</div></div>
+                <div class="prayer-item"><div class="prayer-name">Dzuhur <span>ズフール</span></div><div class="prayer-time" id="pt-dhuhr">--:--</div></div>
+                <div class="prayer-item"><div class="prayer-name">Ashar <span>アスル</span></div><div class="prayer-time" id="pt-asr">--:--</div></div>
+                <div class="prayer-item"><div class="prayer-name">Maghrib <span>マグリブ</span></div><div class="prayer-time" id="pt-maghrib">--:--</div></div>
+                <div class="prayer-item"><div class="prayer-name">Isya <span>イシャー</span></div><div class="prayer-time" id="pt-isha">--:--</div></div>
+            </div>
         </div>
 
-        <div class="announcements" id="announcement-container">
-            <div class="announcement-text" id="announce-id">Memuat informasi...</div>
+        <div class="box announcements">
+            <div class="announcement-text" id="announce-id">Memuat informasi masjid...</div>
             <div class="announcement-jp" id="announce-jp">情報を読み込み中...</div>
+        </div>
+
+        <div class="box waqf-box">
+            <div class="box-title">
+                <h2>Pembebasan Lahan</h2>
+                <p>土地取得ワクフ</p>
+            </div>
+            <div class="waqf-stats">
+                <div class="waqf-item">
+                    <p>Total Target / 目標額</p>
+                    <h3 id="wakaf-target">¥ 0</h3>
+                </div>
+                <div class="waqf-item">
+                    <p>Terkumpul / 集まった額</p>
+                    <h3 id="wakaf-terkumpul">¥ 0</h3>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="wakaf-bar"></div>
+                    <div class="progress-text" id="wakaf-percent">0%</div>
+                </div>
+            </div>
         </div>
     </main>
 
     <footer>
-        <div class="marquee-content" id="running-text">
-            Selamat datang di Masjid As-Sunnah Hekinan. / アスンナ・モスク・ヘキナンへようこそ。
+        <div class="marquee-wrapper">
+            <div class="marquee-content" id="running-text">
+                Kunjungi website kami di assunnahhekinan.org untuk informasi lebih lanjut. / 詳細については、当社のウェブサイトをご覧ください。
+            </div>
         </div>
     </footer>
 
     <script>
-        // 1. GANTI DENGAN URL APPS SCRIPT ANDA
         const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbwqV6GmVbvtAR6drC38u0WEumYvBi9Atz0r89iXnQz682Kg8iQHRChoeRyfnfXpRXUi/exec";
         
-        // 2. JAM DAN TANGGAL
+        // Format Mata Uang Yen
+        const formatYen = (num) => {
+            return new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(num);
+        };
+
         function updateClock() {
             const now = new Date();
             document.getElementById('time').innerText = now.toLocaleTimeString('id-ID', { hour12: false });
-            
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById('date').innerText = now.toLocaleDateString('id-ID', options);
         }
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 3. TARIK JADWAL SHOLAT HEKInan (Menggunakan API Aladhan)
         async function fetchPrayerTimes() {
             try {
-                // Koordinat Hekinan, Aichi, Japan
                 const response = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Hekinan&country=Japan&method=1');
                 const data = await response.json();
                 const timings = data.data.timings;
-
                 document.getElementById('pt-fajr').innerText = timings.Fajr;
                 document.getElementById('pt-sunrise').innerText = timings.Sunrise;
                 document.getElementById('pt-dhuhr').innerText = timings.Dhuhr;
                 document.getElementById('pt-asr').innerText = timings.Asr;
                 document.getElementById('pt-maghrib').innerText = timings.Maghrib;
                 document.getElementById('pt-isha').innerText = timings.Isha;
-            } catch (error) {
-                console.error("Gagal mengambil jadwal sholat", error);
-            }
+            } catch (error) { console.error("Gagal mengambil jadwal sholat", error); }
         }
         fetchPrayerTimes();
-        setInterval(fetchPrayerTimes, 3600000); // Update jadwal sholat setiap 1 jam
+        setInterval(fetchPrayerTimes, 3600000);
 
-        // 4. TARIK DATA DARI GOOGLE SHEETS
         let announcements = [];
         let currentAnnounceIndex = 0;
 
         async function fetchSheetData() {
-            if(SHEET_API_URL === "MASUKKAN_URL_APPS_SCRIPT_ANDA_DISINI") return; // Abaikan jika URL belum diisi
-            
             try {
                 const response = await fetch(SHEET_API_URL);
                 const data = await response.json();
                 
-                // Set Pengumuman
-                if (data.pengumuman.length > 0) {
+                // Update Pengumuman
+                if (data.pengumuman && data.pengumuman.length > 0) {
                     announcements = data.pengumuman;
-                    showNextAnnouncement(); // Mulai rotasi
+                    if(announcements.length === 1) showNextAnnouncement(); 
                 }
 
-                // Set Running Text
-                if (data.running_text.length > 0) {
-                    let rtText = data.running_text.map(item => `${item.id} / ${item.jp}`).join('  ✦  ');
+                // Update Running Text
+                if (data.running_text && data.running_text.length > 0) {
+                    let rtText = data.running_text.map(item => `${item.id}  /  ${item.jp}`).join('   ✦   ');
                     document.getElementById('running-text').innerText = rtText;
                 }
-            } catch (error) {
-                console.error("Gagal mengambil data dari Google Sheets", error);
-            }
+
+                // Update Wakaf (Jika data sudah ditambahkan di script Google)
+                if (data.wakaf && data.wakaf.target > 0) {
+                    let terkumpul = data.wakaf.terkumpul;
+                    let target = data.wakaf.target;
+                    let persentase = (terkumpul / target) * 100;
+                    
+                    document.getElementById('wakaf-target').innerText = formatYen(target);
+                    document.getElementById('wakaf-terkumpul').innerText = formatYen(terkumpul);
+                    document.getElementById('wakaf-bar').style.width = `${Math.min(persentase, 100)}%`;
+                    document.getElementById('wakaf-percent').innerText = `${persentase.toFixed(1)}%`;
+                }
+            } catch (error) { console.error("Gagal mengambil data dari Google Sheets", error); }
         }
 
         function showNextAnnouncement() {
             if (announcements.length === 0) return;
-            
             const current = announcements[currentAnnounceIndex];
             document.getElementById('announce-id').innerText = current.id;
             document.getElementById('announce-jp').innerText = current.jp;
-
             currentAnnounceIndex = (currentAnnounceIndex + 1) % announcements.length;
         }
 
         fetchSheetData();
-        setInterval(fetchSheetData, 300000); // Tarik data baru dari Google Sheets setiap 5 menit
-        setInterval(showNextAnnouncement, 15000); // Ganti slide pengumuman setiap 15 detik
-
+        setInterval(fetchSheetData, 300000); 
+        setInterval(showNextAnnouncement, 15000); 
     </script>
 </body>
 </html>
