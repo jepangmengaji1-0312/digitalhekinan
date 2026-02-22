@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Signage - Masjid As-Sunnah Hekinan</title>
     <style>
-        /* Mengamankan ukuran agar tidak pernah meluber dari layar */
         * { box-sizing: border-box; }
         
         :root {
@@ -24,91 +23,97 @@
             display: flex; flex-direction: column; height: 100vh;
         }
         
-        /* HEADER - Dibuat lebih padat */
+        /* HEADER - Sangat dipadatkan */
         header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 25px; background-color: rgba(0,0,0,0.4);
+            padding: 8px 20px; background-color: rgba(0,0,0,0.4);
             border-bottom: 3px solid var(--primary);
             flex-shrink: 0;
         }
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .logo { width: 65px; height: auto; object-fit: contain; }
-        .masjid-name h1 { margin: 0; font-size: 1.8rem; letter-spacing: 1px; }
-        .masjid-name p { margin: 2px 0; color: var(--primary); font-size: 1rem; font-weight: bold; }
-        .website { display: inline-block; margin-top: 3px; font-size: 0.9rem; color: var(--accent); background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .logo { width: 55px; height: auto; object-fit: contain; }
+        .masjid-name h1 { margin: 0; font-size: 1.6rem; letter-spacing: 1px; }
+        .masjid-name p { margin: 2px 0; color: var(--primary); font-size: 0.9rem; font-weight: bold; }
+        .website { display: inline-block; margin-top: 2px; font-size: 0.85rem; color: var(--accent); background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; }
         
         .clock-container { text-align: right; }
-        #time { font-size: 2.8rem; font-weight: bold; margin: 0; line-height: 1; }
-        #date { font-size: 1.1rem; color: var(--text-sub); margin-top: 5px; }
-        #hijri-date { font-size: 1.1rem; color: var(--primary); font-weight: bold; margin-top: 2px; }
+        #time { font-size: 2.4rem; font-weight: bold; margin: 0; line-height: 1; }
+        #date { font-size: 1rem; color: var(--text-sub); margin-top: 4px; }
+        #hijri-date { font-size: 1rem; color: var(--primary); font-weight: bold; margin-top: 2px; }
 
-        /* MAIN CONTENT - Memastikan tidak melebihi sisa tinggi layar */
+        /* MAIN CONTENT - Aman dari overflow */
         main {
             display: grid;
-            grid-template-columns: 280px 1fr 300px;
-            flex-grow: 1; padding: 15px 20px; gap: 20px;
+            grid-template-columns: 260px 1fr 280px;
+            flex-grow: 1; padding: 12px 15px; gap: 15px;
             overflow: hidden; 
+            min-height: 0;
         }
 
-        /* BOX UMUM */
+        /* BOX UMUM - Padding dikurangi */
         .box {
-            background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px;
+            background: rgba(255,255,255,0.05); border-radius: 12px; padding: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
             display: flex; flex-direction: column; height: 100%;
         }
-        .box-title { text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 8px; margin-bottom: 10px;}
-        .box-title h2 { margin: 0; font-size: 1.3rem; }
-        .box-title p { margin: 0; color: var(--primary); font-size: 0.9rem; }
+        .box-title { text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 6px; margin-bottom: 8px;}
+        .box-title h2 { margin: 0; font-size: 1.2rem; }
+        .box-title p { margin: 0; color: var(--primary); font-size: 0.85rem; }
 
-        /* KIRI: JADWAL SHOLAT (Menggunakan space-evenly agar pas otomatis) */
-        .prayer-list { display: flex; flex-direction: column; flex-grow: 1; justify-content: space-evenly; gap: 5px; }
+        /* KIRI: JADWAL SHOLAT - Jarak sangat rapat */
+        .prayer-list { 
+            display: flex; flex-direction: column; flex-grow: 1; 
+            justify-content: space-between; gap: 4px; 
+            overflow: hidden; min-height: 0;
+        }
         .prayer-item {
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 8px;
-            border-left: 4px solid transparent;
+            background: rgba(0,0,0,0.4); padding: 6px 10px; border-radius: 8px;
+            border-left: 4px solid transparent; flex: 1;
         }
         .prayer-item.active { border-left-color: var(--accent); background: rgba(251, 191, 36, 0.1); }
-        .prayer-name { font-size: 1.2rem; font-weight: bold; }
-        .prayer-name span { display: block; font-size: 0.75rem; color: var(--text-sub); font-weight: normal; }
+        .prayer-name { font-size: 1.1rem; font-weight: bold; }
+        .prayer-name span { display: block; font-size: 0.7rem; color: var(--text-sub); font-weight: normal; margin-top: 2px;}
         
         .times-wrapper { text-align: right; }
-        .adhan-time { font-size: 1.8rem; color: var(--primary); font-weight: bold; line-height: 1; }
-        .iqamah-time { font-size: 0.85rem; color: var(--accent); margin-top: 2px; font-weight: bold; }
+        .adhan-time { font-size: 1.5rem; color: var(--primary); font-weight: bold; line-height: 1; }
+        .iqamah-time { font-size: 0.75rem; color: var(--accent); margin-top: 3px; font-weight: bold; }
         .iqamah-time::before { content: 'Jamaah: '; color: var(--text-sub); font-weight: normal;}
 
-        /* TENGAH: AREA KONTEN (Dibagi 2: Countdown atas, Pengumuman bawah) */
-        .center-column { display: flex; flex-direction: column; gap: 15px; height: 100%; }
+        /* TENGAH: AREA KONTEN */
+        .center-column { display: flex; flex-direction: column; gap: 12px; height: 100%; min-height: 0; }
         
         .countdown-box {
             background: rgba(0,0,0,0.4); border: 2px solid var(--accent); border-radius: 12px; 
-            padding: 15px; text-align: center; flex-shrink: 0;
+            padding: 10px; text-align: center; flex-shrink: 0;
         }
-        .countdown-title { font-size: 1.2rem; color: var(--text-sub); margin-bottom: 5px; }
-        .countdown-timer { font-size: 3rem; color: var(--accent); font-weight: bold; font-variant-numeric: tabular-nums; line-height: 1; }
+        .countdown-title { font-size: 1.1rem; color: var(--text-sub); margin-bottom: 4px; }
+        .countdown-timer { font-size: 2.8rem; color: var(--accent); font-weight: bold; font-variant-numeric: tabular-nums; line-height: 1; }
 
         .announcements {
             flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
-            background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 20px;
+            background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 15px;
+            overflow: hidden;
         }
-        .announcement-text { font-size: 2.2rem; line-height: 1.4; margin-bottom: 15px; }
-        .announcement-jp { font-size: 1.5rem; color: var(--primary); }
+        .announcement-text { font-size: 2rem; line-height: 1.3; margin-bottom: 12px; }
+        .announcement-jp { font-size: 1.4rem; color: var(--primary); }
 
         /* KANAN: WAKAF */
         .waqf-box { background: rgba(251, 191, 36, 0.05); border: 1px solid rgba(251, 191, 36, 0.2); }
         .waqf-box .box-title { border-bottom: 2px solid var(--accent); }
         .waqf-box .box-title p { color: var(--accent); }
-        .waqf-stats { margin-top: 10px; display: flex; flex-direction: column; gap: 15px; justify-content: center; flex-grow: 1; }
-        .waqf-item p { margin: 0 0 5px 0; font-size: 1rem; color: var(--text-sub); }
-        .waqf-item h3 { margin: 0; font-size: 1.6rem; color: var(--accent); }
+        .waqf-stats { margin-top: 8px; display: flex; flex-direction: column; gap: 12px; justify-content: center; flex-grow: 1; }
+        .waqf-item p { margin: 0 0 3px 0; font-size: 0.95rem; color: var(--text-sub); }
+        .waqf-item h3 { margin: 0; font-size: 1.5rem; color: var(--accent); }
         
-        .progress-container { margin-top: 10px; background: rgba(0,0,0,0.5); border-radius: 8px; height: 22px; width: 100%; overflow: hidden; position: relative; }
+        .progress-container { margin-top: 8px; background: rgba(0,0,0,0.5); border-radius: 8px; height: 20px; width: 100%; overflow: hidden; position: relative; }
         .progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0%; transition: width 1s ease-in-out; }
-        .progress-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold; font-size: 0.85rem; color: #fff; text-shadow: 1px 1px 2px #000; }
+        .progress-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold; font-size: 0.8rem; color: #fff; text-shadow: 1px 1px 2px #000; }
 
-        /* FOOTER RUNNING TEXT */
+        /* FOOTER RUNNING TEXT - Ketinggian dikurangi */
         footer {
-            background-color: var(--primary); color: #000; padding: 8px 15px;
-            font-size: 1.3rem; font-weight: bold; white-space: nowrap; overflow: hidden;
+            background-color: var(--primary); color: #000; padding: 6px 15px;
+            font-size: 1.2rem; font-weight: bold; white-space: nowrap; overflow: hidden;
             display: flex; align-items: center; flex-shrink: 0;
         }
         .marquee-wrapper { flex: 1; overflow: hidden; }
@@ -125,7 +130,7 @@
             <img src="logohekinan.jpeg" alt="Logo Masjid" class="logo" onerror="this.style.display='none'">
             <div class="masjid-name">
                 <h1>MASJID AS-SUNNAH</h1>
-                <p>ヘキナン アスンナ モスク</p>
+                <p>マスジド アスンナ 碧南</p>
                 <span class="website">assunnahhekinan.org</span>
             </div>
         </div>
@@ -154,7 +159,7 @@
                     <div class="prayer-name">Syuruq <span>日の出</span></div>
                     <div class="times-wrapper">
                         <div class="adhan-time" id="pt-sunrise">--:--</div>
-                        <div style="font-size:0.75rem; color:var(--text-sub); margin-top:2px;">Batas Subuh</div>
+                        <div style="font-size:0.7rem; color:var(--text-sub); margin-top:3px;">Batas Subuh</div>
                     </div>
                 </div>
                 <div class="prayer-item" id="box-dhuhr">
@@ -233,10 +238,8 @@
 
     <script>
         const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbwqV6GmVbvtAR6drC38u0WEumYvBi9Atz0r89iXnQz682Kg8iQHRChoeRyfnfXpRXUi/exec";
-        
-        let prayerTimesToday = {}; // Menyimpan jadwal sholat hari ini untuk hitung mundur
+        let prayerTimesToday = {}; 
 
-        // 1. Fungsi Tambah Menit untuk Menghitung Iqamah
         function addMinutes(timeString, minsToAdd) {
             let [h, m] = timeString.split(':').map(Number);
             let date = new Date();
@@ -244,10 +247,8 @@
             return date.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit', hour12: false}).replace('.', ':');
         }
 
-        // 2. Format Mata Uang
         const formatYen = (num) => new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(num);
 
-        // 3. Update Jam dan Tanggal (Serta Cek Hari Jumat)
         function updateClock() {
             const now = new Date();
             document.getElementById('time').innerText = now.toLocaleTimeString('id-ID', { hour12: false }).replace(/\./g, ':');
@@ -256,7 +257,6 @@
             let dateStr = now.toLocaleDateString('id-ID', options).replace('Minggu', 'Ahad');
             document.getElementById('date').innerText = dateStr;
 
-            // LOGIKA JUMAT: Jika hari ini Jumat (5), ganti Dzuhur jadi Jumat
             if (now.getDay() === 5) {
                 document.getElementById('nama-dzuhur').innerHTML = 'Jumat <span>ジュマ</span>';
             } else {
@@ -266,14 +266,12 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 4. Tarik Jadwal Sholat dari API Aladhan
         async function fetchPrayerTimes() {
             try {
                 const response = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Hekinan&country=Japan&method=1');
                 const data = await response.json();
                 const timings = data.data.timings;
                 
-                // Menampilkan Adzan di Layar
                 document.getElementById('pt-fajr').innerText = timings.Fajr;
                 document.getElementById('pt-sunrise').innerText = timings.Sunrise;
                 document.getElementById('pt-dhuhr').innerText = timings.Dhuhr;
@@ -281,21 +279,18 @@
                 document.getElementById('pt-maghrib').innerText = timings.Maghrib;
                 document.getElementById('pt-isha').innerText = timings.Isha;
 
-                // Menghitung dan Menampilkan Iqamah (Sesuaikan menit offset di bawah ini)
-                document.getElementById('iq-fajr').innerText = addMinutes(timings.Fajr, 20);    // Subuh +20 menit
-                document.getElementById('iq-dhuhr').innerText = addMinutes(timings.Dhuhr, 15);  // Dzuhur +15 menit
-                document.getElementById('iq-asr').innerText = addMinutes(timings.Asr, 15);      // Ashar +15 menit
-                document.getElementById('iq-maghrib').innerText = addMinutes(timings.Maghrib, 10); // Maghrib +10 menit
-                document.getElementById('iq-isha').innerText = addMinutes(timings.Isha, 15);    // Isya +15 menit
+                document.getElementById('iq-fajr').innerText = addMinutes(timings.Fajr, 20);    
+                document.getElementById('iq-dhuhr').innerText = addMinutes(timings.Dhuhr, 15);  
+                document.getElementById('iq-asr').innerText = addMinutes(timings.Asr, 15);      
+                document.getElementById('iq-maghrib').innerText = addMinutes(timings.Maghrib, 10); 
+                document.getElementById('iq-isha').innerText = addMinutes(timings.Isha, 15);    
 
-                // Simpan untuk perhitungan Countdown (ubah ke format objek Date)
                 const now = new Date();
                 const createDate = (timeStr) => {
                     let [h, m] = timeStr.split(':').map(Number);
                     let d = new Date(); d.setHours(h, m, 0, 0); return d;
                 };
 
-                // Susunan jadwal yang akan di-looping untuk hitung mundur
                 prayerTimesToday = [
                     { name: "Subuh", time: createDate(timings.Fajr) },
                     { name: "Syuruq", time: createDate(timings.Sunrise) },
@@ -311,13 +306,11 @@
             } catch (error) { console.error("Gagal mengambil jadwal sholat", error); }
         }
 
-        // 5. Fungsi Menghitung Countdown
         function updateCountdown() {
             if (prayerTimesToday.length === 0) return;
             const now = new Date();
             let nextPrayer = null;
 
-            // Cari sholat pertama yang waktunya masih di masa depan (lebih besar dari sekarang)
             for (let i = 0; i < prayerTimesToday.length; i++) {
                 if (prayerTimesToday[i].time > now) {
                     nextPrayer = prayerTimesToday[i];
@@ -331,7 +324,6 @@
                 let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 let s = Math.floor((diff % (1000 * 60)) / 1000);
 
-                // Format angka jadi 2 digit (01, 02)
                 h = (h < 10) ? "0" + h : h;
                 m = (m < 10) ? "0" + m : m;
                 s = (s < 10) ? "0" + s : s;
@@ -339,18 +331,15 @@
                 document.getElementById('cd-title').innerText = `Menuju Waktu ${nextPrayer.name}`;
                 document.getElementById('cd-timer').innerText = `${h}:${m}:${s}`;
             } else {
-                // Jika sudah melewati Isya
                 document.getElementById('cd-title').innerText = "Menunggu Waktu Subuh";
                 document.getElementById('cd-timer').innerText = "--:--:--"; 
             }
         }
         
-        // Jalankan fetch awal
         fetchPrayerTimes();
-        setInterval(fetchPrayerTimes, 3600000); // Refresh jadwal tiap 1 jam
-        setInterval(updateCountdown, 1000);     // Hitung mundur berjalan setiap 1 detik
+        setInterval(fetchPrayerTimes, 3600000); 
+        setInterval(updateCountdown, 1000);     
 
-        // 6. Tarik Data dari Google Sheets (Pengumuman & Wakaf)
         let announcements = [];
         let currentAnnounceIndex = 0;
 
@@ -379,7 +368,7 @@
                     document.getElementById('wakaf-bar').style.width = `${Math.min(persentase, 100)}%`;
                     document.getElementById('wakaf-percent').innerText = `${persentase.toFixed(1)}%`;
                 }
-            } catch (error) { console.error("Gagal mengambil data dari Google Sheets", error); }
+            } catch (error) { console.error("Gagal mengambil data", error); }
         }
 
         function showNextAnnouncement() {
