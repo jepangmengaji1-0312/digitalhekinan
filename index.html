@@ -23,7 +23,7 @@
             display: flex; flex-direction: column; height: 100vh;
         }
         
-        /* HEADER - Sangat dipadatkan */
+        /* HEADER */
         header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 8px 20px; background-color: rgba(0,0,0,0.4);
@@ -41,7 +41,7 @@
         #date { font-size: 1rem; color: var(--text-sub); margin-top: 4px; }
         #hijri-date { font-size: 1rem; color: var(--primary); font-weight: bold; margin-top: 2px; }
 
-        /* MAIN CONTENT - Aman dari overflow */
+        /* MAIN CONTENT */
         main {
             display: grid;
             grid-template-columns: 260px 1fr 280px;
@@ -50,7 +50,7 @@
             min-height: 0;
         }
 
-        /* BOX UMUM - Padding dikurangi */
+        /* BOX UMUM */
         .box {
             background: rgba(255,255,255,0.05); border-radius: 12px; padding: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
@@ -60,7 +60,7 @@
         .box-title h2 { margin: 0; font-size: 1.2rem; }
         .box-title p { margin: 0; color: var(--primary); font-size: 0.85rem; }
 
-        /* KIRI: JADWAL SHOLAT - Jarak sangat rapat */
+        /* KIRI: JADWAL SHOLAT */
         .prayer-list { 
             display: flex; flex-direction: column; flex-grow: 1; 
             justify-content: space-between; gap: 4px; 
@@ -71,7 +71,6 @@
             background: rgba(0,0,0,0.4); padding: 6px 10px; border-radius: 8px;
             border-left: 4px solid transparent; flex: 1;
         }
-        .prayer-item.active { border-left-color: var(--accent); background: rgba(251, 191, 36, 0.1); }
         .prayer-name { font-size: 1.1rem; font-weight: bold; }
         .prayer-name span { display: block; font-size: 0.7rem; color: var(--text-sub); font-weight: normal; margin-top: 2px;}
         
@@ -90,13 +89,24 @@
         .countdown-title { font-size: 1.1rem; color: var(--text-sub); margin-bottom: 4px; }
         .countdown-timer { font-size: 2.8rem; color: var(--accent); font-weight: bold; font-variant-numeric: tabular-nums; line-height: 1; }
 
+        /* SMART SLIDER (Pengumuman & Galeri) */
         .announcements {
             flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
             background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 15px;
-            overflow: hidden;
+            overflow: hidden; position: relative;
         }
+        
+        /* Style untuk Teks */
+        #slide-text { display: flex; flex-direction: column; align-items: center; width: 100%; transition: opacity 0.5s; }
         .announcement-text { font-size: 2rem; line-height: 1.3; margin-bottom: 12px; }
         .announcement-jp { font-size: 1.4rem; color: var(--primary); }
+
+        /* Style untuk Gambar */
+        #slide-img { 
+            display: none; width: 100%; height: 100%; 
+            object-fit: contain; /* Memastikan gambar tidak gepeng */
+            border-radius: 8px; transition: opacity 0.5s;
+        }
 
         /* KANAN: WAKAF */
         .waqf-box { background: rgba(251, 191, 36, 0.05); border: 1px solid rgba(251, 191, 36, 0.2); }
@@ -110,7 +120,7 @@
         .progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0%; transition: width 1s ease-in-out; }
         .progress-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold; font-size: 0.8rem; color: #fff; text-shadow: 1px 1px 2px #000; }
 
-        /* FOOTER RUNNING TEXT - Ketinggian dikurangi */
+        /* FOOTER RUNNING TEXT */
         footer {
             background-color: var(--primary); color: #000; padding: 6px 15px;
             font-size: 1.2rem; font-weight: bold; white-space: nowrap; overflow: hidden;
@@ -200,8 +210,11 @@
             </div>
             
             <div class="announcements">
-                <div class="announcement-text" id="announce-id">Memuat informasi masjid...</div>
-                <div class="announcement-jp" id="announce-jp">情報を読み込み中...</div>
+                <div id="slide-text">
+                    <div class="announcement-text" id="announce-id">Memuat informasi masjid...</div>
+                    <div class="announcement-jp" id="announce-jp">情報を読み込み中...</div>
+                </div>
+                <img id="slide-img" src="" alt="Galeri Masjid">
             </div>
         </div>
 
@@ -340,19 +353,39 @@
         setInterval(fetchPrayerTimes, 3600000); 
         setInterval(updateCountdown, 1000);     
 
-        let announcements = [];
-        let currentAnnounceIndex = 0;
+        // --- SISTEM SMART SLIDER ---
+        let playlist = [];
+        let currentSlideIndex = 0;
 
         async function fetchSheetData() {
             try {
                 const response = await fetch(SHEET_API_URL);
                 const data = await response.json();
                 
+                // Kumpulkan teks dan gambar ke dalam satu playlist
+                let tempPlaylist = [];
+                
                 if (data.pengumuman && data.pengumuman.length > 0) {
-                    announcements = data.pengumuman;
-                    if(announcements.length === 1) showNextAnnouncement(); 
+                    data.pengumuman.forEach(item => {
+                        tempPlaylist.push({ type: 'text', id: item.id, jp: item.jp });
+                    });
+                }
+                
+                if (data.galeri && data.galeri.length > 0) {
+                    data.galeri.forEach(filename => {
+                        tempPlaylist.push({ type: 'image', file: filename });
+                    });
                 }
 
+                if (tempPlaylist.length > 0) {
+                    playlist = tempPlaylist;
+                    // Jika ini pertama kali diload, langsung jalankan slide pertama
+                    if (document.getElementById('announce-id').innerText === "Memuat informasi masjid...") {
+                        showNextSlide(); 
+                    }
+                }
+
+                // Data Running Text & Wakaf tetap seperti biasa
                 if (data.running_text && data.running_text.length > 0) {
                     let rtText = data.running_text.map(item => `${item.id}  /  ${item.jp}`).join('   ✦   ');
                     document.getElementById('running-text').innerText = rtText;
@@ -371,17 +404,33 @@
             } catch (error) { console.error("Gagal mengambil data", error); }
         }
 
-        function showNextAnnouncement() {
-            if (announcements.length === 0) return;
-            const current = announcements[currentAnnounceIndex];
-            document.getElementById('announce-id').innerText = current.id;
-            document.getElementById('announce-jp').innerText = current.jp;
-            currentAnnounceIndex = (currentAnnounceIndex + 1) % announcements.length;
+        function showNextSlide() {
+            if (playlist.length === 0) return;
+            
+            const current = playlist[currentSlideIndex];
+            const divText = document.getElementById('slide-text');
+            const imgEl = document.getElementById('slide-img');
+
+            if (current.type === 'text') {
+                // Tampilkan Teks, Sembunyikan Gambar
+                imgEl.style.display = 'none';
+                divText.style.display = 'flex';
+                document.getElementById('announce-id').innerText = current.id;
+                document.getElementById('announce-jp').innerText = current.jp;
+            } else if (current.type === 'image') {
+                // Tampilkan Gambar, Sembunyikan Teks
+                divText.style.display = 'none';
+                imgEl.src = current.file;
+                imgEl.style.display = 'block';
+            }
+
+            // Pindah ke slide berikutnya
+            currentSlideIndex = (currentSlideIndex + 1) % playlist.length;
         }
 
         fetchSheetData();
-        setInterval(fetchSheetData, 300000); 
-        setInterval(showNextAnnouncement, 15000); 
+        setInterval(fetchSheetData, 300000); // Cek data baru dari Sheets tiap 5 menit
+        setInterval(showNextSlide, 15000);  // Ganti slide (Teks/Gambar) tiap 15 detik
     </script>
 </body>
 </html>
