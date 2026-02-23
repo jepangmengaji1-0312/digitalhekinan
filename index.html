@@ -7,12 +7,7 @@
     <style>
         * { box-sizing: border-box; }
         :root { --bg-color: #0f172a; --primary: #10b981; --accent: #fbbf24; --text-main: #f8fafc; --text-sub: #cbd5e1; --alert: #ef4444; }
-        body {
-            margin: 0; padding: 0; background-color: var(--bg-color);
-            background-image: radial-gradient(rgba(16, 185, 129, 0.15) 2px, transparent 2px);
-            background-size: 30px 30px; color: var(--text-main); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden; display: flex; flex-direction: column; height: 100vh; transition: background-color 2s ease;
-        }
+        body { margin: 0; padding: 0; background-color: var(--bg-color); background-image: radial-gradient(rgba(16, 185, 129, 0.15) 2px, transparent 2px); background-size: 30px 30px; color: var(--text-main); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; display: flex; flex-direction: column; height: 100vh; transition: background-color 2s ease; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 8px 20px; background-color: rgba(0,0,0,0.6); border-bottom: 3px solid var(--primary); flex-shrink: 0; backdrop-filter: blur(5px); transition: opacity 1s; }
         .header-left { display: flex; align-items: center; gap: 12px; }
         .logo { width: 55px; height: auto; object-fit: contain; }
@@ -228,7 +223,6 @@
 
                 const nowDay = new Date().getDay();
                 
-                // Susun array utama (Iqamah dibiarkan kosong dulu, akan diisi oleh Sheet Data)
                 prayerTimesToday = [
                     { id: "box-fajr", name: "Subuh", adzanTime: createDateObj(timings.Fajr), iqamahTime: null },
                     { id: "box-sunrise", name: "Syuruq", adzanTime: createDateObj(timings.Sunrise), iqamahTime: null },
@@ -294,7 +288,7 @@
         fetchPrayerTimes(); setInterval(fetchPrayerTimes, 3600000); 
         setInterval(updateCountdown, 1000); updateClock();    
 
-        // SMART SLIDER & DATA GOOGLE SHEETS
+        // AMBIL DATA DARI GOOGLE SHEETS
         let playlist = []; let currentSlideIndex = 0;
 
         async function fetchSheetData() {
@@ -302,24 +296,32 @@
                 const response = await fetch(SHEET_API_URL);
                 const data = await response.json();
                 
-                // MENGATUR IQAMAH DARI GOOGLE SHEETS
+                // MENGATUR IQAMAH DARI TAB IQAMAH
                 if (data.iqamah && Object.keys(data.iqamah).length > 0) {
                     const nowDay = new Date().getDay();
                     const isWeekend = (nowDay === 0 || nowDay === 6);
+                    
+                    // Logika Isya
                     let isyaTime = data.iqamah['Isya_Biasa'] || "20:30";
                     if (isWeekend && data.iqamah['Isya_Weekend']) {
                         isyaTime = data.iqamah['Isya_Weekend'];
                     }
 
+                    // Logika Dzuhur / Jumat
+                    let dhuhrOrJumatTime = data.iqamah['Dzuhur'] || "--:--";
+                    if (nowDay === 5 && data.iqamah['Jumat']) {
+                        dhuhrOrJumatTime = data.iqamah['Jumat'];
+                    }
+
                     document.getElementById('iq-fajr').innerText = data.iqamah['Subuh'] || "--:--";
-                    document.getElementById('iq-dhuhr').innerText = data.iqamah['Dzuhur'] || "--:--";
+                    document.getElementById('iq-dhuhr').innerText = dhuhrOrJumatTime;
                     document.getElementById('iq-asr').innerText = data.iqamah['Ashar'] || "--:--";
                     document.getElementById('iq-maghrib').innerText = data.iqamah['Maghrib'] || "--:--";
                     document.getElementById('iq-isha').innerText = isyaTime;
 
                     if (prayerTimesToday.length === 6) {
                         prayerTimesToday[0].iqamahTime = createDateObj(data.iqamah['Subuh']);
-                        prayerTimesToday[2].iqamahTime = createDateObj(data.iqamah['Dzuhur']);
+                        prayerTimesToday[2].iqamahTime = createDateObj(dhuhrOrJumatTime);
                         prayerTimesToday[3].iqamahTime = createDateObj(data.iqamah['Ashar']);
                         prayerTimesToday[4].iqamahTime = createDateObj(data.iqamah['Maghrib']);
                         prayerTimesToday[5].iqamahTime = createDateObj(isyaTime);
