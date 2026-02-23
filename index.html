@@ -85,7 +85,6 @@
         .countdown-title { font-size: 1.1rem; color: var(--text-sub); margin-bottom: 4px; }
         .countdown-timer { font-size: 2.8rem; color: var(--accent); font-weight: bold; font-variant-numeric: tabular-nums; line-height: 1; }
         
-        /* Alert Iqamah Merah Berkedip */
         .iqamah-alert { border-color: var(--alert) !important; background: rgba(239, 68, 68, 0.1) !important; animation: blinkBg 2s infinite; }
         .iqamah-alert .countdown-timer { color: var(--alert) !important; animation: blinkText 1s infinite; }
         .iqamah-alert .countdown-title { color: #fff !important; font-weight: bold; font-size: 1.3rem; }
@@ -151,7 +150,6 @@
 <body>
 
     <audio id="audio-chime" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
-
     <div id="sleep-clock">00:00</div>
 
     <div id="adzan-takeover" onclick="this.classList.remove('active')">
@@ -214,7 +212,6 @@
         let prayerTimesToday = []; 
         let audioPlayedId = ""; 
 
-        // Fungsi Audio
         function playChime() {
             let audio = document.getElementById('audio-chime');
             audio.currentTime = 0; audio.play().catch(e => console.log("Autoplay audio ditolak browser", e));
@@ -223,11 +220,6 @@
         function createDateObj(timeStr) {
             let [h, m] = timeStr.split(':').map(Number);
             let d = new Date(); d.setHours(h, m, 0, 0); return d;
-        }
-
-        function addMinutesStr(timeString, minsToAdd) {
-            let d = createDateObj(timeString); d.setMinutes(d.getMinutes() + minsToAdd);
-            return d.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit', hour12: false}).replace('.', ':');
         }
 
         const formatYen = (num) => new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(num);
@@ -241,7 +233,6 @@
         }
         fetchWeather(); setInterval(fetchWeather, 1800000); 
 
-        // Update Waktu & SLEEP MODE
         function updateClock() {
             const now = new Date();
             let timeStr = now.toLocaleTimeString('id-ID', { hour12: false }).replace(/\./g, ':');
@@ -254,11 +245,10 @@
             if (now.getDay() === 5) { document.getElementById('nama-dzuhur').innerHTML = 'Jumat <span>ジュマ</span>'; } 
             else { document.getElementById('nama-dzuhur').innerHTML = 'Dzuhur <span>ズフール</span>'; }
 
-            // SLEEP MODE LOGIC (Mati jam 10 malam, Nyala jam 4 pagi)
+            // SLEEP MODE
             const currentHour = now.getHours();
             if (currentHour >= 22 || currentHour < 4) {
                 document.body.classList.add('is-sleeping');
-                // Pindah posisi jam acak tiap menit
                 if (now.getSeconds() === 0) {
                     document.getElementById('sleep-clock').style.top = Math.random() * 70 + "%";
                     document.getElementById('sleep-clock').style.left = Math.random() * 70 + "%";
@@ -272,8 +262,6 @@
                 let diffMs = now - prayerTimesToday[i].adzanTime;
                 if (diffMs >= 0 && diffMs < 180000) { 
                     isAdzanTime = true; currentAdzanName = prayerTimesToday[i].name; 
-                    
-                    // Mainkan suara HANYA 1 kali saat Adzan masuk
                     let uniqueAudioId = "adzan_" + currentAdzanName;
                     if(audioPlayedId !== uniqueAudioId) { playChime(); audioPlayedId = uniqueAudioId; }
                     break;
@@ -303,21 +291,25 @@
                 document.getElementById('pt-maghrib').innerText = timings.Maghrib;
                 document.getElementById('pt-isha').innerText = timings.Isha;
 
-                document.getElementById('iq-fajr').innerText = addMinutesStr(timings.Fajr, 20);    
-                document.getElementById('iq-dhuhr').innerText = addMinutesStr(timings.Dhuhr, 15);  
-                document.getElementById('iq-asr').innerText = addMinutesStr(timings.Asr, 15);      
-                document.getElementById('iq-maghrib').innerText = addMinutesStr(timings.Maghrib, 10); 
-                document.getElementById('iq-isha').innerText = addMinutesStr(timings.Isha, 15);    
-
+                // LOGIKA JADWAL IQAMAH TETAP
                 const nowDay = new Date().getDay();
-                // Simpan dua objek waktu: adzan dan iqamah (kecuali syuruq)
+                // Deteksi Weekend (Sabtu=6, Ahad=0) untuk penentuan sholat Isya
+                const isWeekend = (nowDay === 0 || nowDay === 6);
+                const isyaIqamahStr = isWeekend ? "20:00" : "20:30";
+
+                document.getElementById('iq-fajr').innerText = "05:30";
+                document.getElementById('iq-dhuhr').innerText = "12:15";
+                document.getElementById('iq-asr').innerText = "15:25";
+                document.getElementById('iq-maghrib').innerText = "17:55";
+                document.getElementById('iq-isha').innerText = isyaIqamahStr;
+
                 prayerTimesToday = [
-                    { id: "box-fajr", name: "Subuh", adzanTime: createDateObj(timings.Fajr), iqamahTime: createDateObj(addMinutesStr(timings.Fajr, 20)) },
+                    { id: "box-fajr", name: "Subuh", adzanTime: createDateObj(timings.Fajr), iqamahTime: createDateObj("05:30") },
                     { id: "box-sunrise", name: "Syuruq", adzanTime: createDateObj(timings.Sunrise), iqamahTime: null },
-                    { id: "box-dhuhr", name: (nowDay === 5 ? "Jumat" : "Dzuhur"), adzanTime: createDateObj(timings.Dhuhr), iqamahTime: createDateObj(addMinutesStr(timings.Dhuhr, 15)) },
-                    { id: "box-asr", name: "Ashar", adzanTime: createDateObj(timings.Asr), iqamahTime: createDateObj(addMinutesStr(timings.Asr, 15)) },
-                    { id: "box-maghrib", name: "Maghrib", adzanTime: createDateObj(timings.Maghrib), iqamahTime: createDateObj(addMinutesStr(timings.Maghrib, 10)) },
-                    { id: "box-isha", name: "Isya", adzanTime: createDateObj(timings.Isha), iqamahTime: createDateObj(addMinutesStr(timings.Isha, 15)) }
+                    { id: "box-dhuhr", name: (nowDay === 5 ? "Jumat" : "Dzuhur"), adzanTime: createDateObj(timings.Dhuhr), iqamahTime: createDateObj("12:15") },
+                    { id: "box-asr", name: "Ashar", adzanTime: createDateObj(timings.Asr), iqamahTime: createDateObj("15:25") },
+                    { id: "box-maghrib", name: "Maghrib", adzanTime: createDateObj(timings.Maghrib), iqamahTime: createDateObj("17:55") },
+                    { id: "box-isha", name: "Isya", adzanTime: createDateObj(timings.Isha), iqamahTime: createDateObj(isyaIqamahStr) }
                 ];
 
                 const hijri = data.data.date.hijri;
@@ -325,14 +317,12 @@
             } catch (error) { console.error("Gagal mengambil jadwal", error); }
         }
 
-        // HIGHLIGHT PRAYER & IQAMAH ALERT LOGIC
         function updateCountdown() {
             if (prayerTimesToday.length === 0) return;
             const now = new Date(); 
             let targetName = ""; let targetTime = null; 
             let isIqamah = false; let activeId = "";
 
-            // Cari event terdekat (Bisa Adzan atau Iqamah)
             for (let i = 0; i < prayerTimesToday.length; i++) {
                 let p = prayerTimesToday[i];
                 if (p.adzanTime > now) {
@@ -342,7 +332,6 @@
                 }
             }
 
-            // Atur Highlight CSS di sebelah Kiri
             document.querySelectorAll('.prayer-item').forEach(el => el.classList.remove('active'));
             if(activeId) document.getElementById(activeId).classList.add('active');
 
@@ -356,12 +345,10 @@
 
                 h = (h < 10) ? "0" + h : h; m = (m < 10) ? "0" + m : m; s = (s < 10) ? "0" + s : s;
                 
-                // Jika menuju Iqamah dan waktu sisa < 2 Menit
                 if (isIqamah && diff <= 120000) {
                     cdBox.classList.add('iqamah-alert');
                     document.getElementById('cd-title').innerText = "BERSIAP SHOLAT BERJAMAAH";
                     
-                    // Mainkan suara 2 menit sebelum Iqamah
                     let uniqueAudioId = "iqamah_" + targetName;
                     if(audioPlayedId !== uniqueAudioId && diff <= 120000 && diff >= 119000) { 
                         playChime(); audioPlayedId = uniqueAudioId; 
@@ -382,7 +369,7 @@
         fetchPrayerTimes(); setInterval(fetchPrayerTimes, 3600000); 
         setInterval(updateCountdown, 1000); updateClock();    
 
-        // SMART SLIDER (Dengan JUM'AH MODE)
+        // SMART SLIDER
         let playlist = []; let currentSlideIndex = 0;
 
         async function fetchSheetData() {
@@ -393,7 +380,6 @@
                 let tempPlaylist = [];
                 const now = new Date();
                 
-                // JUM'AH MODE: Jika Kamis Sore (>= 15:00) atau hari Jumat, dan data Khatib ada
                 if ((now.getDay() === 4 && now.getHours() >= 15) || now.getDay() === 5) {
                     if (data.khatib) {
                         tempPlaylist.push({ type: 'text', id: "Khatib Jumat: " + data.khatib.id, jp: "今週のハティーブ: " + data.khatib.jp });
