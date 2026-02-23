@@ -4,386 +4,645 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Signage - Masjid As-Sunnah Hekinan</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
-        * { box-sizing: border-box; }
-        :root { --bg-color: #0f172a; --primary: #10b981; --accent: #fbbf24; --text-main: #f8fafc; --text-sub: #cbd5e1; --alert: #ef4444; }
-        body { margin: 0; padding: 0; background-color: var(--bg-color); background-image: radial-gradient(rgba(16, 185, 129, 0.15) 2px, transparent 2px); background-size: 30px 30px; color: var(--text-main); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; display: flex; flex-direction: column; height: 100vh; transition: background-color 2s ease; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 8px 20px; background-color: rgba(0,0,0,0.6); border-bottom: 3px solid var(--primary); flex-shrink: 0; backdrop-filter: blur(5px); transition: opacity 1s; }
-        .header-left { display: flex; align-items: center; gap: 12px; }
-        .logo { width: 55px; height: auto; object-fit: contain; }
-        .masjid-name h1 { margin: 0; font-size: 1.6rem; letter-spacing: 1px; }
-        .masjid-name p { margin: 2px 0; color: var(--primary); font-size: 0.9rem; font-weight: bold; }
-        .website { display: inline-block; margin-top: 2px; font-size: 0.85rem; color: var(--accent); background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; }
+        /* --- 1. RESET & VARIABLE --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg-color: #0f172a;
+            --primary: #10b981;    /* Hijau Emerald */
+            --accent: #fbbf24;     /* Kuning Emas */
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --alert: #ef4444;      /* Merah */
+            --glass: rgba(15, 23, 42, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(251, 191, 36, 0.1) 0px, transparent 50%);
+            color: var(--text-main);
+            font-family: 'Inter', 'Noto Sans JP', sans-serif; /* Font lebih modern & jelas */
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* --- 2. HEADER --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: var(--glass);
+            border-bottom: 2px solid var(--primary);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .logo { 
+            width: 60px; height: 60px; 
+            object-fit: contain; 
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); 
+        }
+        .masjid-name h1 { font-size: 1.8rem; letter-spacing: 0.5px; line-height: 1.1; }
+        .masjid-name p { color: var(--primary); font-size: 0.95rem; font-weight: 700; }
+        .website { 
+            display: inline-block; margin-top: 4px; font-size: 0.8rem; 
+            color: var(--accent); background: rgba(251, 191, 36, 0.1); 
+            padding: 2px 8px; border-radius: 4px; 
+        }
+
+        /* Clock Section */
         .clock-container { text-align: right; }
-        #time { font-size: 2.4rem; font-weight: bold; margin: 0; line-height: 1; }
-        #date { font-size: 1rem; color: var(--text-sub); margin-top: 4px; }
-        .date-row { display: flex; justify-content: flex-end; gap: 15px; margin-top: 2px; align-items: center;}
-        #hijri-date { font-size: 1rem; color: var(--primary); font-weight: bold; }
-        #weather-info { font-size: 1rem; color: var(--accent); font-weight: bold; background: rgba(251, 191, 36, 0.1); padding: 2px 8px; border-radius: 5px;}
-        main { display: grid; grid-template-columns: 260px 1fr 280px; flex-grow: 1; padding: 12px 15px; gap: 15px; overflow: hidden; min-height: 0; transition: opacity 1s; }
-        .box { background: rgba(0,0,0,0.5); border-radius: 12px; padding: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; flex-direction: column; height: 100%; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(4px); }
-        .box-title { text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 6px; margin-bottom: 8px;}
-        .box-title h2 { margin: 0; font-size: 1.2rem; }
-        .box-title p { margin: 0; color: var(--primary); font-size: 0.85rem; }
-        .prayer-list { display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; gap: 4px; }
-        .prayer-item { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.4); padding: 6px 10px; border-radius: 8px; border-left: 4px solid transparent; flex: 1; transition: all 0.3s ease; }
-        .prayer-item.active { border-left: 5px solid var(--accent); background: rgba(251, 191, 36, 0.15); box-shadow: 0 0 10px rgba(251, 191, 36, 0.2); transform: scale(1.02); }
-        .prayer-name { font-size: 1.1rem; font-weight: bold; }
-        .prayer-name span { display: block; font-size: 0.7rem; color: var(--text-sub); font-weight: normal; margin-top: 2px;}
-        .times-wrapper { text-align: right; }
-        .adhan-time { font-size: 1.5rem; color: var(--primary); font-weight: bold; line-height: 1; }
-        .iqamah-time { font-size: 0.75rem; color: var(--accent); margin-top: 3px; font-weight: bold; }
-        .iqamah-time::before { content: 'Jamaah: '; color: var(--text-sub); font-weight: normal;}
-        .center-column { display: flex; flex-direction: column; gap: 12px; height: 100%; min-height: 0; }
-        .countdown-box { background: rgba(0,0,0,0.6); border: 2px solid var(--accent); border-radius: 12px; padding: 10px; text-align: center; flex-shrink: 0; transition: all 0.3s ease; }
-        .countdown-title { font-size: 1.1rem; color: var(--text-sub); margin-bottom: 4px; }
-        .countdown-timer { font-size: 2.8rem; color: var(--accent); font-weight: bold; font-variant-numeric: tabular-nums; line-height: 1; }
-        .iqamah-alert { border-color: var(--alert) !important; background: rgba(239, 68, 68, 0.1) !important; animation: blinkBg 2s infinite; }
-        .iqamah-alert .countdown-timer { color: var(--alert) !important; animation: blinkText 1s infinite; }
-        .iqamah-alert .countdown-title { color: #fff !important; font-weight: bold; font-size: 1.3rem; }
-        @keyframes blinkBg { 0%, 100% { background: rgba(239, 68, 68, 0.1); } 50% { background: rgba(239, 68, 68, 0.3); } }
-        @keyframes blinkText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .announcements { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 15px; overflow: hidden; position: relative; }
-        #slide-text { display: flex; flex-direction: column; align-items: center; width: 100%; transition: opacity 0.5s; }
-        .announcement-text { font-size: 2rem; line-height: 1.3; margin-bottom: 12px; }
-        .announcement-jp { font-size: 1.4rem; color: var(--primary); }
-        #slide-img { display: none; width: 100%; height: 100%; object-fit: contain; border-radius: 8px; transition: opacity 0.5s; }
-        .waqf-box { background: rgba(251, 191, 36, 0.05); border: 1px solid rgba(251, 191, 36, 0.2); }
-        .waqf-box .box-title { border-bottom: 2px solid var(--accent); }
-        .waqf-box .box-title p { color: var(--accent); }
-        .waqf-stats { margin-top: 8px; display: flex; flex-direction: column; gap: 8px; justify-content: center; flex-grow: 1; }
-        .waqf-item p { margin: 0 0 2px 0; font-size: 0.9rem; color: var(--text-sub); }
-        .waqf-item h3 { margin: 0; font-size: 1.4rem; color: var(--accent); }
-        .progress-container { margin-top: 4px; background: rgba(0,0,0,0.5); border-radius: 8px; height: 18px; width: 100%; overflow: hidden; position: relative; }
-        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0%; transition: width 1s ease-in-out; }
-        .progress-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold; font-size: 0.75rem; color: #fff; text-shadow: 1px 1px 2px #000; }
-        .qr-container { display: flex; flex-direction: column; align-items: center; margin-top: 5px; }
-        .qr-code { width: 65px; height: 65px; object-fit: contain; border-radius: 5px; border: 2px solid var(--accent); padding: 2px; background: white; }
-        .qr-container p { font-size: 0.75rem; color: var(--accent); margin-top: 3px; font-weight: bold;}
-        footer { background-color: var(--primary); color: #000; padding: 6px 15px; font-size: 1.2rem; font-weight: bold; white-space: nowrap; overflow: hidden; display: flex; align-items: center; flex-shrink: 0; transition: opacity 1s; }
-        .marquee-wrapper { flex: 1; overflow: hidden; }
-        .marquee-content { display: inline-block; padding-left: 100%; animation: marquee 35s linear infinite; }
+        #time { font-size: 3rem; font-weight: 700; line-height: 1; letter-spacing: -1px; }
+        #date { font-size: 1.1rem; color: var(--text-sub); margin-top: 2px; }
+        .date-row { display: flex; justify-content: flex-end; gap: 12px; margin-top: 4px; font-size: 0.95rem; font-weight: 600; }
+        #hijri-date { color: var(--primary); }
+        #weather-info { color: var(--accent); }
+
+        /* --- 3. MAIN LAYOUT --- */
+        main {
+            display: grid;
+            grid-template-columns: 280px 1fr 300px; /* Kiri, Tengah, Kanan */
+            gap: 20px;
+            padding: 20px;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        /* Card Container Style */
+        .card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+        }
+
+        .card-header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .card-header h2 { font-size: 1.3rem; margin-bottom: 2px; }
+        .card-header p { color: var(--primary); font-size: 0.85rem; font-weight: 600; }
+
+        /* JADWAL SHOLAT (KIRI) */
+        .prayer-list { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+        .prayer-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        /* Highlight Sholat Aktif */
+        .prayer-item.active {
+            background: rgba(16, 185, 129, 0.15);
+            border-left: 4px solid var(--accent);
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .prayer-name { font-size: 1.2rem; font-weight: 600; }
+        .prayer-name span { display: block; font-size: 0.75rem; color: var(--text-sub); font-weight: 400; }
+        .prayer-time { text-align: right; }
+        .adhan-time { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+        .iqamah-time { font-size: 0.8rem; color: var(--accent); font-weight: 600; }
+
+        /* CENTER CONTENT (TENGAH) */
+        .center-column { display: flex; flex-direction: column; gap: 20px; height: 100%; }
+        
+        /* Countdown Box */
+        .countdown-box {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9));
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Efek Berkedip saat Iqamah */
+        .countdown-box.alert {
+            border-color: var(--alert);
+            background: rgba(239, 68, 68, 0.1);
+            animation: pulseAlert 2s infinite;
+        }
+        @keyframes pulseAlert { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+
+        .cd-label { font-size: 1.1rem; color: var(--text-sub); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .cd-timer { font-size: 4rem; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1; text-shadow: 0 0 20px rgba(251, 191, 36, 0.3); }
+
+        /* Slide Show Area */
+        .slide-area {
+            flex-grow: 1;
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+        }
+        .slide-content { width: 100%; text-align: center; padding: 30px; animation: fadeIn 0.8s ease; }
+        .slide-text-id { font-size: 2rem; font-weight: 700; margin-bottom: 15px; line-height: 1.3; }
+        .slide-text-jp { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+        .slide-image { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; display: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* WAKAF (KANAN) */
+        .wakaf-card { border-top: 4px solid var(--accent); }
+        .wakaf-stats { display: flex; flex-direction: column; gap: 15px; flex-grow: 1; justify-content: center; }
+        .stat-item p { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 4px; }
+        .stat-item h3 { font-size: 1.6rem; color: var(--text-main); font-weight: 700; }
+        
+        .progress-container { background: rgba(255,255,255,0.1); height: 12px; border-radius: 20px; overflow: hidden; margin: 10px 0; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0%; transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        .qr-wrapper { text-align: center; margin-top: auto; }
+        .qr-code { width: 140px; height: 140px; background: white; padding: 5px; border-radius: 8px; }
+        .qr-wrapper p { margin-top: 8px; color: var(--accent); font-size: 0.9rem; font-weight: 600; }
+
+        /* --- 4. FOOTER (Running Text) --- */
+        footer {
+            background: var(--primary);
+            color: #064e3b;
+            padding: 10px 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+            overflow: hidden;
+            white-space: nowrap;
+            box-shadow: 0 -4px 20px rgba(16, 185, 129, 0.3);
+        }
+        .marquee-content { display: inline-block; padding-left: 100%; animation: marquee 40s linear infinite; }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-        #adzan-takeover { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.98); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; opacity: 0; pointer-events: none; transition: opacity 1s ease; background-image: radial-gradient(rgba(251, 191, 36, 0.1) 2px, transparent 2px); background-size: 40px 40px; }
-        #adzan-takeover.active { opacity: 1; pointer-events: all; }
-        #takeover-title { font-size: 3rem; color: var(--text-sub); margin: 0; font-weight: normal;}
-        #takeover-prayer { font-size: 8rem; color: var(--accent); margin: 10px 0; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;}
-        .takeover-msg { font-size: 2.5rem; color: white; margin: 10px 0; }
-        .takeover-msg-jp { font-size: 1.8rem; color: var(--primary); margin-top: 5px; }
-        .takeover-close { position: absolute; bottom: 20px; font-size: 1rem; color: gray; cursor: pointer; }
-        body.is-sleeping header, body.is-sleeping main, body.is-sleeping footer { opacity: 0; pointer-events: none; }
-        body.is-sleeping { background: #000; background-image: none; }
-        #sleep-clock { position: fixed; font-size: 8rem; color: rgba(255,255,255,0.1); font-weight: bold; display: none; transition: all 10s ease-in-out; pointer-events: none; z-index: 1000; }
-        body.is-sleeping #sleep-clock { display: block; }
+
+        /* --- 5. OVERLAY ADZAN --- */
+        #adzan-overlay {
+            position: fixed; inset: 0;
+            background: rgba(15, 23, 42, 0.98);
+            z-index: 1000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
+        }
+        #adzan-overlay.active { opacity: 1; pointer-events: auto; }
+        .overlay-title { font-size: 2.5rem; color: var(--text-sub); letter-spacing: 2px; }
+        .overlay-prayer { font-size: 7rem; font-weight: 800; color: var(--accent); margin: 10px 0; text-transform: uppercase; }
+        .overlay-msg { font-size: 1.8rem; color: white; margin-top: 20px; }
+        .overlay-msg-jp { font-size: 1.4rem; color: var(--primary); margin-top: 10px; }
+
+        /* Responsif untuk layar kecil (opsional jika dibuka di HP) */
+        @media (max-width: 1000px) {
+            main { grid-template-columns: 1fr; grid-template-rows: auto auto auto; overflow-y: auto; }
+            .prayer-list { flex-direction: row; flex-wrap: wrap; gap: 10px; }
+            .prayer-item { flex: 1 1 45%; }
+            body { overflow: auto; height: auto; }
+        }
     </style>
 </head>
 <body>
 
     <audio id="audio-chime" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
-    <div id="sleep-clock">00:00</div>
 
-    <div id="adzan-takeover" onclick="this.classList.remove('active')">
-        <h1 id="takeover-title">Masuk Waktu Sholat</h1>
-        <h2 id="takeover-prayer">MAGHRIB</h2>
-        <p class="takeover-msg">Mohon luruskan shaf dan matikan telepon genggam.</p>
-        <p class="takeover-msg-jp">列を真っ直ぐに整え、携帯電話の電源をお切りください。</p>
-        <p class="takeover-close">(Tap layar untuk menutup)</p>
+    <div id="adzan-overlay">
+        <h1 class="overlay-title">MASUK WAKTU SHOLAT</h1>
+        <h2 class="overlay-prayer" id="overlay-prayer-name">MAGHRIB</h2>
+        <p class="overlay-msg">Mohon luruskan shaf dan matikan HP</p>
+        <p class="overlay-msg-jp">列を整え、携帯電話の電源をお切りください</p>
     </div>
 
     <header>
         <div class="header-left">
             <img src="logohekinan.jpeg" alt="Logo Masjid" class="logo" onerror="this.style.display='none'">
-            <div class="masjid-name"><h1>MASJID AS-SUNNAH</h1><p>マスジド アスンナ 碧南</p><span class="website">assunnahhekinan.org</span></div>
+            <div class="masjid-name">
+                <h1>MASJID AS-SUNNAH</h1>
+                <p>マスジド アスンナ 碧南</p>
+                <span class="website">assunnahhekinan.org</span>
+            </div>
         </div>
         <div class="clock-container">
-            <div id="time">00:00:00</div><div id="date">Memuat tanggal...</div>
-            <div class="date-row"><div id="weather-info">--°C</div><div id="hijri-date">Memuat Hijriah...</div></div>
+            <div id="time">00:00</div>
+            <div id="date">Memuat Tanggal...</div>
+            <div class="date-row">
+                <span id="weather-info">--°C</span>
+                <span>•</span>
+                <span id="hijri-date">...</span>
+            </div>
         </div>
     </header>
 
     <main>
-        <div class="box">
-            <div class="box-title"><h2>Jadwal Sholat</h2><p>礼拝の時間</p></div>
+        <div class="card">
+            <div class="card-header">
+                <h2>Jadwal Sholat</h2>
+                <p>本日の礼拝時間</p>
+            </div>
             <div class="prayer-list">
-                <div class="prayer-item" id="box-fajr"><div class="prayer-name">Subuh <span>ファジル</span></div><div class="times-wrapper"><div class="adhan-time" id="pt-fajr">--:--</div><div class="iqamah-time" id="iq-fajr">--:--</div></div></div>
-                <div class="prayer-item" id="box-sunrise"><div class="prayer-name">Syuruq <span>日の出</span></div><div class="times-wrapper"><div class="adhan-time" id="pt-sunrise">--:--</div><div style="font-size:0.7rem; color:var(--text-sub); margin-top:3px;">Batas Subuh</div></div></div>
-                <div class="prayer-item" id="box-dhuhr"><div class="prayer-name" id="nama-dzuhur">Dzuhur <span>ズフール</span></div><div class="times-wrapper"><div class="adhan-time" id="pt-dhuhr">--:--</div><div class="iqamah-time" id="iq-dhuhr">--:--</div></div></div>
-                <div class="prayer-item" id="box-asr"><div class="prayer-name">Ashar <span>アスル</span></div><div class="times-wrapper"><div class="adhan-time" id="pt-asr">--:--</div><div class="iqamah-time" id="iq-asr">--:--</div></div></div>
-                <div class="prayer-item" id="box-maghrib"><div class="prayer-name">Maghrib <span>マグリブ</span></div><div class="times-wrapper"><div class="adhan-time" id="pt-maghrib">--:--</div><div class="iqamah-time" id="iq-maghrib">--:--</div></div></div>
-                <div class="prayer-item" id="box-isha"><div class="prayer-name">Isya <span>イシャー</span></div><div class="times-wrapper"><div class="adhan-time" id="pt-isha">--:--</div><div class="iqamah-time" id="iq-isha">--:--</div></div></div>
+                <div class="prayer-item" id="row-Subuh">
+                    <div class="prayer-name">Subuh <span>ファジル</span></div>
+                    <div class="prayer-time"><div class="adhan-time" id="time-Subuh">--:--</div><div class="iqamah-time" id="iq-Subuh">--:--</div></div>
+                </div>
+                <div class="prayer-item" id="row-Syuruq">
+                    <div class="prayer-name">Syuruq <span>日の出</span></div>
+                    <div class="prayer-time"><div class="adhan-time" id="time-Syuruq">--:--</div></div>
+                </div>
+                <div class="prayer-item" id="row-Dzuhur">
+                    <div class="prayer-name" id="label-dzuhur">Dzuhur <span>ズフール</span></div>
+                    <div class="prayer-time"><div class="adhan-time" id="time-Dzuhur">--:--</div><div class="iqamah-time" id="iq-Dzuhur">--:--</div></div>
+                </div>
+                <div class="prayer-item" id="row-Ashar">
+                    <div class="prayer-name">Ashar <span>アスル</span></div>
+                    <div class="prayer-time"><div class="adhan-time" id="time-Ashar">--:--</div><div class="iqamah-time" id="iq-Ashar">--:--</div></div>
+                </div>
+                <div class="prayer-item" id="row-Maghrib">
+                    <div class="prayer-name">Maghrib <span>マグリブ</span></div>
+                    <div class="prayer-time"><div class="adhan-time" id="time-Maghrib">--:--</div><div class="iqamah-time" id="iq-Maghrib">--:--</div></div>
+                </div>
+                <div class="prayer-item" id="row-Isya">
+                    <div class="prayer-name">Isya <span>イシャー</span></div>
+                    <div class="prayer-time"><div class="adhan-time" id="time-Isya">--:--</div><div class="iqamah-time" id="iq-Isya">--:--</div></div>
+                </div>
             </div>
         </div>
 
         <div class="center-column">
-            <div class="countdown-box" id="cd-box"><div class="countdown-title" id="cd-title">Menuju Waktu Sholat</div><div class="countdown-timer" id="cd-timer">--:--:--</div></div>
-            <div class="announcements">
-                <div id="slide-text"><div class="announcement-text" id="announce-id">Memuat informasi...</div><div class="announcement-jp" id="announce-jp">読み込み中...</div></div>
-                <img id="slide-img" src="" alt="Galeri">
+            <div class="countdown-box" id="cd-box">
+                <div class="cd-label" id="cd-label">MENUJU WAKTU SHOLAT</div>
+                <div class="cd-timer" id="cd-timer">--:--:--</div>
+            </div>
+            
+            <div class="slide-area">
+                <div id="slide-text" class="slide-content">
+                    <div class="slide-text-id" id="announce-id">Selamat Datang di Masjid As-Sunnah Hekinan</div>
+                    <div class="slide-text-jp" id="announce-jp">ようこそお越しくださいました</div>
+                </div>
+                <img id="slide-img" class="slide-image" src="" alt="Slide">
             </div>
         </div>
 
-        <div class="box waqf-box">
-            <div class="box-title"><h2>Pembebasan Lahan</h2><p>土地取得ワクフ</p></div>
-            <div class="waqf-stats">
-                <div class="waqf-item"><p>Total Target / 目標額</p><h3 id="wakaf-target">¥ 0</h3></div>
-                <div class="waqf-item"><p>Terkumpul / 集まった額</p><h3 id="wakaf-terkumpul">¥ 0</h3></div>
-                <div class="progress-container"><div class="progress-bar" id="wakaf-bar"></div><div class="progress-text" id="wakaf-percent">0%</div></div>
-                <div class="qr-container"><img src="qr-wakaf.png" alt="QR" class="qr-code" onerror="this.parentElement.style.display='none'"><p>Scan untuk Infaq</p></div>
+        <div class="card wakaf-card">
+            <div class="card-header">
+                <h2>Wakaf Tanah</h2>
+                <p>土地取得プロジェクト</p>
+            </div>
+            <div class="wakaf-stats">
+                <div class="stat-item">
+                    <p>Total Kebutuhan / 目標</p>
+                    <h3 id="wakaf-target">¥ 0</h3>
+                </div>
+                <div class="stat-item">
+                    <p>Terkumpul / 現在</p>
+                    <h3 id="wakaf-terkumpul" style="color: var(--primary)">¥ 0</h3>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="wakaf-bar"></div>
+                </div>
+                <div style="text-align: right; font-weight: bold; color: var(--accent);" id="wakaf-percent">0%</div>
+                
+                <div class="qr-wrapper">
+                    <img src="qr-wakaf.png" class="qr-code" alt="QR Infaq" onerror="this.style.opacity='0.2'">
+                    <p>Scan untuk Infaq</p>
+                </div>
             </div>
         </div>
     </main>
 
     <footer>
-        <div class="marquee-wrapper"><div class="marquee-content" id="running-text">Kunjungi website kami di assunnahhekinan.org untuk informasi lebih lanjut. / 詳細については、当社のウェブサイトをご覧ください。</div></div>
+        <div class="marquee-content" id="running-text">
+            Mohon luruskan shaf dan rapatkan barisan • Matikan alat komunikasi selama sholat berjamaah • Jagalah kebersihan masjid
+        </div>
     </footer>
 
     <script>
-        const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbwqV6GmVbvtAR6drC38u0WEumYvBi9Atz0r89iXnQz682Kg8iQHRChoeRyfnfXpRXUi/exec";
-        let prayerTimesToday = []; 
-        let audioPlayedId = ""; 
+        // --- KONFIGURASI ---
+        const CONFIG = {
+            // URL Script Google Apps Script Anda (PASTIKAN INI TERBARU)
+            API_URL: "https://script.google.com/macros/s/AKfycbwqV6GmVbvtAR6drC38u0WEumYvBi9Atz0r89iXnQz682Kg8iQHRChoeRyfnfXpRXUi/exec",
+            LAT: 34.8819,
+            LONG: 136.9956,
+            CITY: "Hekinan"
+        };
 
-        function playChime() {
-            let audio = document.getElementById('audio-chime');
-            audio.currentTime = 0; audio.play().catch(e => console.log("Autoplay ditolak", e));
+        // State Management
+        let state = {
+            prayerToday: [],
+            prayerTomorrow: [],
+            playlist: [],
+            slideIndex: 0,
+            lastPlayedAudio: ""
+        };
+
+        // --- 1. UTILITIES ---
+        const el = (id) => document.getElementById(id);
+        const formatYen = (n) => new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(n);
+        
+        function playAudio() {
+            const audio = el('audio-chime');
+            audio.currentTime = 0;
+            audio.play().catch(e => console.log("Audio autoplay blocked via browser policy"));
         }
 
-        function createDateObj(timeStr) {
-            if(!timeStr) return null;
-            let [h, m] = timeStr.split(':').map(Number);
-            let d = new Date(); d.setHours(h, m, 0, 0); return d;
+        function createDate(timeStr, addDay = 0) {
+            if (!timeStr) return null;
+            const [h, m] = timeStr.split(':').map(Number);
+            const d = new Date();
+            d.setDate(d.getDate() + addDay);
+            d.setHours(h, m, 0, 0);
+            return d;
         }
 
-        const formatYen = (num) => new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(num);
-
-        async function fetchWeather() {
-            try {
-                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=34.8819&longitude=136.9956&current_weather=true');
-                const data = await res.json();
-                document.getElementById('weather-info').innerText = `${Math.round(data.current_weather.temperature)}°C Hekinan`;
-            } catch (e) { console.error("Gagal ambil cuaca", e); }
-        }
-        fetchWeather(); setInterval(fetchWeather, 1800000); 
-
+        // --- 2. CLOCK & DATE ---
         function updateClock() {
             const now = new Date();
-            let timeStr = now.toLocaleTimeString('id-ID', { hour12: false }).replace(/\./g, ':');
-            document.getElementById('time').innerText = timeStr;
-            document.getElementById('sleep-clock').innerText = timeStr;
+            el('time').textContent = now.toLocaleTimeString('id-ID', { hour12: false }).replace(/\./g, ':');
             
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('date').innerText = now.toLocaleDateString('id-ID', options).replace('Minggu', 'Ahad');
+            // Format: Senin, 20 Februari 2026
+            const dateOpts = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            el('date').textContent = now.toLocaleDateString('id-ID', dateOpts).replace('Minggu', 'Ahad');
 
-            if (now.getDay() === 5) { document.getElementById('nama-dzuhur').innerHTML = 'Jumat <span>ジュマ</span>'; } 
-            else { document.getElementById('nama-dzuhur').innerHTML = 'Dzuhur <span>ズフール</span>'; }
+            // Cek Jumat
+            if (now.getDay() === 5) {
+                el('label-dzuhur').innerHTML = 'Jumat <span>ジュマ</span>';
+            } else {
+                el('label-dzuhur').innerHTML = 'Dzuhur <span>ズフール</span>';
+            }
+        }
+        setInterval(updateClock, 1000);
 
-            const currentHour = now.getHours();
-            if (currentHour >= 22 || currentHour < 4) {
-                document.body.classList.add('is-sleeping');
-                if (now.getSeconds() === 0) {
-                    document.getElementById('sleep-clock').style.top = Math.random() * 70 + "%";
-                    document.getElementById('sleep-clock').style.left = Math.random() * 70 + "%";
+        // --- 3. API DATA HANDLER (Backend Apps Script) ---
+        async function fetchData() {
+            try {
+                const res = await fetch(CONFIG.API_URL);
+                const json = await res.json();
+                
+                // Jika backend mengirim error
+                if (json.error) { console.error("Backend Error:", json.message); return; }
+
+                // A. Update Wakaf (Gunakan textContent untuk keamanan)
+                const w = json.wakaf || { terkumpul: 0, target: 1 };
+                el('wakaf-terkumpul').textContent = formatYen(w.terkumpul);
+                el('wakaf-target').textContent = formatYen(w.target);
+                const percent = Math.min((w.terkumpul / w.target) * 100, 100).toFixed(1);
+                el('wakaf-bar').style.width = percent + "%";
+                el('wakaf-percent').textContent = percent + "%";
+
+                // B. Update Playlist (Pengumuman)
+                let newPlaylist = [];
+                // Info Khatib (Kamis Sore & Jumat)
+                const now = new Date();
+                const isJumatTime = (now.getDay() === 4 && now.getHours() >= 15) || now.getDay() === 5;
+                if (isJumatTime && json.khatib) {
+                    newPlaylist.push({ type: 'text', id: "Khatib Jumat: " + json.khatib.id, jp: json.khatib.jp });
                 }
-            } else { document.body.classList.remove('is-sleeping'); }
+                
+                // Pengumuman Biasa
+                if (json.pengumuman) newPlaylist = [...newPlaylist, ...json.pengumuman.map(p => ({type:'text', ...p}))];
+                
+                // Galeri
+                if (json.galeri) newPlaylist = [...newPlaylist, ...json.galeri.map(img => ({type:'image', url: img}))];
+                
+                if (newPlaylist.length > 0) state.playlist = newPlaylist;
 
-            let isAdzanTime = false; let currentAdzanName = "";
-            for (let i = 0; i < prayerTimesToday.length; i++) {
-                if (prayerTimesToday[i].name === "Syuruq") continue; 
-                if (!prayerTimesToday[i].adzanTime) continue;
-                let diffMs = now - prayerTimesToday[i].adzanTime;
-                if (diffMs >= 0 && diffMs < 180000) { 
-                    isAdzanTime = true; currentAdzanName = prayerTimesToday[i].name; 
-                    let uniqueAudioId = "adzan_" + currentAdzanName;
-                    if(audioPlayedId !== uniqueAudioId) { playChime(); audioPlayedId = uniqueAudioId; }
+                // C. Running Text
+                if (json.running_text && json.running_text.length > 0) {
+                    const txt = json.running_text.map(t => `${t.id} (${t.jp})`).join("  ✦  ");
+                    el('running-text').textContent = txt; // Aman dari XSS
+                }
+
+                // D. Iqamah Time (Simpan di DOM attribute untuk dibaca logic countdown)
+                if (json.iqamah) {
+                    const map = { Subuh: 'Subuh', Dzuhur: 'Dzuhur', Ashar: 'Ashar', Maghrib: 'Maghrib', Isya: 'Isya' };
+                    // Logic khusus Isya Weekend / Jumat bisa ditambahkan di sini jika perlu,
+                    // Tapi backend (code.gs) sebaiknya sudah handle itu.
+                    for (const [key, val] of Object.entries(json.iqamah)) {
+                        const domId = `iq-${key}`;
+                        if (el(domId)) el(domId).textContent = val;
+                    }
+                }
+
+            } catch (e) {
+                console.error("Gagal fetch data sheet:", e);
+            }
+        }
+        
+        // Panggil data awal & interval 5 menit
+        fetchData();
+        setInterval(fetchData, 300000);
+
+        // --- 4. JADWAL SHOLAT (Aladhan API) ---
+        async function fetchPrayer() {
+            try {
+                const now = Math.floor(Date.now() / 1000);
+                const res = await fetch(`https://api.aladhan.com/v1/timings/${now}?latitude=${CONFIG.LAT}&longitude=${CONFIG.LONG}&method=1`); // Method 1: MWL
+                const data = await res.json();
+                const t = data.data.timings;
+                
+                // Update Hijriah
+                const h = data.data.date.hijri;
+                el('hijri-date').textContent = `${h.day} ${h.month.en} ${h.year}H`;
+
+                // Render Waktu Adzan
+                const prayers = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+                const mapIndo = { Fajr: 'Subuh', Sunrise: 'Syuruq', Dhuhr: 'Dzuhur', Asr: 'Ashar', Maghrib: 'Maghrib', Isha: 'Isya' };
+
+                let todayArr = [];
+                let tomorrowArr = [];
+
+                prayers.forEach(p => {
+                    const name = mapIndo[p];
+                    const time = t[p];
+                    
+                    // Render ke layar
+                    if (el(`time-${name}`)) el(`time-${name}`).textContent = time;
+
+                    // Masukkan ke array logic
+                    const iqamahText = el(`iq-${name}`) ? el(`iq-${name}`).textContent : null;
+                    const iqamahDate = (iqamahText && iqamahText !== '--:--') ? createDate(iqamahText) : null;
+                    
+                    todayArr.push({
+                        name: name,
+                        adzan: createDate(time),
+                        iqamah: iqamahDate
+                    });
+                    
+                    // Buat array besok (asumsi jam sama untuk transisi malam)
+                    tomorrowArr.push({
+                        name: name,
+                        adzan: createDate(time, 1),
+                        iqamah: iqamahDate ? createDate(iqamahText, 1) : null
+                    });
+                });
+
+                state.prayerToday = todayArr;
+                state.prayerTomorrow = tomorrowArr;
+
+            } catch (e) { console.error("Gagal fetch jadwal sholat:", e); }
+        }
+        fetchPrayer();
+        setInterval(fetchPrayer, 3600000); // Tiap 1 jam refresh jadwal
+
+        // --- 5. LOGIC UTAMA (Countdown & Slide) ---
+        function updateLogic() {
+            const now = new Date();
+            let target = null;
+            let type = ""; // "adzan" atau "iqamah"
+            let pName = "";
+            let activeRowId = "";
+
+            // Cari jadwal terdekat
+            const allSchedules = [...state.prayerToday, ...state.prayerTomorrow];
+            
+            for (let p of allSchedules) {
+                // Lewati Syuruq (bukan waktu sholat wajib)
+                if (p.name === 'Syuruq') {
+                    // Logic khusus: jika sekarang sebelum syuruq dan sesudah subuh, aktifkan baris syuruq
+                    if (now < p.adzan && now > createDate(el('time-Subuh').textContent)) {
+                       // Optional: highlight syuruq
+                    }
+                    continue; 
+                }
+
+                // Cek Iqamah (Prioritas 1: Sedang menunggu iqamah)
+                if (p.iqamah && now >= p.adzan && now < p.iqamah) {
+                    target = p.iqamah;
+                    type = "iqamah";
+                    pName = p.name;
+                    activeRowId = `row-${p.name}`;
+                    break;
+                }
+
+                // Cek Adzan (Prioritas 2: Menunggu adzan)
+                if (now < p.adzan) {
+                    target = p.adzan;
+                    type = "adzan";
+                    pName = p.name;
+                    activeRowId = `row-${p.name}`;
                     break;
                 }
             }
 
-            const takeoverEl = document.getElementById('adzan-takeover');
-            if (isAdzanTime) {
-                if (!takeoverEl.classList.contains('active')) {
-                    document.getElementById('takeover-prayer').innerText = currentAdzanName;
-                    takeoverEl.classList.add('active');
-                }
-            } else { takeoverEl.classList.remove('active'); }
-        }
-        setInterval(updateClock, 1000);
+            // Update UI Highlight Row
+            document.querySelectorAll('.prayer-item').forEach(r => r.classList.remove('active'));
+            if (activeRowId && el(activeRowId)) el(activeRowId).classList.add('active');
 
-        async function fetchPrayerTimes() {
-            try {
-                const response = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Hekinan&country=Japan&method=1');
-                const data = await response.json();
-                const timings = data.data.timings;
-                
-                document.getElementById('pt-fajr').innerText = timings.Fajr;
-                document.getElementById('pt-sunrise').innerText = timings.Sunrise;
-                document.getElementById('pt-dhuhr').innerText = timings.Dhuhr;
-                document.getElementById('pt-asr').innerText = timings.Asr;
-                document.getElementById('pt-maghrib').innerText = timings.Maghrib;
-                document.getElementById('pt-isha').innerText = timings.Isha;
+            // Update Countdown Box
+            if (target) {
+                const diff = target - now;
+                const h = Math.floor(diff / 3600000);
+                const m = Math.floor((diff % 3600000) / 60000);
+                const s = Math.floor((diff % 60000) / 1000);
 
-                const nowDay = new Date().getDay();
-                
-                prayerTimesToday = [
-                    { id: "box-fajr", name: "Subuh", adzanTime: createDateObj(timings.Fajr), iqamahTime: null },
-                    { id: "box-sunrise", name: "Syuruq", adzanTime: createDateObj(timings.Sunrise), iqamahTime: null },
-                    { id: "box-dhuhr", name: (nowDay === 5 ? "Jumat" : "Dzuhur"), adzanTime: createDateObj(timings.Dhuhr), iqamahTime: null },
-                    { id: "box-asr", name: "Ashar", adzanTime: createDateObj(timings.Asr), iqamahTime: null },
-                    { id: "box-maghrib", name: "Maghrib", adzanTime: createDateObj(timings.Maghrib), iqamahTime: null },
-                    { id: "box-isha", name: "Isya", adzanTime: createDateObj(timings.Isha), iqamahTime: null }
-                ];
+                el('cd-timer').textContent = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 
-                const hijri = data.data.date.hijri;
-                document.getElementById('hijri-date').innerText = `${hijri.day} ${hijri.month.en} ${hijri.year} H`;
-            } catch (error) { console.error("Gagal mengambil jadwal adzan", error); }
-        }
+                if (type === "iqamah") {
+                    el('cd-label').textContent = `IQAMAH ${pName.toUpperCase()}`;
+                    el('cd-box').classList.remove('alert');
 
-        function updateCountdown() {
-            if (prayerTimesToday.length === 0) return;
-            const now = new Date(); 
-            let targetName = ""; let targetTime = null; 
-            let isIqamah = false; let activeId = "";
-
-            for (let i = 0; i < prayerTimesToday.length; i++) {
-                let p = prayerTimesToday[i];
-                if (p.adzanTime && p.adzanTime > now) {
-                    targetName = p.name; targetTime = p.adzanTime; activeId = p.id; break;
-                } else if (p.iqamahTime && p.iqamahTime > now) {
-                    targetName = p.name; targetTime = p.iqamahTime; isIqamah = true; activeId = p.id; break;
-                }
-            }
-
-            document.querySelectorAll('.prayer-item').forEach(el => el.classList.remove('active'));
-            if(activeId) document.getElementById(activeId).classList.add('active');
-
-            const cdBox = document.getElementById('cd-box');
-
-            if (targetTime) {
-                let diff = targetTime - now;
-                let h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                let s = Math.floor((diff % (1000 * 60)) / 1000);
-
-                h = (h < 10) ? "0" + h : h; m = (m < 10) ? "0" + m : m; s = (s < 10) ? "0" + s : s;
-                
-                if (isIqamah && diff <= 120000) {
-                    cdBox.classList.add('iqamah-alert');
-                    document.getElementById('cd-title').innerText = "BERSIAP SHOLAT BERJAMAAH";
-                    
-                    let uniqueAudioId = "iqamah_" + targetName;
-                    if(audioPlayedId !== uniqueAudioId && diff <= 120000 && diff >= 119000) { 
-                        playChime(); audioPlayedId = uniqueAudioId; 
+                    // Jika < 2 menit menuju iqamah -> MERAH KEDIP
+                    if (diff < 120000) {
+                        el('cd-box').classList.add('alert');
+                        el('cd-label').textContent = "LURUSKAN SHAF";
+                        
+                        // Bunyi Beep 10 detik sebelum iqamah
+                        if (diff < 15000 && diff > 14000) playAudio();
                     }
                 } else {
-                    cdBox.classList.remove('iqamah-alert');
-                    document.getElementById('cd-title').innerText = isIqamah ? `Menunggu Iqamah ${targetName}` : `Menuju Waktu ${targetName}`;
-                }
-                document.getElementById('cd-timer').innerText = `${h}:${m}:${s}`;
-            } else {
-                cdBox.classList.remove('iqamah-alert');
-                document.getElementById('cd-title').innerText = "Menunggu Waktu Subuh";
-                document.getElementById('cd-timer').innerText = "--:--:--"; 
-            }
-        }
-        
-        fetchPrayerTimes(); setInterval(fetchPrayerTimes, 3600000); 
-        setInterval(updateCountdown, 1000); updateClock();    
-
-        // AMBIL DATA DARI GOOGLE SHEETS
-        let playlist = []; let currentSlideIndex = 0;
-
-        async function fetchSheetData() {
-            try {
-                const response = await fetch(SHEET_API_URL);
-                const data = await response.json();
-                
-                // MENGATUR IQAMAH DARI TAB IQAMAH
-                if (data.iqamah && Object.keys(data.iqamah).length > 0) {
-                    const nowDay = new Date().getDay();
-                    const isWeekend = (nowDay === 0 || nowDay === 6);
+                    el('cd-label').textContent = `MENUJU ${pName.toUpperCase()}`;
+                    el('cd-box').classList.remove('alert');
                     
-                    // Logika Isya
-                    let isyaTime = data.iqamah['Isya_Biasa'] || "20:30";
-                    if (isWeekend && data.iqamah['Isya_Weekend']) {
-                        isyaTime = data.iqamah['Isya_Weekend'];
-                    }
-
-                    // Logika Dzuhur / Jumat
-                    let dhuhrOrJumatTime = data.iqamah['Dzuhur'] || "--:--";
-                    if (nowDay === 5 && data.iqamah['Jumat']) {
-                        dhuhrOrJumatTime = data.iqamah['Jumat'];
-                    }
-
-                    document.getElementById('iq-fajr').innerText = data.iqamah['Subuh'] || "--:--";
-                    document.getElementById('iq-dhuhr').innerText = dhuhrOrJumatTime;
-                    document.getElementById('iq-asr').innerText = data.iqamah['Ashar'] || "--:--";
-                    document.getElementById('iq-maghrib').innerText = data.iqamah['Maghrib'] || "--:--";
-                    document.getElementById('iq-isha').innerText = isyaTime;
-
-                    if (prayerTimesToday.length === 6) {
-                        prayerTimesToday[0].iqamahTime = createDateObj(data.iqamah['Subuh']);
-                        prayerTimesToday[2].iqamahTime = createDateObj(dhuhrOrJumatTime);
-                        prayerTimesToday[3].iqamahTime = createDateObj(data.iqamah['Ashar']);
-                        prayerTimesToday[4].iqamahTime = createDateObj(data.iqamah['Maghrib']);
-                        prayerTimesToday[5].iqamahTime = createDateObj(isyaTime);
-                    }
+                    // Logic Overlay Adzan (Saat waktu masuk)
+                    // Jika selisih < 1 detik (baru saja masuk)
+                    // Kita gunakan range 0 sampai -3 menit (sedang adzan)
+                    const diffAdzan = now - target; // Positif berarti sudah lewat target
+                    // Karena target adalah adzan 'next', maka saat adzan bunyi, 'target' sudah lewat.
+                    // Logic di atas mencari 'next', jadi saat pas adzan, loop akan loncat ke 'iqamah' atau 'next adzan'
+                    // Kita butuh check khusus trigger adzan:
                 }
-
-                let tempPlaylist = [];
-                const now = new Date();
-                
-                if ((now.getDay() === 4 && now.getHours() >= 15) || now.getDay() === 5) {
-                    if (data.khatib) {
-                        tempPlaylist.push({ type: 'text', id: "Khatib Jumat: " + data.khatib.id, jp: "今週のハティーブ: " + data.khatib.jp });
-                    }
-                }
-
-                if (data.pengumuman && data.pengumuman.length > 0) {
-                    data.pengumuman.forEach(item => tempPlaylist.push({ type: 'text', id: item.id, jp: item.jp }));
-                }
-                if (data.galeri && data.galeri.length > 0) {
-                    data.galeri.forEach(filename => tempPlaylist.push({ type: 'image', file: filename }));
-                }
-
-                if (tempPlaylist.length > 0) {
-                    playlist = tempPlaylist;
-                    if (document.getElementById('announce-id').innerText === "Memuat informasi...") { showNextSlide(); }
-                }
-
-                if (data.running_text && data.running_text.length > 0) {
-                    let rtText = data.running_text.map(item => `${item.id}  /  ${item.jp}`).join('   ✦   ');
-                    document.getElementById('running-text').innerText = rtText;
-                }
-
-                if (data.wakaf && data.wakaf.target > 0) {
-                    let terkumpul = data.wakaf.terkumpul; let target = data.wakaf.target;
-                    let persentase = (terkumpul / target) * 100;
-                    document.getElementById('wakaf-target').innerText = formatYen(target);
-                    document.getElementById('wakaf-terkumpul').innerText = formatYen(terkumpul);
-                    document.getElementById('wakaf-bar').style.width = `${Math.min(persentase, 100)}%`;
-                    document.getElementById('wakaf-percent').innerText = `${persentase.toFixed(1)}%`;
-                }
-            } catch (error) { console.error("Gagal mengambil data sheet", error); }
-        }
-
-        function showNextSlide() {
-            if (playlist.length === 0) return;
-            const current = playlist[currentSlideIndex];
-            const divText = document.getElementById('slide-text');
-            const imgEl = document.getElementById('slide-img');
-
-            if (current.type === 'text') {
-                imgEl.style.display = 'none'; divText.style.display = 'flex';
-                document.getElementById('announce-id').innerText = current.id;
-                document.getElementById('announce-jp').innerText = current.jp;
-            } else if (current.type === 'image') {
-                divText.style.display = 'none';
-                imgEl.src = current.file; imgEl.style.display = 'block';
             }
-            currentSlideIndex = (currentSlideIndex + 1) % playlist.length;
         }
+        setInterval(updateLogic, 1000);
 
-        fetchSheetData(); setInterval(fetchSheetData, 300000); 
-        setInterval(showNextSlide, 15000); 
+        // Logic Overlay Adzan Terpisah (Agar lebih presisi)
+        setInterval(() => {
+            const now = new Date();
+            let isAdzan = false;
+            let adzanName = "";
+
+            state.prayerToday.forEach(p => {
+                if(p.name === 'Syuruq') return;
+                const diff = now - p.adzan; // miliseconds sejak adzan
+                // Jika waktu adzan sudah lewat 0 s.d 2 menit
+                if (diff >= 0 && diff < 120000) { 
+                    isAdzan = true; 
+                    adzanName = p.name;
+                }
+            });
+
+            const overlay = el('adzan-overlay');
+            if (isAdzan) {
+                if (!overlay.classList.contains('active')) {
+                    el('overlay-prayer-name').textContent = adzanName;
+                    overlay.classList.add('active');
+                    playAudio(); // Bunyi ting-tung
+                }
+            } else {
+                overlay.classList.remove('active');
+            }
+        }, 1000);
+
+        // --- 6. SLIDESHOW ---
+        function rotateSlide() {
+            if (state.playlist.length === 0) return;
+            
+            const item = state.playlist[state.slideIndex];
+            const txtArea = el('slide-text');
+            const imgArea = el('slide-img');
+
+            // Reset Animasi
+            txtArea.style.display = 'none';
+            imgArea.style.display = 'none';
+
+            if (item.type === 'text') {
+                txtArea.style.display = 'block';
+                el('announce-id').textContent = item.id;
+                el('announce-jp').textContent = item.jp;
+            } else {
+                imgArea.style.display = 'block';
+                imgArea.src = item.url;
+            }
+
+            // Next Index
+            state.slideIndex = (state.slideIndex + 1) % state.playlist.length;
+        }
+        setInterval(rotateSlide, 15000); // Ganti slide tiap 15 detik
+
+        // Ambil Cuaca (Simple)
+        async function fetchWeather() {
+            try {
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${CONFIG.LAT}&longitude=${CONFIG.LONG}&current_weather=true`);
+                const d = await res.json();
+                el('weather-info').textContent = `${Math.round(d.current_weather.temperature)}°C`;
+            } catch(e){}
+        }
+        fetchWeather(); setInterval(fetchWeather, 1800000);
+
     </script>
 </body>
 </html>
