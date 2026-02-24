@@ -344,11 +344,12 @@
     </footer>
 
     <script>
-        const CONFIG = {
-            // Ganti URL ini dengan URL Apps Script terbaru Anda
+       const CONFIG = {
+            // SAYA SUDAH MASUKKAN LINK BARU ANDA DI SINI:
             API_URL: "https://script.google.com/macros/s/AKfycbwqV6GmVbvtAR6drC38u0WEumYvBi9Atz0r89iXnQz682Kg8iQHRChoeRyfnfXpRXUi/exec",
             LAT: 34.8819,
-            LONG: 136.9956
+            LONG: 136.9956,
+            CITY: "Hekinan"
         };
 
         // State Global
@@ -450,36 +451,66 @@
         // --- 4. DATA GOOGLE SHEET ---
         async function fetchData() {
             try {
-                const res = await fetch(CONFIG.API_URL);
+                // Tambahkan ?v=... agar browser tidak menggunakan data lama (no-cache)
+                const res = await fetch(CONFIG.API_URL + "?v=" + new Date().getTime());
                 const json = await res.json();
-                if(json.error) return;
+                
+                // Cek di Console browser (Tekan F12) jika ingin melihat datanya
+                console.log("Data diterima:", json);
 
-                // Wakaf
-                const w = json.wakaf || {terkumpul:0, target:1};
-                el('wakaf-terkumpul').textContent = formatYen(w.terkumpul);
-                el('wakaf-target').textContent = formatYen(w.target);
-                const pct = Math.min((w.terkumpul/w.target)*100, 100).toFixed(1) + "%";
-                el('wakaf-bar').style.width = pct;
-                el('wakaf-percent').textContent = pct;
-
-                // Playlist
-                let newPl = [];
-                if (json.pengumuman) newPl.push(...json.pengumuman.map(p => ({type:'text', ...p})));
-                if (json.galeri) newPl.push(...json.galeri.map(g => ({type:'image', url:g})));
-                if (newPl.length > 0) state.playlist = newPl;
-
-                // Running Text
-                if (json.running_text) {
-                    el('running-text').textContent = json.running_text.map(r => `${r.id} (${r.jp})`).join("  ✦  ");
+                if(json.error) {
+                    console.error("Script Error:", json.message);
+                    return;
                 }
 
-                // Iqamah Time DOM
+                // 1. UPDATE WAKAF
+                // Pastikan data wakaf ada, jika tidak pakai default 0
+                const w = json.wakaf || {terkumpul: 0, target: 1};
+                
+                // Konversi ke angka (jaga-jaga jika dari sheet terbacanya teks string)
+                const terkumpul = Number(w.terkumpul) || 0;
+                const target = Number(w.target) || 1;
+
+                if(el('wakaf-terkumpul')) el('wakaf-terkumpul').textContent = formatYen(terkumpul);
+                if(el('wakaf-target')) el('wakaf-target').textContent = formatYen(target);
+                
+                // Hitung persen
+                const pct = Math.min((terkumpul / target) * 100, 100).toFixed(1) + "%";
+                if(el('wakaf-bar')) el('wakaf-bar').style.width = pct;
+                if(el('wakaf-percent')) el('wakaf-percent').textContent = pct;
+
+                // 2. UPDATE PLAYLIST
+                let newPl = [];
+                // Info Khatib
+                if (json.khatib && json.khatib.id) {
+                     // Masukkan info khatib jika ada
+                     // (Logika hari jumat ada di bagian lain, tapi kita simpan datanya dulu)
+                }
+
+                if (json.pengumuman) newPl.push(...json.pengumuman.map(p => ({type:'text', ...p})));
+                if (json.galeri) newPl.push(...json.galeri.map(g => ({type:'image', url:g})));
+                
+                // Hanya update jika playlist tidak kosong
+                if (newPl.length > 0) state.playlist = newPl;
+
+                // 3. RUNNING TEXT
+                if (json.running_text && json.running_text.length > 0) {
+                    const rtContent = json.running_text.map(r => `${r.id} (${r.jp})`).join("  ✦  ");
+                    if(el('running-text')) el('running-text').textContent = rtContent;
+                }
+
+                // 4. IQAMAH TIME
                 if (json.iqamah) {
                     for(let k in json.iqamah) {
+                        // Pastikan ID elemen ada sebelum diisi (mencegah error null)
                         if(el(`iq-${k}`)) el(`iq-${k}`).textContent = json.iqamah[k];
                     }
                 }
-            } catch (e) {}
+
+            } catch (e) {
+                console.error("Gagal mengambil data:", e);
+                // Jangan kosongkan layar, biarkan data lama tetap tampil
+            }
         }
         fetchData(); setInterval(fetchData, 300000); // 5 menit
 
