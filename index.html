@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -18,15 +18,14 @@
         :root {
             --bg-deep: #051e18;    /* Hijau Tua Gelap (Mewah) */
             --gold: #d4af37;       /* Emas Metalik */
-            --glass: rgba(0, 20, 10, 0.7); /* Efek Kaca Gelap */
+            --glass: rgba(0, 20, 10, 0.75); /* Efek Kaca Gelap */
             --text: #ffffff;
-            --accent: #4ade80;     /* Hijau Terang untuk highlight */
+            --accent: #4ade80;     /* Hijau Terang */
             --alert: #ef4444;
         }
 
         body {
             background-color: var(--bg-deep);
-            /* Background Image Mewah (Masjid/Pattern) */
             background-image: 
                 linear-gradient(rgba(5, 30, 24, 0.85), rgba(5, 30, 24, 0.95)),
                 url("https://www.transparenttextures.com/patterns/arabesque.png");
@@ -38,18 +37,7 @@
             overflow: hidden;
         }
 
-        /* ORNAMEN POJOK */
-        .corner-ornament {
-            position: fixed; width: 150px; height: 150px;
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Arabesque-pattern.svg/1200px-Arabesque-pattern.svg.png'); 
-            background-size: contain; opacity: 0.1; z-index: 0; pointer-events: none;
-        }
-        .top-left { top: 0; left: 0; transform: rotate(0deg); }
-        .top-right { top: 0; right: 0; transform: rotate(90deg); }
-        .bottom-left { bottom: 0; left: 0; transform: rotate(-90deg); }
-        .bottom-right { bottom: 0; right: 0; transform: rotate(180deg); }
-
-        /* --- 2. HEADER ELEGAN --- */
+        /* --- 2. HEADER ELEGAN (JAM DUNIA KEMBALI) --- */
         header {
             flex-shrink: 0; display: flex; justify-content: space-between; align-items: flex-start;
             padding: 20px 30px; z-index: 10;
@@ -61,10 +49,10 @@
         .masjid-name p { font-size: 1rem; color: #aaa; letter-spacing: 1px; }
 
         .header-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
-        #time { font-size: 4rem; font-weight: 800; line-height: 1; color: var(--text); text-shadow: 0 0 20px rgba(74, 222, 128, 0.3); font-variant-numeric: tabular-nums; }
+        #time { font-size: 3.8rem; font-weight: 800; line-height: 1; color: var(--text); text-shadow: 0 0 20px rgba(74, 222, 128, 0.3); font-variant-numeric: tabular-nums; }
         #date { font-size: 1.1rem; color: var(--gold); font-weight: 600; margin-top: 5px; text-transform: uppercase; margin-bottom: 8px; }
         
-        /* Jam Dunia Kecil */
+        /* Jam Dunia (KEMBALI ADA) */
         .world-clocks { display: flex; gap: 15px; background: rgba(255,255,255,0.08); padding: 6px 15px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); }
         .w-clock-item { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: #ddd; font-weight: 600; }
         .w-clock-item i { color: var(--gold); }
@@ -96,7 +84,7 @@
         .panel-header h2 { font-size: 1.3rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
         .panel-header p { font-size: 0.85rem; color: #aaa; font-weight: 600; margin-top: 2px; }
 
-        /* JADWAL SHOLAT LIST */
+        /* JADWAL SHOLAT LIST (BILINGUAL & IQAMAH KEMBALI) */
         .prayer-list { display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; }
         .prayer-item {
             display: flex; justify-content: space-between; align-items: center;
@@ -108,9 +96,14 @@
             background: linear-gradient(90deg, rgba(212, 175, 55, 0.25), transparent);
             border-left: 3px solid var(--gold);
         }
-        .prayer-name { font-size: 1.1rem; font-weight: 700; line-height: 1.1; }
-        .prayer-jp { display: block; font-size: 0.75rem; color: #aaa; font-weight: 600; margin-top: 2px; }
-        .prayer-time { font-size: 1.4rem; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; }
+        /* Susunan Teks Jadwal */
+        .prayer-info { text-align: left; }
+        .prayer-name { font-size: 1.2rem; font-weight: 700; line-height: 1.1; }
+        .prayer-jp { display: block; font-size: 0.8rem; color: #aaa; font-weight: 600; font-family: 'Noto Sans JP', sans-serif; margin-top: 2px; }
+        
+        .times-wrap { text-align: right; }
+        .prayer-time { font-size: 1.4rem; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; line-height: 1; }
+        .prayer-iqamah { font-size: 0.9rem; color: var(--accent); font-weight: 600; margin-top: 4px; display: block; }
 
         /* CENTER SLIDER */
         .center-area { display: flex; flex-direction: column; gap: 20px; height: 100%; }
@@ -124,20 +117,20 @@
         .cd-label { font-size: 1.2rem; color: #ccc; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
         .cd-timer { font-size: 5.5rem; font-weight: 800; color: var(--gold); line-height: 1; text-shadow: 0 0 30px rgba(212, 175, 55, 0.4); font-variant-numeric: tabular-nums; }
 
-        /* Slide Konten (PERBAIKAN POSISI TENGAH) */
+        /* Slide Konten (PAS TENGAH) */
         .slide-container {
             flex-grow: 1; position: relative; overflow: hidden; border-radius: 20px;
-            display: flex; align-items: center; justify-content: center; /* KUNCI POSISI TENGAH */
+            display: flex; align-items: center; justify-content: center;
             background: rgba(0,0,0,0.3); min-height: 0;
         }
         .slide-content { 
             width: 100%; padding: 20px; text-align: center; 
-            /* Pastikan konten di dalam juga center */
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             height: 100%; 
             animation: fadeUp 0.8s ease; 
         }
         
+        /* Font Khusus Slide */
         .arabic-text { 
             font-family: 'Noto Naskh Arabic', serif; font-size: 2.8rem; color: var(--gold); 
             line-height: 1.6; margin-bottom: 25px; text-shadow: 0 4px 15px rgba(0,0,0,0.5);
@@ -150,18 +143,17 @@
             color: var(--accent); border-radius: 50px; font-size: 1rem; font-weight: 700; 
         }
         
-        /* Style untuk Pengumuman Biasa */
+        /* Style untuk Pengumuman Teks Biasa */
         .announce-title { font-size: 2.5rem; font-weight: 800; color: var(--gold); margin-bottom: 20px; text-transform: uppercase; }
         .announce-body { font-size: 1.8rem; color: #fff; line-height: 1.4; }
 
-        /* WAKAF */
+        /* WAKAF (SIMETRIS FIXED) */
         .wakaf-stats { display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; gap: 10px; }
         .stat-group h3 { font-size: 2rem; color: var(--gold); font-weight: 800; margin-top: 5px; line-height: 1; }
         .stat-group p { color: #aaa; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
         .progress-track { height: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin: 10px 0 5px; }
         .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), #fff); width: 0%; transition: width 1.5s ease; }
         
-        /* QR Area Simetris */
         .qr-area { 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             background: white; padding: 15px; border-radius: 15px; margin-top: auto; 
@@ -169,10 +161,9 @@
         }
         #qrcode-wakaf { display: flex; justify-content: center; } 
 
-        /* FOOTER (Background Gelap Pekat Agar Teks Jelas) */
+        /* FOOTER (GELAP PEKAT) */
         footer {
-            background: #020617; 
-            border-top: 1px solid var(--gold);
+            background: #020617; border-top: 1px solid var(--gold);
             padding: 12px 0; z-index: 20; color: var(--gold); font-weight: 600; font-size: 1.2rem; flex-shrink: 0;
         }
         .marquee { white-space: nowrap; overflow: hidden; }
@@ -191,7 +182,7 @@
         .adzan-sub { font-size: 2.5rem; color: #fff; margin-top: 20px; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        /* Style Khatib Khusus */
+        /* Style Khatib */
         .khatib-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
         .khatib-label { color: var(--accent); font-size: 1.2rem; font-weight: 700; border-bottom: 2px solid var(--accent); margin-bottom: 10px; }
         .khatib-name { font-size: 3rem; font-weight: 800; color: var(--text); margin-bottom: 5px; }
@@ -207,11 +198,6 @@
         <div class="adzan-sub" id="adzan-name">MAGHRIB</div>
         <div style="margin-top:40px; color:#aaa;">Mohon Luruskan Shaf & Matikan HP</div>
     </div>
-
-    <div class="corner-ornament top-left"></div>
-    <div class="corner-ornament top-right"></div>
-    <div class="corner-ornament bottom-left"></div>
-    <div class="corner-ornament bottom-right"></div>
 
     <header>
         <div class="header-left">
@@ -290,18 +276,15 @@
             SLIDE_TIME: 15000
         };
 
-        // --- DATABASE HADITS & SAPAAN (DATA BAWAAN AGAR TIDAK KOSONG) ---
+        // DATABASE HADITS (DIKEMBALIKAN UNTUK MENGGANTI FOTO)
         const ISLAMIC_CONTENT = [
-            { arab: "السلام عليكم ورحمة الله وبركاته", indo: "Selamat Datang di Masjid As-Sunnah Hekinan", source: "Ahlan Wa Sahlan" },
             { arab: "مَنْ بَنَى مَسْجِدًا لِلَّهِ بَنَى اللَّهُ لَهُ فِي الْجَنَّةِ مِثْلَهُ", indo: "Barangsiapa membangun masjid karena Allah, maka Allah akan membangunkan baginya rumah di surga.", source: "HR. Bukhari & Muslim" },
             { arab: "إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ", indo: "Sesungguhnya setiap amalan tergantung pada niatnya.", source: "HR. Bukhari & Muslim" },
             { arab: "تَبَسُّمُكَ فِي وَجْهِ أَخِيكَ لَكَ صَدَقَةٌ", indo: "Senyummu di hadapan saudaramu adalah sedekah bagimu.", source: "HR. Tirmidzi" },
             { arab: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", indo: "Sebaik-baik kalian adalah yang mempelajari Al-Qur'an dan mengajarkannya.", source: "HR. Bukhari" }
         ];
 
-        // INISIALISASI PLAYLIST DENGAN KONTEN ISLAMI (SUPAYA TIDAK KOSONG SAAT LOADING)
-        let state = { prayerToday: [], playlist: [...ISLAMIC_CONTENT], slideIndex: 0, khatibData: null };
-        
+        let state = { prayerToday: [], playlist: [], slideIndex: 0, khatibData: null };
         const el = (id) => document.getElementById(id);
         const formatYen = (n) => new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(n);
         function createDate(timeStr, addDay = 0) {
@@ -322,7 +305,7 @@
         }
         setInterval(updateClock, 1000);
 
-        // 2. JADWAL SHOLAT (BILINGUAL KEMBALI)
+        // 2. JADWAL SHOLAT (BILINGUAL KEMBALI & IQAMAH)
         async function fetchPrayer() {
             try {
                 const nowUnix = Math.floor(Date.now() / 1000);
@@ -351,9 +334,16 @@
                         names = { id: 'Jumat', jp: 'ジュマ' };
                     }
 
+                    // TAMPILKAN JADWAL LENGKAP DENGAN JEPANG & IQAMAH
                     html += `<div class="prayer-item" id="row-${names.id}">
-                                <div class="prayer-name">${names.id}<span class="prayer-jp">${names.jp}</span></div>
-                                <div class="prayer-time">${time}</div>
+                                <div class="prayer-info">
+                                    <div class="prayer-name">${names.id}</div>
+                                    <span class="prayer-jp">${names.jp}</span>
+                                </div>
+                                <div class="times-wrap">
+                                    <div class="prayer-time">${time}</div>
+                                    ${key !== 'Sunrise' ? `<div class="prayer-iqamah" id="iq-${names.id}">--:--</div>` : ''}
+                                </div>
                              </div>`;
                     
                     if(key !== 'Sunrise') {
@@ -367,13 +357,12 @@
         }
         fetchPrayer(); setInterval(fetchPrayer, 3600000);
 
-        // 3. AMBIL DATA GOOGLE SHEET (METODE HYBRID)
+        // 3. AMBIL DATA GOOGLE SHEET (DENGAN HADITS & IQAMAH)
         async function fetchSheet() {
             try {
                 const res = await fetch(CONFIG.API_URL + "?v=" + new Date().getTime());
                 const json = await res.json();
                 
-                // Wakaf
                 const w = json.wakaf || {terkumpul:0, target:1};
                 el('wakaf-terkumpul').innerText = formatYen(w.terkumpul);
                 el('wakaf-target').innerText = formatYen(w.target);
@@ -386,25 +375,31 @@
 
                 if (json.khatib && json.khatib.id) state.khatibData = { ...json.khatib };
 
-                // GABUNGKAN DATA: PENGUMUMAN (SHEET) + HADITS (BAWAAN)
                 let newPlaylist = [];
-                
-                // Prioritas 1: Pengumuman dari Sheet
+                // Pengumuman Text dari Sheet
                 if(json.pengumuman) {
                     json.pengumuman.forEach(p => newPlaylist.push({ type:'text', title:p.id, sub:p.jp }));
                 }
                 
-                // Prioritas 2: Hadits & Ayat (Selalu Ada)
+                // SISIPKAN HADITS AGAR LEBIH BANYAK KONTEN TEKS (GANTI GAMBAR)
                 ISLAMIC_CONTENT.forEach(q => newPlaylist.push({ type:'quote', ...q }));
 
-                // Update Playlist hanya jika ada konten baru (mencegah kedip)
-                if(newPlaylist.length > 0) {
-                    state.playlist = newPlaylist;
-                }
-
+                state.playlist = newPlaylist;
                 if(json.running_text) el('running-text').innerText = json.running_text.map(r => `${r.id} (${r.jp})`).join("  ✦  ");
 
-            } catch (e) { console.log("Sheet Error - Menggunakan Data Offline"); }
+                // UPDATE JAM IQAMAH
+                if (json.iqamah) {
+                    const now = new Date(); const day = now.getDay(); const isWeekend = (day === 0 || day === 6);
+                    if(el('iq-Subuh')) el('iq-Subuh').innerText = json.iqamah.Subuh || "--:--";
+                    if(el('iq-Ashar')) el('iq-Ashar').innerText = json.iqamah.Ashar || "--:--";
+                    if(el('iq-Maghrib')) el('iq-Maghrib').innerText = json.iqamah.Maghrib || "--:--";
+                    let isya = isWeekend ? json.iqamah.Isya_Weekend : json.iqamah.Isya_Biasa;
+                    if(el('iq-Isya')) el('iq-Isya').innerText = isya || json.iqamah.Isya_Biasa;
+                    if (day === 5 && json.iqamah.Jumat) { if(el('iq-Jumat')) el('iq-Jumat').innerText = json.iqamah.Jumat; } 
+                    else { if(el('iq-Dzuhur')) el('iq-Dzuhur').innerText = json.iqamah.Dzuhur || "--:--"; }
+                }
+
+            } catch (e) { console.log("Sheet Error"); }
         }
         fetchSheet(); setInterval(fetchSheet, 60000);
 
@@ -431,15 +426,11 @@
             area.innerHTML = ''; 
 
             if(item.type === 'text') {
-                // PENGUMUMAN BIASA
-                area.innerHTML = `<div class="slide-content"><div class="announce-title">${item.title}</div><div class="announce-body">${item.sub}</div></div>`;
+                area.innerHTML = `<div class="slide-content"><h1 style="font-size:2.5rem; color:var(--gold); margin-bottom:20px;">${item.title}</h1><p style="font-size:1.5rem;">${item.sub}</p></div>`;
             } else if(item.type === 'quote') {
-                // HADITS / AYAT
                 area.innerHTML = `<div class="slide-content"><div class="arabic-text">${item.arab}</div><div class="indo-text">"${item.indo}"</div><div class="source-text">${item.source}</div></div>`;
             }
         }
-        // Init Slide Pertama
-        rotateSlide();
         setInterval(rotateSlide, 15000);
 
         // 5. COUNTDOWN & LOGIC
