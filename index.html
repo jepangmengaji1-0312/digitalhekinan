@@ -24,38 +24,33 @@
             --alert: #ef4444;      
             --glass: rgba(15, 23, 42, 0.85); 
             --border: rgba(255, 255, 255, 0.1);
-            --burn-offset: 0px; /* Untuk animasi pixel shift */
         }
 
         /* --- 2. ATMOSPHERE MODE (LATAR BELAKANG DINAMIS) --- */
-        /* Default (Siang): Hijau Emerald Tenang */
         body { 
             background: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.2) 0px, transparent 50%),
                         radial-gradient(at 100% 100%, rgba(251, 191, 36, 0.1) 0px, transparent 50%),
                         #0f172a;
             transition: background 3s ease, color 1s ease;
         }
-        /* Subuh (Fajar): Ungu Kebiruan (Syahdu) */
         body.atmos-subuh {
             background: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.25) 0px, transparent 60%),
                         radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 60%),
                         #1e1b4b; /* Indigo gelap */
-            --primary: #818cf8; /* Ubah warna utama jadi Indigo muda */
+            --primary: #818cf8; 
         }
-        /* Sore (Maghrib/Senja): Oranye Keemasan (Hangat) */
         body.atmos-sore {
             background: radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.2) 0px, transparent 60%),
                         radial-gradient(at 100% 100%, rgba(180, 83, 9, 0.2) 0px, transparent 60%),
                         #451a03; /* Coklat gelap */
-            --primary: #fbbf24; /* Ubah warna utama jadi Emas */
+            --primary: #fbbf24; 
         }
-        /* Malam (Isya): Biru Sangat Gelap (Khusyuk) */
         body.atmos-malam {
             background: #020617; /* Hampir hitam */
             --glass: rgba(2, 6, 23, 0.95);
         }
 
-        /* --- 3. ANIMASI ANTI-BURN IN (PIXEL SHIFT) --- */
+        /* --- 3. ANIMASI ANTI-BURN IN & LAYOUT --- */
         @keyframes antiBurnIn {
             0% { transform: translate(0, 0); }
             25% { transform: translate(2px, 1px); }
@@ -64,17 +59,11 @@
             100% { transform: translate(0, 0); }
         }
 
-        html, body {
-            height: 100%; width: 100%; overflow: hidden;
-        }
-
+        html, body { height: 100%; width: 100%; overflow: hidden; }
         body {
-            color: var(--text-main);
-            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            color: var(--text-main); font-family: 'Inter', 'Noto Sans JP', sans-serif;
             display: flex; flex-direction: column;
-            
-            /* AKTIFKAN PROTEKSI LAYAR */
-            animation: antiBurnIn 600s infinite linear; /* Bergeser halus setiap 10 menit */
+            animation: antiBurnIn 600s infinite linear; /* Proteksi Layar */
         }
 
         /* --- 4. HEADER --- */
@@ -105,7 +94,7 @@
         }
 
         .card {
-            background: rgba(30, 41, 59, 0.6); /* Lebih transparan agar background dinamis terlihat */
+            background: rgba(30, 41, 59, 0.6);
             border: 1px solid var(--border); border-radius: 16px; padding: 16px;
             display: flex; flex-direction: column; box-shadow: 0 8px 32px rgba(0,0,0,0.2);
             backdrop-filter: blur(15px); height: 100%; 
@@ -176,7 +165,7 @@
         .marquee-content { display: inline-block; padding-left: 100%; animation: marquee 35s linear infinite; }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* OVERLAYS */
+        /* OVERLAYS & ALERTS */
         #adzan-overlay {
             position: fixed; inset: 0; background: rgba(15, 23, 42, 0.98); z-index: 999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -187,28 +176,32 @@
         .overlay-prayer { font-size: 8rem; font-weight: 800; color: var(--accent); margin: 10px 0; text-transform: uppercase; }
         .overlay-msg { font-size: 2rem; color: white; margin-top: 20px; }
 
+        /* Indikator Offline */
+        #offline-indicator {
+            display: none; position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+            background: #ef4444; color: white; padding: 5px 15px; border-radius: 20px;
+            font-weight: bold; font-size: 0.9rem; z-index: 2000; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            animation: pulseAlert 2s infinite;
+        }
+
         body.jumat-mode main, body.jumat-mode header, body.jumat-mode footer { opacity: 0; pointer-events: none; transition: opacity 1s; }
-        body.jumat-mode { background: #000; background-image: none; animation: none; } /* Matikan burn-in anim saat jumat */
+        body.jumat-mode { background: #000; background-image: none; animation: none; }
         #khutbah-msg { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #333; z-index: 1001; }
         body.jumat-mode #khutbah-msg { display: block; }
 
-        /* --- STYLE KHATIB (PROFESSIONAL) --- */
+        /* STYLE KHATIB */
         .khatib-slide { display: flex; flex-direction: row; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 40px; padding: 20px; animation: fadeIn 0.8s ease; }
         .khatib-info { text-align: left; max-width: 60%; }
         .khatib-label { font-size: 1rem; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; border-bottom: 2px solid var(--primary); padding-bottom: 5px; display: inline-block;}
         .khatib-name { font-size: 2.8rem; font-weight: 800; color: var(--text-main); line-height: 1.1; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
         .khatib-jp { font-size: 1.5rem; color: var(--primary); margin-top: 5px; font-weight: 700; margin-bottom: 15px; }
-        
-        /* Indikator Bahasa */
         .lang-badge { font-size: 0.9rem; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); margin-right: 5px; vertical-align: middle; border: 1px solid var(--border); }
         
-        /* Sunnah Checklist */
         .sunnah-list { display: flex; gap: 15px; margin-top: 20px; }
         .sunnah-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: var(--text-sub); }
         .sunnah-icon { font-size: 1.8rem; color: var(--accent); background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 50%; border: 1px solid rgba(251, 191, 36, 0.3); }
         .sunnah-text { font-size: 0.75rem; font-weight: 600; }
 
-        /* QR Code Materi */
         .khatib-qr { text-align: center; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: slideInRight 1s ease; }
         .khatib-qr-label { color: black; font-weight: bold; font-size: 0.9rem; margin-top: 8px; }
         #qrcode-khatib { width: 140px; height: 140px; display: flex; justify-content: center; align-items: center; }
@@ -219,6 +212,8 @@
 <body>
 
     <audio id="audio-chime" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+    
+    <div id="offline-indicator">🔴 OFFLINE - CEK INTERNET</div>
 
     <div id="adzan-overlay">
         <h1 class="overlay-title">MASUK WAKTU SHOLAT</h1>
@@ -347,7 +342,6 @@
             CITY: "Hekinan"
         };
 
-        // State Global
         let state = {
             prayerToday: [],
             prayerTomorrow: [],
@@ -366,28 +360,37 @@
             return d;
         }
 
-        // --- 1. CLOCK & ATMOSPHERE CONTROL ---
+        // --- FITUR BARU: INDIKATOR OFFLINE ---
+        window.addEventListener('offline', () => { el('offline-indicator').style.display = 'block'; });
+        window.addEventListener('online', () => { el('offline-indicator').style.display = 'none'; });
+
+        // --- 1. CLOCK, ATMOSPHERE & AUTO RELOAD ---
         function updateClock() {
             const now = new Date();
             el('time').textContent = now.toLocaleTimeString('id-ID', { hour12: false }).replace(/\./g, ':');
             el('date').textContent = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace('Minggu', 'Ahad');
 
-            const isFriday = now.getDay() === 5;
-            if (isFriday) el('label-dzuhur').innerHTML = 'Jumat <span>ジュマ</span>';
-            else el('label-dzuhur').innerHTML = 'Dzuhur <span>ズフール</span>';
+            // AUTO RELOAD: SETIAP JAM 02:00 PAGI
+            // (Mencegah memory leak / hang setelah berhari-hari)
+            if (now.getHours() === 2 && now.getMinutes() === 0 && now.getSeconds() < 2) {
+                window.location.reload();
+            }
 
+            // Atmosphere Mode
             const hour = now.getHours(); 
             const min = now.getMinutes();
-
-            // LOGIKA ATMOSPHERE (Background Dinamis)
-            document.body.className = ''; // Reset class
+            document.body.className = ''; 
             if (hour >= 4 && hour < 6) document.body.classList.add('atmos-subuh');
             else if (hour >= 15 && hour < 18) document.body.classList.add('atmos-sore');
             else if (hour >= 18 || hour < 4) document.body.classList.add('atmos-malam');
-            // Default (Siang 06-15) tidak perlu class (pake default body style)
 
-            // Mode Jumat (Layar Mati saat Khotbah: 12:15 - 13:00)
+            // Jumat Mode
+            const isFriday = now.getDay() === 5;
             const isKhotbahTime = (hour === 12 && min >= 15) || (hour === 13 && min < 0);
+            
+            if (isFriday) el('label-dzuhur').innerHTML = 'Jumat <span>ジュマ</span>';
+            else el('label-dzuhur').innerHTML = 'Dzuhur <span>ズフール</span>';
+            
             if (isFriday && isKhotbahTime) document.body.classList.add('jumat-mode');
         }
         setInterval(updateClock, 1000);
@@ -398,7 +401,6 @@
                 const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${CONFIG.LAT}&longitude=${CONFIG.LONG}&current_weather=true`);
                 const data = await res.json();
                 el('weather-temp').textContent = `${Math.round(data.current_weather.temperature)}°C`;
-                
                 const code = data.current_weather.weathercode;
                 const iconEl = el('weather-icon');
                 let icon = "ph-cloud"; 
@@ -410,7 +412,7 @@
         }
         fetchWeather(); setInterval(fetchWeather, 1800000);
 
-        // --- 3. JADWAL SHOLAT (API) ---
+        // --- 3. JADWAL SHOLAT ---
         async function fetchPrayer() {
             try {
                 const nowUnix = Math.floor(Date.now() / 1000);
@@ -419,17 +421,14 @@
                 const t = data.data.timings;
                 
                 el('hijri-date').textContent = `${data.data.date.hijri.day} ${data.data.date.hijri.month.en} ${data.data.date.hijri.year}H`;
-
                 const map = { Fajr: 'Subuh', Sunrise: 'Syuruq', Dhuhr: 'Dzuhur', Asr: 'Ashar', Maghrib: 'Maghrib', Isha: 'Isya' };
                 let todayArr = []; let tomorrowArr = [];
 
                 for (let key in map) {
                     let name = map[key];
                     if(el(`time-${name}`)) el(`time-${name}`).textContent = t[key];
-                    
                     let iqamahStr = el(`iq-${name}`) ? el(`iq-${name}`).textContent : null;
                     let iqamahDate = (iqamahStr && iqamahStr !== '--:--') ? createDate(iqamahStr) : null;
-
                     todayArr.push({ name: name, adzan: createDate(t[key]), iqamah: iqamahDate });
                     tomorrowArr.push({ name: name, adzan: createDate(t[key], 1), iqamah: (iqamahDate ? createDate(iqamahStr, 1) : null) });
                 }
@@ -438,7 +437,7 @@
         }
         fetchPrayer(); setInterval(fetchPrayer, 3600000);
 
-        // --- 4. DATA GOOGLE SHEET (Backend) ---
+        // --- 4. DATA GOOGLE SHEET ---
         async function fetchData() {
             try {
                 const res = await fetch(CONFIG.API_URL + "?v=" + new Date().getTime());
@@ -454,80 +453,58 @@
                 el('wakaf-bar').style.width = Math.min((terkumpul/target)*100, 100).toFixed(1) + "%";
                 el('wakaf-percent').textContent = Math.min((terkumpul/target)*100, 100).toFixed(1) + "%";
 
-                // Khatib Data (Simpan dulu)
+                // Khatib
                 if (json.khatib && json.khatib.id) {
                     state.khatibData = { id: json.khatib.id, jp: json.khatib.jp, link: json.khatib.link || "" };
                 }
 
-                // Playlist Base
+                // Playlist
                 let rawPlaylist = [];
                 if (json.pengumuman) rawPlaylist.push(...json.pengumuman.map(p => ({type:'text', ...p})));
                 if (json.galeri) rawPlaylist.push(...json.galeri.map(g => ({type:'image', url:g})));
                 state.basePlaylist = rawPlaylist;
-                updatePlaylistContent(); // Gabungkan
+                updatePlaylistContent(); 
 
                 // Running Text
                 if (json.running_text) {
                     el('running-text').textContent = json.running_text.map(r => `${r.id} (${r.jp})`).join("  ✦  ");
                 }
 
-                // Iqamah (Logic Isya Weekend)
+                // Iqamah
                 if (json.iqamah) {
-                    const now = new Date();
-                    const day = now.getDay(); 
-                    const isWeekend = (day === 0 || day === 6);
-
+                    const now = new Date(); const day = now.getDay(); const isWeekend = (day === 0 || day === 6);
                     if(el('iq-Subuh')) el('iq-Subuh').textContent = json.iqamah.Subuh || "--:--";
                     if(el('iq-Ashar')) el('iq-Ashar').textContent = json.iqamah.Ashar || "--:--";
                     if(el('iq-Maghrib')) el('iq-Maghrib').textContent = json.iqamah.Maghrib || "--:--";
-
                     let isyaTime = isWeekend ? json.iqamah.Isya_Weekend : json.iqamah.Isya_Biasa;
                     if (!isyaTime) isyaTime = json.iqamah.Isya_Biasa;
                     if(el('iq-Isya')) el('iq-Isya').textContent = isyaTime;
-
-                    if (day === 5 && json.iqamah.Jumat) {
-                        if(el('iq-Dzuhur')) el('iq-Dzuhur').textContent = json.iqamah.Jumat;
-                    } else {
-                        if(el('iq-Dzuhur')) el('iq-Dzuhur').textContent = json.iqamah.Dzuhur || "--:--";
-                    }
+                    if (day === 5 && json.iqamah.Jumat) { if(el('iq-Dzuhur')) el('iq-Dzuhur').textContent = json.iqamah.Jumat; } 
+                    else { if(el('iq-Dzuhur')) el('iq-Dzuhur').textContent = json.iqamah.Dzuhur || "--:--"; }
                 }
-
             } catch (e) { console.error("Sheet Error", e); }
         }
         fetchData(); setInterval(fetchData, 300000);
 
-        // --- 5. LOGIKA PLAYLIST KHATIB ---
         function updatePlaylistContent() {
             let finalPlaylist = [...(state.basePlaylist || [])];
-            const now = new Date();
-            const day = now.getDay(); 
-            const hour = now.getHours();
-
-            // Tampilkan Khatib HANYA Jumat, 04:00 - 13:00
-            if (day === 5 && hour >= 4 && hour < 13) {
-                if (state.khatibData) {
-                    finalPlaylist.unshift({ type: 'khatib', ...state.khatibData });
-                }
+            const now = new Date(); const day = now.getDay(); const hour = now.getHours();
+            if (day === 5 && hour >= 4 && hour < 13 && state.khatibData) {
+                finalPlaylist.unshift({ type: 'khatib', ...state.khatibData });
             }
             state.playlist = finalPlaylist;
         }
         setInterval(updatePlaylistContent, 60000);
 
-        // --- 6. LOGIKA SLIDESHOW ---
         function rotateSlide() {
             if (!state.playlist || state.playlist.length === 0) return;
             if (state.slideIndex >= state.playlist.length) state.slideIndex = 0;
-            
             const item = state.playlist[state.slideIndex];
             const slideArea = document.querySelector('.slide-area');
             slideArea.innerHTML = ''; 
 
             if (item.type === 'khatib') {
-                // RENDER KHATIB SLIDE
-                let qrHtml = '';
-                if (item.link) {
-                    qrHtml = `<div class="khatib-qr"><div id="qrcode-khatib"></div><div class="khatib-qr-label">SCAN MATERI</div></div>`;
-                }
+                let qrHtml = item.link ? `<div class="khatib-qr"><div id="qrcode-khatib"></div><div class="khatib-qr-label">SCAN MATERI</div></div>` : '';
                 slideArea.innerHTML = `
                     <div class="khatib-slide">
                         <div class="khatib-info">
@@ -543,34 +520,25 @@
                         </div>
                         ${qrHtml}
                     </div>`;
-                if (item.link) {
-                    new QRCode(document.getElementById("qrcode-khatib"), { text: item.link, width: 140, height: 140 });
-                }
+                if (item.link) new QRCode(document.getElementById("qrcode-khatib"), { text: item.link, width: 140, height: 140 });
             } else if (item.type === 'text') {
-                // RENDER TEXT SLIDE
                 slideArea.innerHTML = `<div class="slide-content"><div class="slide-text-id">${item.id}</div><div class="slide-text-jp">${item.jp}</div></div>`;
             } else if (item.type === 'image') {
-                // RENDER IMAGE SLIDE
                 slideArea.innerHTML = `<img src="${item.url}" class="slide-image" style="display:block; width:100%; height:100%; object-fit:contain;">`;
             }
             state.slideIndex = (state.slideIndex + 1) % state.playlist.length;
         }
         setInterval(rotateSlide, 15000);
 
-        // --- 7. COUNTDOWN & OVERLAY ---
+        // --- 6. LOGIC & OVERLAY ---
         function updateLogic() {
             const now = new Date();
             let target = null; let type = ""; let pName = ""; let activeId = "";
             const all = [...state.prayerToday, ...state.prayerTomorrow];
-            
             for (let p of all) {
                 if (p.name === 'Syuruq') continue;
-                if (p.iqamah && now >= p.adzan && now < p.iqamah) {
-                    target = p.iqamah; type = "iqamah"; pName = p.name; activeId = `row-${p.name}`; break;
-                }
-                if (now < p.adzan) {
-                    target = p.adzan; type = "adzan"; pName = p.name; activeId = `row-${p.name}`; break;
-                }
+                if (p.iqamah && now >= p.adzan && now < p.iqamah) { target = p.iqamah; type = "iqamah"; pName = p.name; activeId = `row-${p.name}`; break; }
+                if (now < p.adzan) { target = p.adzan; type = "adzan"; pName = p.name; activeId = `row-${p.name}`; break; }
             }
             document.querySelectorAll('.prayer-item').forEach(e => e.classList.remove('active'));
             if(activeId && el(activeId)) el(activeId).classList.add('active');
@@ -584,39 +552,28 @@
                 
                 if (type === "iqamah") {
                     el('cd-label').textContent = `IQAMAH ${pName}`;
-                    if (diff < 120000) { 
-                        el('cd-box').classList.add('alert');
-                        el('cd-label').textContent = "LURUSKAN SHAF";
-                        if (diff < 15000 && diff > 14000) playAudio();
-                    } else el('cd-box').classList.remove('alert');
+                    if (diff < 120000) { el('cd-box').classList.add('alert'); el('cd-label').textContent = "LURUSKAN SHAF"; if (diff < 15000 && diff > 14000) playAudio(); } 
+                    else el('cd-box').classList.remove('alert');
                 } else {
-                    el('cd-label').textContent = `MENUJU ${pName}`;
-                    el('cd-box').classList.remove('alert');
+                    el('cd-label').textContent = `MENUJU ${pName}`; el('cd-box').classList.remove('alert');
                 }
             }
         }
         setInterval(updateLogic, 1000);
 
         function checkOverlay() {
-            const now = new Date();
-            let isAdzan = false; let name = "";
+            const now = new Date(); let isAdzan = false; let name = "";
             state.prayerToday.forEach(p => {
                 if (p.name === 'Syuruq') return;
-                let diff = now - p.adzan;
-                if (diff >= 0 && diff < 180000) { isAdzan = true; name = p.name; }
+                let diff = now - p.adzan; if (diff >= 0 && diff < 180000) { isAdzan = true; name = p.name; }
             });
             const ov = el('adzan-overlay');
-            if (isAdzan) {
-                if(!ov.classList.contains('active')) {
-                    el('overlay-prayer-name').textContent = name; ov.classList.add('active'); playAudio();
-                }
-            } else ov.classList.remove('active');
+            if (isAdzan) { if(!ov.classList.contains('active')) { el('overlay-prayer-name').textContent = name; ov.classList.add('active'); playAudio(); } } 
+            else ov.classList.remove('active');
         }
         setInterval(checkOverlay, 1000);
 
-        function playAudio() {
-            const a = el('audio-chime'); a.currentTime = 0; a.play().catch(() => {});
-        }
+        function playAudio() { const a = el('audio-chime'); a.currentTime = 0; a.play().catch(() => {}); }
     </script>
 </body>
 </html>
