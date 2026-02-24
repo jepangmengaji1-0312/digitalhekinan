@@ -37,10 +37,10 @@
             overflow: hidden;
         }
 
-        /* ORNAMEN POJOK (HIASAN) */
+        /* ORNAMEN POJOK (HIASAN AGAR TIDAK KAKU) */
         .corner-ornament {
             position: fixed; width: 150px; height: 150px;
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Arabesque-pattern.svg/1200px-Arabesque-pattern.svg.png'); /* Pattern SVG */
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Arabesque-pattern.svg/1200px-Arabesque-pattern.svg.png'); 
             background-size: contain; opacity: 0.1; z-index: 0; pointer-events: none;
         }
         .top-left { top: 0; left: 0; transform: rotate(0deg); }
@@ -259,10 +259,28 @@
             SLIDE_TIME: 15000
         };
 
-        // DATABASE HADITS CADANGAN (Jika Internet Mati)
-        const OFFLINE_QUOTES = [
-            { arab: "إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ", indo: "Sesungguhnya setiap amalan tergantung pada niatnya.", source: "HR. Bukhari" },
-            { arab: "مَنْ بَنَى مَسْجِدًا لِلَّهِ بَنَى اللَّهُ لَهُ بَيْتًا فِي الْجَنَّةِ", indo: "Siapa membangun masjid karena Allah, Allah bangunkan rumah di surga.", source: "HR. Muslim" }
+        // --- DATABASE HADITS (DILETAKKAN DI SINI UNTUK DIGANTI/DITAMBAH) ---
+        const ISLAMIC_CONTENT = [
+            { 
+                arab: "مَنْ بَنَى مَسْجِدًا لِلَّهِ بَنَى اللَّهُ لَهُ فِي الْجَنَّةِ مِثْلَهُ", 
+                indo: "Barangsiapa membangun masjid karena Allah, maka Allah akan membangunkan baginya rumah di surga.", 
+                source: "HR. Bukhari & Muslim" 
+            },
+            { 
+                arab: "إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ", 
+                indo: "Sesungguhnya setiap amalan tergantung pada niatnya.", 
+                source: "HR. Bukhari & Muslim" 
+            },
+            { 
+                arab: "تَبَسُّمُكَ فِي وَجْهِ أَخِيكَ لَكَ صَدَقَةٌ", 
+                indo: "Senyummu di hadapan saudaramu adalah sedekah bagimu.", 
+                source: "HR. Tirmidzi" 
+            },
+            { 
+                arab: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", 
+                indo: "Sebaik-baik kalian adalah yang mempelajari Al-Qur'an dan mengajarkannya.", 
+                source: "HR. Bukhari" 
+            }
         ];
 
         let state = { prayerToday: [], playlist: [], slideIndex: 0 };
@@ -323,7 +341,7 @@
         // 3. AMBIL DATA GOOGLE SHEET (CORE)
         async function fetchSheet() {
             try {
-                const res = await fetch(CONFIG.API_URL);
+                const res = await fetch(CONFIG.API_URL + "?v=" + new Date().getTime());
                 const json = await res.json();
                 
                 // Wakaf
@@ -346,13 +364,13 @@
                     json.pengumuman.forEach(p => newPlaylist.push({ type:'text', title:p.id, sub:p.jp }));
                 }
                 
-                // B. Gambar dari Sheet
+                // B. Gambar dari Sheet (Tab Galeri)
                 if(json.galeri) {
                     json.galeri.forEach(g => newPlaylist.push({ type:'image', url:g }));
                 }
 
-                // C. Sisipkan Hadits Random (Biar tidak kaku)
-                OFFLINE_QUOTES.forEach(q => newPlaylist.push({ type:'quote', ...q }));
+                // C. Sisipkan Hadits Random (Dari Database Kode)
+                ISLAMIC_CONTENT.forEach(q => newPlaylist.push({ type:'quote', ...q }));
 
                 state.playlist = newPlaylist;
                 if(json.running_text) el('running-text').innerText = json.running_text.map(r => `${r.id} (${r.jp})`).join("  ✦  ");
