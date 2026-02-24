@@ -16,29 +16,42 @@
         /* --- 1. SETTING WARNA (PALET WARNA) --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        :root {
-            /* --- TEMA: ROYAL BLUE --- */
-            --bg-grad-1: #f8fafc; 
-            --bg-grad-2: #e0f2fe; /* Sedikit kebiruan sangat muda */
+       :root {
+            /* --- TEMA: HIJAU & EMAS MEWAH --- */
             
-            --glass: rgba(255, 255, 255, 0.9);
-            --glass-border: rgba(30, 58, 138, 0.1);
-            --card-shadow: 0 4px 20px rgba(30, 58, 138, 0.08);
+            /* Background Siang: Putih Bersih tapi Lembut */
+            --bg-grad-1: #ffffff; 
+            --bg-grad-2: #f0fdf4; /* Hijau sangat muda (Mint) */
+            
+            --glass: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(21, 128, 61, 0.1);
+            --card-shadow: 0 4px 15px rgba(0,0,0,0.05);
 
             /* Text Colors */
-            --text-main: #0f172a; /* Hitam Kebiruan */
+            --text-main: #14532d; /* Hijau Tua Gelap (Pengganti Hitam) - Lebih enak dilihat */
             --text-sub: #64748b;  
             
-            /* WARNA UTAMA (Ganti Hijau jadi Biru Royal) */
-            --primary: #1e40af;   
+            /* WARNA UTAMA (Header/Blok Hijau) */
+            --primary: #15803d;   /* Hijau Daun Segar */
             
-            /* WARNA AKSEN (Countdown/Iqamah - Emas Tembaga) */
-            --accent: #b45309;    
+            /* WARNA AKSEN (Countdown/Jam) - INI YANG KITA PERBAIKI */
+            --accent: #ca8a04;    /* EMAS MURNI (Bukan Oranye/Coklat) */
             --alert: #dc2626;
             
             /* Footer */
-            --footer-bg: #1e3a8a;
-            --footer-text: #ffffff;
+            --footer-bg: #14532d;
+            --footer-text: #f0fdf4;
+        }
+
+        /* TEMA MALAM (Otomatis) */
+        body.mode-malam {
+            --bg-grad-1: #022c22; /* Hijau Malam Gelap */
+            --bg-grad-2: #064e3b; 
+            --glass: rgba(6, 78, 59, 0.8);
+            --text-main: #ecfccb; /* Hijau Pupus Terang */
+            --text-sub: #9ca3af;
+            --primary: #22c55e;   /* Hijau Neon (Supaya nyala di gelap) */
+            --accent: #facc15;    /* KUNING EMAS MENYALA */
         }
 
         /* --- TEMA MALAM (DARK MODE - OTOMATIS) --- */
