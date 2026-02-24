@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -37,26 +37,33 @@
             overflow: hidden;
         }
 
-        /* --- 2. HEADER ELEGAN (JAM DUNIA KEMBALI) --- */
+        /* --- 2. HEADER ELEGAN (LENGKAP: JAM, TANGGAL, HIJRIAH, CUACA) --- */
         header {
             flex-shrink: 0; display: flex; justify-content: space-between; align-items: flex-start;
-            padding: 20px 30px; z-index: 10;
+            padding: 15px 30px; z-index: 10;
             background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
         }
         .header-left { display: flex; align-items: center; gap: 15px; }
-        .logo { width: 70px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)); }
-        .masjid-name h1 { font-size: 2rem; font-weight: 800; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 2px; line-height: 1; }
-        .masjid-name p { font-size: 1rem; color: #aaa; letter-spacing: 1px; }
+        .logo { width: 75px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)); }
+        .masjid-name h1 { font-size: 2.2rem; font-weight: 800; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 2px; line-height: 1; }
+        .masjid-name p { font-size: 1.1rem; color: #aaa; letter-spacing: 1px; }
 
         .header-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
-        #time { font-size: 3.8rem; font-weight: 800; line-height: 1; color: var(--text); text-shadow: 0 0 20px rgba(74, 222, 128, 0.3); font-variant-numeric: tabular-nums; }
-        #date { font-size: 1.1rem; color: var(--gold); font-weight: 600; margin-top: 5px; text-transform: uppercase; margin-bottom: 8px; }
+        #time { font-size: 4.2rem; font-weight: 800; line-height: 1; color: var(--text); text-shadow: 0 0 20px rgba(74, 222, 128, 0.3); font-variant-numeric: tabular-nums; }
         
-        /* Jam Dunia (KEMBALI ADA) */
-        .world-clocks { display: flex; gap: 15px; background: rgba(255,255,255,0.08); padding: 6px 15px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); }
-        .w-clock-item { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: #ddd; font-weight: 600; }
-        .w-clock-item i { color: var(--gold); }
-        .w-time { color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums;}
+        /* Baris Tanggal & Hijriyah */
+        .date-line { font-size: 1.1rem; color: var(--gold); font-weight: 600; margin-top: 5px; text-transform: uppercase; }
+        
+        /* Baris Info: Jam Dunia + Cuaca */
+        .info-bar { display: flex; gap: 15px; margin-top: 8px; }
+        .info-pill { 
+            display: flex; align-items: center; gap: 6px; 
+            background: rgba(255,255,255,0.1); padding: 5px 12px; 
+            border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3);
+            font-size: 0.85rem; color: #ddd; font-weight: 600;
+        }
+        .info-pill i { color: var(--accent); }
+        .w-time { color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums;}
 
         /* --- 3. MAIN LAYOUT --- */
         main {
@@ -79,12 +86,12 @@
         
         .panel-header {
             text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 10px; margin-bottom: 15px; flex-shrink: 0;
+            padding-bottom: 10px; margin-bottom: 10px; flex-shrink: 0;
         }
         .panel-header h2 { font-size: 1.3rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-        .panel-header p { font-size: 0.85rem; color: #aaa; font-weight: 600; margin-top: 2px; }
+        .panel-header p { font-size: 0.8rem; color: #aaa; font-weight: 600; margin-top: 2px; }
 
-        /* JADWAL SHOLAT LIST (BILINGUAL & IQAMAH KEMBALI) */
+        /* JADWAL SHOLAT LIST */
         .prayer-list { display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; }
         .prayer-item {
             display: flex; justify-content: space-between; align-items: center;
@@ -96,14 +103,12 @@
             background: linear-gradient(90deg, rgba(212, 175, 55, 0.25), transparent);
             border-left: 3px solid var(--gold);
         }
-        /* Susunan Teks Jadwal */
-        .prayer-info { text-align: left; }
         .prayer-name { font-size: 1.2rem; font-weight: 700; line-height: 1.1; }
-        .prayer-jp { display: block; font-size: 0.8rem; color: #aaa; font-weight: 600; font-family: 'Noto Sans JP', sans-serif; margin-top: 2px; }
+        .prayer-jp { display: block; font-size: 0.75rem; color: #aaa; font-family: 'Noto Sans JP', sans-serif; margin-top: 2px; }
         
         .times-wrap { text-align: right; }
         .prayer-time { font-size: 1.4rem; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; line-height: 1; }
-        .prayer-iqamah { font-size: 0.9rem; color: var(--accent); font-weight: 600; margin-top: 4px; display: block; }
+        .prayer-iqamah { font-size: 0.9rem; color: var(--accent); font-weight: 600; margin-top: 2px; display: block; }
 
         /* CENTER SLIDER */
         .center-area { display: flex; flex-direction: column; gap: 20px; height: 100%; }
@@ -117,7 +122,7 @@
         .cd-label { font-size: 1.2rem; color: #ccc; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
         .cd-timer { font-size: 5.5rem; font-weight: 800; color: var(--gold); line-height: 1; text-shadow: 0 0 30px rgba(212, 175, 55, 0.4); font-variant-numeric: tabular-nums; }
 
-        /* Slide Konten (PAS TENGAH) */
+        /* Slide Konten */
         .slide-container {
             flex-grow: 1; position: relative; overflow: hidden; border-radius: 20px;
             display: flex; align-items: center; justify-content: center;
@@ -130,24 +135,23 @@
             animation: fadeUp 0.8s ease; 
         }
         
-        /* Font Khusus Slide */
         .arabic-text { 
             font-family: 'Noto Naskh Arabic', serif; font-size: 2.8rem; color: var(--gold); 
             line-height: 1.6; margin-bottom: 25px; text-shadow: 0 4px 15px rgba(0,0,0,0.5);
             max-width: 95%;
         }
-        .indo-text { font-size: 1.5rem; font-weight: 600; color: #fff; line-height: 1.4; max-width: 90%; }
+        .indo-text { font-size: 1.5rem; font-weight: 600; color: #fff; line-height: 1.4; max-width: 90%; font-style: italic;}
         .source-text { 
             display: inline-block; margin-top: 25px; padding: 5px 20px; 
             background: rgba(74, 222, 128, 0.1); border: 1px solid var(--accent); 
             color: var(--accent); border-radius: 50px; font-size: 1rem; font-weight: 700; 
         }
         
-        /* Style untuk Pengumuman Teks Biasa */
+        /* Style Pengumuman Teks */
         .announce-title { font-size: 2.5rem; font-weight: 800; color: var(--gold); margin-bottom: 20px; text-transform: uppercase; }
         .announce-body { font-size: 1.8rem; color: #fff; line-height: 1.4; }
 
-        /* WAKAF (SIMETRIS FIXED) */
+        /* WAKAF */
         .wakaf-stats { display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; gap: 10px; }
         .stat-group h3 { font-size: 2rem; color: var(--gold); font-weight: 800; margin-top: 5px; line-height: 1; }
         .stat-group p { color: #aaa; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
@@ -161,7 +165,7 @@
         }
         #qrcode-wakaf { display: flex; justify-content: center; } 
 
-        /* FOOTER (GELAP PEKAT) */
+        /* FOOTER */
         footer {
             background: #020617; border-top: 1px solid var(--gold);
             padding: 12px 0; z-index: 20; color: var(--gold); font-weight: 600; font-size: 1.2rem; flex-shrink: 0;
@@ -199,6 +203,9 @@
         <div style="margin-top:40px; color:#aaa;">Mohon Luruskan Shaf & Matikan HP</div>
     </div>
 
+    <div style="position:fixed; width:150px; height:150px; background:url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Arabesque-pattern.svg/1200px-Arabesque-pattern.svg.png') no-repeat contain; opacity:0.1; top:0; left:0; pointer-events:none;"></div>
+    <div style="position:fixed; width:150px; height:150px; background:url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Arabesque-pattern.svg/1200px-Arabesque-pattern.svg.png') no-repeat contain; opacity:0.1; top:0; right:0; transform:rotate(90deg); pointer-events:none;"></div>
+
     <header>
         <div class="header-left">
             <img src="logohekinan.jpeg" alt="Logo" class="logo" onerror="this.style.display='none'">
@@ -207,12 +214,16 @@
                 <p>Hekinan, Japan</p>
             </div>
         </div>
+        
         <div class="header-right">
             <div id="time">00:00:00</div>
-            <div id="date">Senin, 1 Januari 2024</div>
-            <div class="world-clocks">
-                <div class="w-clock-item"><i class="ph ph-house-line"></i> JKT: <span id="time-jkt" class="w-time">--:--</span></div>
-                <div class="w-clock-item"><i class="ph ph-mosque"></i> MEK: <span id="time-makkah" class="w-time">--:--</span></div>
+            <div class="date-line">
+                <span id="date">Senin, 1 Januari 2024</span> • <span id="hijri-date">...</span>
+            </div>
+            <div class="info-bar">
+                <div class="info-pill"><i class="ph ph-house-line"></i> JKT: <span id="time-jkt" class="w-time">--:--</span></div>
+                <div class="info-pill"><i class="ph ph-mosque"></i> MEK: <span id="time-makkah" class="w-time">--:--</span></div>
+                <div class="info-pill"><i id="weather-icon" class="ph ph-cloud"></i> <span id="weather-temp">--°C</span></div>
             </div>
         </div>
     </header>
@@ -276,12 +287,12 @@
             SLIDE_TIME: 15000
         };
 
-        // DATABASE HADITS (DIKEMBALIKAN UNTUK MENGGANTI FOTO)
+        // DATABASE HADITS (BAWAAN)
         const ISLAMIC_CONTENT = [
+            { arab: "السلام عليكم ورحمة الله وبركاته", indo: "Selamat Datang di Masjid As-Sunnah Hekinan", source: "Sapaan" },
             { arab: "مَنْ بَنَى مَسْجِدًا لِلَّهِ بَنَى اللَّهُ لَهُ فِي الْجَنَّةِ مِثْلَهُ", indo: "Barangsiapa membangun masjid karena Allah, maka Allah akan membangunkan baginya rumah di surga.", source: "HR. Bukhari & Muslim" },
             { arab: "إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ", indo: "Sesungguhnya setiap amalan tergantung pada niatnya.", source: "HR. Bukhari & Muslim" },
-            { arab: "تَبَسُّمُكَ فِي وَجْهِ أَخِيكَ لَكَ صَدَقَةٌ", indo: "Senyummu di hadapan saudaramu adalah sedekah bagimu.", source: "HR. Tirmidzi" },
-            { arab: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", indo: "Sebaik-baik kalian adalah yang mempelajari Al-Qur'an dan mengajarkannya.", source: "HR. Bukhari" }
+            { arab: "تَبَسُّمُكَ فِي وَجْهِ أَخِيكَ لَكَ صَدَقَةٌ", indo: "Senyummu di hadapan saudaramu adalah sedekah bagimu.", source: "HR. Tirmidzi" }
         ];
 
         let state = { prayerToday: [], playlist: [], slideIndex: 0, khatibData: null };
@@ -293,7 +304,7 @@
             const d = new Date(); d.setDate(d.getDate() + addDay); d.setHours(h, m, 0, 0); return d;
         }
 
-        // 1. JAM DIGITAL & JAM DUNIA
+        // 1. JAM, CUACA, DAN TANGGAL
         function updateClock() {
             const now = new Date();
             el('time').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
@@ -305,7 +316,24 @@
         }
         setInterval(updateClock, 1000);
 
-        // 2. JADWAL SHOLAT (BILINGUAL KEMBALI & IQAMAH)
+        // API CUACA (DIKEMBALIKAN)
+        async function fetchWeather() {
+            try {
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${CONFIG.LAT}&longitude=${CONFIG.LONG}&current_weather=true`);
+                const data = await res.json();
+                el('weather-temp').innerText = `${Math.round(data.current_weather.temperature)}°C`;
+                
+                const code = data.current_weather.weathercode;
+                let icon = "ph-cloud"; 
+                if (code === 0) icon = "ph-sun"; 
+                else if (code >= 1 && code <= 3) icon = "ph-cloud-sun"; 
+                else if (code >= 51) icon = "ph-cloud-rain"; 
+                el('weather-icon').className = `ph ${icon}`;
+            } catch (e) { }
+        }
+        fetchWeather(); setInterval(fetchWeather, 1800000);
+
+        // 2. JADWAL SHOLAT & HIJRIAH (DIKEMBALIKAN LENGKAP)
         async function fetchPrayer() {
             try {
                 const nowUnix = Math.floor(Date.now() / 1000);
@@ -313,7 +341,9 @@
                 const data = await res.json();
                 const t = data.data.timings;
                 
-                // Map Nama Bilingual
+                // Set Hijriah
+                el('hijri-date').innerText = `${data.data.date.hijri.day} ${data.data.date.hijri.month.en} ${data.data.date.hijri.year}H`;
+
                 const nameMap = { 
                     Fajr: { id: 'Subuh', jp: 'ファジル' }, 
                     Sunrise: { id: 'Syuruq', jp: '日の出' }, 
@@ -329,12 +359,9 @@
                 for(let key in nameMap) {
                     let time = t[key];
                     let names = nameMap[key];
-                    // Cek Jumat
-                    if(new Date().getDay() === 5 && key === 'Dhuhr') {
-                        names = { id: 'Jumat', jp: 'ジュマ' };
-                    }
+                    if(new Date().getDay() === 5 && key === 'Dhuhr') names = { id: 'Jumat', jp: 'ジュマ' };
 
-                    // TAMPILKAN JADWAL LENGKAP DENGAN JEPANG & IQAMAH
+                    // HTML STRUCTURE DENGAN IQAMAH SLOT
                     html += `<div class="prayer-item" id="row-${names.id}">
                                 <div class="prayer-info">
                                     <div class="prayer-name">${names.id}</div>
@@ -346,9 +373,7 @@
                                 </div>
                              </div>`;
                     
-                    if(key !== 'Sunrise') {
-                        todayArr.push({ name: names.id, time: createDate(time) });
-                    }
+                    if(key !== 'Sunrise') todayArr.push({ name: names.id, time: createDate(time) });
                 }
                 el('prayer-list-container').innerHTML = html;
                 state.prayerToday = todayArr;
@@ -357,7 +382,7 @@
         }
         fetchPrayer(); setInterval(fetchPrayer, 3600000);
 
-        // 3. AMBIL DATA GOOGLE SHEET (DENGAN HADITS & IQAMAH)
+        // 3. AMBIL DATA GOOGLE SHEET (LOGIKA IQAMAH DIKEMBALIKAN)
         async function fetchSheet() {
             try {
                 const res = await fetch(CONFIG.API_URL + "?v=" + new Date().getTime());
@@ -376,38 +401,41 @@
                 if (json.khatib && json.khatib.id) state.khatibData = { ...json.khatib };
 
                 let newPlaylist = [];
-                // Pengumuman Text dari Sheet
+                // Text Pengumuman
                 if(json.pengumuman) {
                     json.pengumuman.forEach(p => newPlaylist.push({ type:'text', title:p.id, sub:p.jp }));
                 }
-                
-                // SISIPKAN HADITS AGAR LEBIH BANYAK KONTEN TEKS (GANTI GAMBAR)
+                // Hadits
                 ISLAMIC_CONTENT.forEach(q => newPlaylist.push({ type:'quote', ...q }));
 
-                state.playlist = newPlaylist;
+                if(newPlaylist.length > 0) state.playlist = newPlaylist;
                 if(json.running_text) el('running-text').innerText = json.running_text.map(r => `${r.id} (${r.jp})`).join("  ✦  ");
 
-                // UPDATE JAM IQAMAH
+                // --- PENTING: UPDATE JAM IQAMAH DARI SHEET ---
                 if (json.iqamah) {
-                    const now = new Date(); const day = now.getDay(); const isWeekend = (day === 0 || day === 6);
+                    const isWeekend = (new Date().getDay() === 0 || new Date().getDay() === 6);
                     if(el('iq-Subuh')) el('iq-Subuh').innerText = json.iqamah.Subuh || "--:--";
                     if(el('iq-Ashar')) el('iq-Ashar').innerText = json.iqamah.Ashar || "--:--";
                     if(el('iq-Maghrib')) el('iq-Maghrib').innerText = json.iqamah.Maghrib || "--:--";
+                    
                     let isya = isWeekend ? json.iqamah.Isya_Weekend : json.iqamah.Isya_Biasa;
                     if(el('iq-Isya')) el('iq-Isya').innerText = isya || json.iqamah.Isya_Biasa;
-                    if (day === 5 && json.iqamah.Jumat) { if(el('iq-Jumat')) el('iq-Jumat').innerText = json.iqamah.Jumat; } 
-                    else { if(el('iq-Dzuhur')) el('iq-Dzuhur').innerText = json.iqamah.Dzuhur || "--:--"; }
+                    
+                    if (new Date().getDay() === 5 && json.iqamah.Jumat) { 
+                        if(el('iq-Jumat')) el('iq-Jumat').innerText = json.iqamah.Jumat; 
+                    } else { 
+                        if(el('iq-Dzuhur')) el('iq-Dzuhur').innerText = json.iqamah.Dzuhur || "--:--"; 
+                    }
                 }
 
             } catch (e) { console.log("Sheet Error"); }
         }
         fetchSheet(); setInterval(fetchSheet, 60000);
 
-        // 4. ROTASI SLIDE (PASTI PAS TENGAH)
+        // 4. ROTASI SLIDE
         function rotateSlide() {
             if(state.playlist.length === 0) return;
             
-            // Logika Khatib Jumat (Jumat 04:00 - 13:00)
             const now = new Date();
             if (now.getDay() === 5 && now.getHours() >= 4 && now.getHours() < 13 && state.khatibData) {
                 const item = state.khatibData;
@@ -433,7 +461,7 @@
         }
         setInterval(rotateSlide, 15000);
 
-        // 5. COUNTDOWN & LOGIC
+        // 5. COUNTDOWN
         function updateLogic() {
             const now = new Date();
             let nextPrayer = null;
