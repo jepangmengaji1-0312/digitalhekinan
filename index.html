@@ -37,7 +37,7 @@
         body {
             background-color: var(--bg-color);
             background-image: 
-                linear-gradient(rgba(2, 6, 23, 0.8), rgba(2, 6, 23, 0.9)),
+                linear-gradient(rgba(2, 6, 23, 0.85), rgba(2, 6, 23, 0.95)),
                 url("https://www.transparenttextures.com/patterns/arabesque.png"); /* Pola Halus */
             background-size: 400px;
             color: var(--text-main); 
@@ -104,6 +104,15 @@
             background: rgba(251, 191, 36, 0.15); border-left: 4px solid var(--primary);
             box-shadow: 0 0 15px rgba(251, 191, 36, 0.1);
         }
+        /* Style Khusus Waktu Terlarang (Syuruq) */
+        .prayer-item.forbidden {
+            background: rgba(239, 68, 68, 0.15) !important;
+            border-left: 4px solid var(--alert) !important;
+            animation: pulseRed 2s infinite;
+        }
+        .prayer-item.forbidden .prayer-name span { color: #fca5a5; } 
+        @keyframes pulseRed { 0% { box-shadow: 0 0 0 rgba(239, 68, 68, 0.2); } 50% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); } 100% { box-shadow: 0 0 0 rgba(239, 68, 68, 0.2); } }
+
         .prayer-name { font-size: 1.2rem; font-weight: 700; }
         .prayer-name span { display: block; font-size: 0.75rem; color: var(--text-sub); font-weight: 400; }
         .times-wrap { text-align: right; }
@@ -132,37 +141,21 @@
         }
         .slide-content { width: 100%; text-align: center; padding: 30px; animation: fadeIn 0.8s ease; }
         
-        /* STYLE KHUSUS KONTEN (AYAT & HADITS) */
         .arabic-text { 
-            font-family: 'Noto Naskh Arabic', serif; 
-            font-size: 3rem; 
-            font-weight: 700; 
-            margin-bottom: 25px; 
-            line-height: 1.6; 
-            color: var(--primary);
+            font-family: 'Noto Naskh Arabic', serif; font-size: 3rem; font-weight: 700; 
+            margin-bottom: 25px; line-height: 1.6; color: var(--primary);
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
         .translation-text { 
-            font-size: 1.5rem; 
-            font-weight: 500; 
-            margin-bottom: 20px; 
-            line-height: 1.4; 
-            color: var(--text-main);
-            font-style: italic;
+            font-size: 1.5rem; font-weight: 500; margin-bottom: 20px; 
+            line-height: 1.4; color: var(--text-main); font-style: italic;
         }
         .source-text {
-            font-size: 1.1rem;
-            color: var(--accent);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            background: rgba(255,255,255,0.05);
-            padding: 5px 15px;
-            border-radius: 20px;
-            display: inline-block;
+            font-size: 1.1rem; color: var(--accent); font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px; background: rgba(255,255,255,0.05);
+            padding: 5px 15px; border-radius: 20px; display: inline-block;
         }
 
-        /* Slide Progress */
         .slide-progress { position: absolute; bottom: 0; left: 0; height: 4px; background: var(--primary); width: 0%; box-shadow: 0 -2px 10px var(--primary); }
         @keyframes progressRun { from { width: 0%; } to { width: 100%; } }
 
@@ -313,48 +306,17 @@
             SLIDE_TIME: 15000
         };
 
-        // --- DATABASE ISLAMI (AYAT & HADITS SHAHIH) ---
+        // --- DATABASE ISLAMI & SAPAAN (FITUR CERDAS) ---
         const ISLAMIC_CONTENT = [
-            { 
-                arab: "السلام عليكم ورحمة الله وبركاته", 
-                indo: "Selamat Datang di Masjid As-Sunnah Hekinan", 
-                source: "Ahlan Wa Sahlan" 
-            },
-            { 
-                arab: "مَنْ بَنَى مَسْجِدًا لِلَّهِ بَنَى اللَّهُ لَهُ فِي الْجَنَّةِ مِثْلَهُ", 
-                indo: "Barangsiapa membangun masjid karena Allah, maka Allah akan membangunkan baginya rumah di surga.", 
-                source: "HR. Bukhari & Muslim" 
-            },
-            { 
-                arab: "اللَّهُ نُورُ السَّمَاوَاتِ وَالْأَرْضِ", 
-                indo: "Allah (Pemberi) cahaya (kepada) langit dan bumi.", 
-                source: "QS. An-Nur: 35" 
-            },
-            { 
-                arab: "الطُّهُورُ شَطْرُ الْإِيمَانِ", 
-                indo: "Bersuci (Thaharah) adalah setengah dari keimanan.", 
-                source: "HR. Muslim" 
-            },
-            { 
-                arab: "فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ", 
-                indo: "Maka ingatlah kepada-Ku, Aku pun akan ingat kepadamu. Bersyukurlah kepada-Ku, dan janganlah kamu ingkar.", 
-                source: "QS. Al-Baqarah: 152" 
-            },
-            { 
-                arab: "تَبَسُّمُكَ فِي وَجْهِ أَخِيكَ لَكَ صَدَقَةٌ", 
-                indo: "Senyummu di hadapan saudaramu adalah sedekah bagimu.", 
-                source: "HR. Tirmidzi" 
-            },
-            { 
-                arab: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", 
-                indo: "Sebaik-baik kalian adalah yang mempelajari Al-Qur'an dan mengajarkannya.", 
-                source: "HR. Bukhari" 
-            },
-            { 
-                arab: "إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ", 
-                indo: "Sesungguhnya setiap amalan tergantung pada niatnya.", 
-                source: "HR. Bukhari & Muslim" 
-            }
+            // Slide 1: Sapaan (Akan diganti otomatis oleh Logic Smart Greeting)
+            { arab: "السلام عليكم ورحمة الله وبركاته", indo: "Selamat Datang di Masjid As-Sunnah Hekinan", source: "Sapaan" },
+            { arab: "مَنْ بَنَى مَسْجِدًا لِلَّهِ بَنَى اللَّهُ لَهُ فِي الْجَنَّةِ مِثْلَهُ", indo: "Barangsiapa membangun masjid karena Allah, maka Allah akan membangunkan baginya rumah di surga.", source: "HR. Bukhari & Muslim" },
+            { arab: "اللَّهُ نُورُ السَّمَاوَاتِ وَالْأَرْضِ", indo: "Allah (Pemberi) cahaya (kepada) langit dan bumi.", source: "QS. An-Nur: 35" },
+            { arab: "الطُّهُورُ شَطْرُ الْإِيمَانِ", indo: "Bersuci (Thaharah) adalah setengah dari keimanan.", source: "HR. Muslim" },
+            { arab: "فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ", indo: "Maka ingatlah kepada-Ku, Aku pun akan ingat kepadamu. Bersyukurlah kepada-Ku, dan janganlah kamu ingkar.", source: "QS. Al-Baqarah: 152" },
+            { arab: "تَبَسُّمُكَ فِي وَجْهِ أَخِيكَ لَكَ صَدَقَةٌ", indo: "Senyummu di hadapan saudaramu adalah sedekah bagimu.", source: "HR. Tirmidzi" },
+            { arab: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", indo: "Sebaik-baik kalian adalah yang mempelajari Al-Qur'an dan mengajarkannya.", source: "HR. Bukhari" },
+            { arab: "إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ", indo: "Sesungguhnya setiap amalan tergantung pada niatnya.", source: "HR. Bukhari & Muslim" }
         ];
 
         let state = { prayerToday: [], prayerTomorrow: [], playlist: [], khatibData: null, slideIndex: 0 };
@@ -432,23 +394,18 @@
 
                 if (json.khatib && json.khatib.id) state.khatibData = { ...json.khatib };
 
-                // LOGIKA BARU: ISI PLAYLIST DENGAN ISLAMIC CONTENT (GANTIKAN FOTO)
-                // Kita buat playlist murni dari array ISLAMIC_CONTENT + Pengumuman Text dari Sheet
                 let mixedPlaylist = [];
-                
-                // 1. Masukkan Pengumuman dari Google Sheet (Prioritas)
+                // 1. Pengumuman
                 if (json.pengumuman) {
                     json.pengumuman.forEach(p => {
                         mixedPlaylist.push({ type: 'text', id: p.id, jp: p.jp });
                     });
                 }
-
-                // 2. Masukkan Ayat & Hadits secara bergantian
+                // 2. Ayat & Hadits (Cerdas)
                 ISLAMIC_CONTENT.forEach(content => {
                     mixedPlaylist.push({ type: 'quote', arab: content.arab, indo: content.indo, source: content.source });
                 });
 
-                // Update Playlist Utama
                 updatePlaylistContent(mixedPlaylist);
 
                 if (json.running_text) el('running-text').textContent = json.running_text.map(r => `${r.id} (${r.jp})`).join("  ✦  ");
@@ -470,14 +427,12 @@
         function updatePlaylistContent(newItems) {
             let final = [...(newItems || state.playlist)];
             const now = new Date();
-            // Jumat 04:00 - 13:00 Tampil Khatib di Paling Depan
             if (now.getDay() === 5 && now.getHours() >= 4 && now.getHours() < 13 && state.khatibData) {
                 final.unshift({ type: 'khatib', ...state.khatibData });
             }
             state.playlist = final;
         }
 
-        // --- ROTASI SLIDE BARU (TANPA FOTO PECAH) ---
         function rotateSlide() {
             if (!state.playlist || state.playlist.length === 0) return;
             if (state.slideIndex >= state.playlist.length) state.slideIndex = 0;
@@ -513,25 +468,34 @@
                 } else { area.insertAdjacentHTML('beforeend', html); }
 
             } else if (item.type === 'quote') {
-                // TAMPILAN BARU: AYAT & HADITS (PENGGANTI FOTO)
+                // LOGIC SMART GREETING (Ganti Sapaan Sesuai Jam)
+                let textArab = item.arab;
+                let textIndo = item.indo;
+                let textSource = item.source;
+
+                if (item.source === "Sapaan") {
+                    const h = new Date().getHours();
+                    if (h >= 4 && h < 10) { textArab = "صَبَاحُ الْخَيْر"; textIndo = "Selamat Pagi / おはようございます"; }
+                    else if (h >= 10 && h < 15) { textArab = "نَهَارُكُم سَعِيد"; textIndo = "Selamat Siang / こんにちは"; }
+                    else if (h >= 15 && h < 18) { textArab = "مَسَاءُ الْخَيْر"; textIndo = "Selamat Sore / こんばんは"; }
+                    else { textArab = "لَيْلَتُكُم سَعِيدَة"; textIndo = "Selamat Malam / おやすみなさい"; }
+                }
+
                 let html = `
                     <div class="slide-content" style="justify-content:center;">
-                        <div class="arabic-text">${item.arab}</div>
-                        <div class="translation-text">"${item.indo}"</div>
-                        <div class="source-text">${item.source}</div>
+                        <div class="arabic-text">${textArab}</div>
+                        <div class="translation-text">"${textIndo}"</div>
+                        <div class="source-text">${textSource}</div>
                     </div>`;
                 area.insertAdjacentHTML('beforeend', html);
 
             } else if (item.type === 'text') {
-                // Tampilan Pengumuman Biasa
                 let html = `<div class="slide-content">
                                 <div style="font-size:2.5rem; font-weight:700; color:var(--primary); margin-bottom:20px;">${item.id}</div>
                                 <div style="font-size:1.8rem; color:var(--text-main);">${item.jp}</div>
                             </div>`;
                 area.insertAdjacentHTML('beforeend', html);
             }
-            // LOGIKA IMAGE DIHAPUS AGAR TIDAK ADA YANG PECAH
-            
             state.slideIndex = (state.slideIndex + 1) % state.playlist.length;
         }
         setInterval(rotateSlide, CONFIG.SLIDE_TIME);
@@ -540,6 +504,25 @@
             const now = new Date();
             let target = null; let type = ""; let pName = ""; let activeId = "";
             const all = [...state.prayerToday, ...state.prayerTomorrow];
+            
+            // LOGIC WARNING SYURUQ
+            const syuruqObj = state.prayerToday.find(p => p.name === 'Syuruq');
+            if (syuruqObj) {
+                const diffSyuruq = now - syuruqObj.adzan;
+                // Jika waktu sekarang adalah Syuruq s.d +15 menit (900.000 ms)
+                if (diffSyuruq >= 0 && diffSyuruq < 900000) {
+                    if (el('row-Syuruq')) {
+                        el('row-Syuruq').classList.add('forbidden');
+                        el('row-Syuruq').querySelector('.prayer-name span').innerText = "DILARANG SHOLAT (TUNGGU 15M)";
+                    }
+                } else {
+                    if (el('row-Syuruq')) {
+                        el('row-Syuruq').classList.remove('forbidden');
+                        el('row-Syuruq').querySelector('.prayer-name span').innerText = "日の出";
+                    }
+                }
+            }
+
             for (let p of all) {
                 if (p.name === 'Syuruq') continue;
                 if (p.iqamah && now >= p.adzan && now < p.iqamah) { target = p.iqamah; type = "iqamah"; pName = p.name; activeId = `row-${p.name}`; break; }
