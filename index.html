@@ -36,12 +36,10 @@
         html, body { height: 100%; width: 100%; overflow: hidden; }
         body {
             background-color: var(--bg-color);
-            /* UPDATE: Menambahkan Pola Geometris Islam Tipis */
             background-image: 
-                linear-gradient(rgba(2, 6, 23, 0.9), rgba(2, 6, 23, 0.95)), /* Lapisan Gelap Penutup */
-                url("https://www.transparenttextures.com/patterns/arabesque.png"); /* Pola Arabesque */
-            background-size: cover, 400px; /* Ukuran pola */
-            
+                linear-gradient(rgba(2, 6, 23, 0.8), rgba(2, 6, 23, 0.9)),
+                url("https://www.transparenttextures.com/patterns/arabesque.png"); /* Pola Halus */
+            background-size: 400px;
             color: var(--text-main); 
             font-family: 'Inter', 'Noto Naskh Arabic', 'Noto Sans JP', sans-serif;
             display: flex; flex-direction: column;
@@ -65,7 +63,7 @@
         #time { 
             font-size: 4rem; font-weight: 800; line-height: 0.9; color: var(--text-main); 
             font-variant-numeric: tabular-nums; text-shadow: 0 0 20px rgba(251, 191, 36, 0.2); 
-            font-family: 'Inter', sans-serif; /* Jam tetap pakai font angka latin tegas */
+            font-family: 'Inter', sans-serif;
         }
         .date-row { font-size: 1.1rem; color: var(--primary); font-weight: 600; letter-spacing: 1px; margin-top: 5px; }
 
@@ -134,13 +132,37 @@
         }
         .slide-content { width: 100%; text-align: center; padding: 30px; animation: fadeIn 0.8s ease; }
         
-        /* Font Arab khusus untuk Salam */
-        .slide-text-arab { font-family: 'Noto Naskh Arabic', serif; font-size: 3rem; font-weight: 700; margin-bottom: 15px; line-height: 1.4; color: var(--primary); }
-        .slide-text-id { font-size: 1.8rem; font-weight: 700; margin-bottom: 15px; line-height: 1.3; color: var(--primary); }
-        .slide-text-jp { font-size: 1.5rem; color: var(--text-main); font-weight: 700; }
-        .slide-image { width: 100%; height: 100%; object-fit: contain; display: none; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
+        /* STYLE KHUSUS KONTEN (AYAT & HADITS) */
+        .arabic-text { 
+            font-family: 'Noto Naskh Arabic', serif; 
+            font-size: 3rem; 
+            font-weight: 700; 
+            margin-bottom: 25px; 
+            line-height: 1.6; 
+            color: var(--primary);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        .translation-text { 
+            font-size: 1.5rem; 
+            font-weight: 500; 
+            margin-bottom: 20px; 
+            line-height: 1.4; 
+            color: var(--text-main);
+            font-style: italic;
+        }
+        .source-text {
+            font-size: 1.1rem;
+            color: var(--accent);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(255,255,255,0.05);
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        /* Slide Progress */
         .slide-progress { position: absolute; bottom: 0; left: 0; height: 4px; background: var(--primary); width: 0%; box-shadow: 0 -2px 10px var(--primary); }
         @keyframes progressRun { from { width: 0%; } to { width: 100%; } }
 
@@ -148,7 +170,6 @@
         .wakaf-stats { display: flex; flex-direction: column; gap: 15px; flex-grow: 1; justify-content: center; }
         .stat-item p { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 4px; }
         .stat-item h3 { font-size: 1.8rem; color: var(--primary); font-weight: 800; }
-        /* Style Deadline Wakaf */
         .wakaf-deadline { font-size: 0.85rem; color: var(--alert); font-weight: 700; margin-top: 2px; letter-spacing: 0.5px; }
         
         .progress-container { background: rgba(255,255,255,0.1); height: 12px; border-radius: 20px; overflow: hidden; margin: 10px 0; position: relative; }
@@ -181,17 +202,17 @@
         #khutbah-msg { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #333; z-index: 1001; }
         body.jumat-mode #khutbah-msg { display: block; }
 
-        /* STYLE KHATIB & HADITS */
-        .khatib-slide, .hadith-slide { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; animation: fadeIn 0.8s ease; padding: 20px;}
+        /* STYLE KHATIB */
+        .khatib-slide { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; animation: fadeIn 0.8s ease; padding: 20px;}
         .khatib-label { border-bottom: 2px solid var(--primary); color: var(--primary); font-size: 1.2rem; margin-bottom: 15px; padding-bottom: 5px; font-weight: bold; letter-spacing: 1px;}
         .khatib-name { font-size: 2.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 10px; }
         .sunnah-row { display: flex; gap: 20px; margin-top: 20px; justify-content: center; }
         .sunnah-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 0.8rem; }
         .sunnah-item i { font-size: 1.5rem; color: var(--primary); margin-bottom: 5px; border: 1px solid var(--primary); padding: 8px; border-radius: 50%; }
-        
-        .hadith-text { font-family: 'Inter', 'Noto Naskh Arabic', sans-serif; font-size: 1.6rem; font-style: italic; margin-bottom: 15px; line-height: 1.4; color: var(--text-main); }
-        .hadith-source { color: var(--accent); font-weight: bold; font-size: 1.2rem; }
-        .hadith-icon { font-size: 3rem; color: var(--primary); margin-bottom: 15px; opacity: 0.8; }
+        .khatib-qr { text-align: center; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: slideInRight 1s ease; }
+        .khatib-qr-label { color: black; font-weight: bold; font-size: 0.9rem; margin-top: 8px; }
+        #qrcode-khatib { width: 140px; height: 140px; display: flex; justify-content: center; align-items: center; }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
     </style>
 </head>
 <body>
@@ -253,10 +274,10 @@
             
             <div class="slide-area" id="slide-area">
                 <div id="slide-content" class="slide-content">
-                    <div class="slide-text-arab" id="announce-id">السلام عليكم ورحمة الله وبركاته</div>
-                    <div class="slide-text-jp" id="announce-jp">Ahlan Wa Sahlan / Selamat Datang</div>
+                    <div class="arabic-text" id="announce-id">السلام عليكم ورحمة الله وبركاته</div>
+                    <div class="translation-text" id="announce-jp">Ahlan Wa Sahlan / Selamat Datang</div>
                 </div>
-                <img id="slide-img" class="slide-image" src="" alt="Slide">
+                <img id="slide-img" class="slide-image" src="" alt="Slide" style="display:none;">
                 <div class="slide-progress" id="slide-prog"></div>
             </div>
         </div>
@@ -292,15 +313,51 @@
             SLIDE_TIME: 15000
         };
 
-        const HADITH_DB = [
-            { text: "Barangsiapa membangun masjid karena Allah, maka Allah akan membangunkan baginya rumah di surga.", source: "HR. Bukhari & Muslim" },
-            { text: "Shalat berjamaah lebih utama 27 derajat daripada shalat sendirian.", source: "HR. Bukhari & Muslim" },
-            { text: "Bersuci (Thaharah) adalah setengah dari keimanan.", source: "HR. Muslim" },
-            { text: "Senyummu di hadapan saudaramu adalah sedekah.", source: "HR. Tirmidzi (Shahih)" },
-            { text: "Sebaik-baik kalian adalah yang mempelajari Al-Qur'an dan mengajarkannya.", source: "HR. Bukhari" }
+        // --- DATABASE ISLAMI (AYAT & HADITS SHAHIH) ---
+        const ISLAMIC_CONTENT = [
+            { 
+                arab: "السلام عليكم ورحمة الله وبركاته", 
+                indo: "Selamat Datang di Masjid As-Sunnah Hekinan", 
+                source: "Ahlan Wa Sahlan" 
+            },
+            { 
+                arab: "مَنْ بَنَى مَسْجِدًا لِلَّهِ بَنَى اللَّهُ لَهُ فِي الْجَنَّةِ مِثْلَهُ", 
+                indo: "Barangsiapa membangun masjid karena Allah, maka Allah akan membangunkan baginya rumah di surga.", 
+                source: "HR. Bukhari & Muslim" 
+            },
+            { 
+                arab: "اللَّهُ نُورُ السَّمَاوَاتِ وَالْأَرْضِ", 
+                indo: "Allah (Pemberi) cahaya (kepada) langit dan bumi.", 
+                source: "QS. An-Nur: 35" 
+            },
+            { 
+                arab: "الطُّهُورُ شَطْرُ الْإِيمَانِ", 
+                indo: "Bersuci (Thaharah) adalah setengah dari keimanan.", 
+                source: "HR. Muslim" 
+            },
+            { 
+                arab: "فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ", 
+                indo: "Maka ingatlah kepada-Ku, Aku pun akan ingat kepadamu. Bersyukurlah kepada-Ku, dan janganlah kamu ingkar.", 
+                source: "QS. Al-Baqarah: 152" 
+            },
+            { 
+                arab: "تَبَسُّمُكَ فِي وَجْهِ أَخِيكَ لَكَ صَدَقَةٌ", 
+                indo: "Senyummu di hadapan saudaramu adalah sedekah bagimu.", 
+                source: "HR. Tirmidzi" 
+            },
+            { 
+                arab: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", 
+                indo: "Sebaik-baik kalian adalah yang mempelajari Al-Qur'an dan mengajarkannya.", 
+                source: "HR. Bukhari" 
+            },
+            { 
+                arab: "إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ", 
+                indo: "Sesungguhnya setiap amalan tergantung pada niatnya.", 
+                source: "HR. Bukhari & Muslim" 
+            }
         ];
 
-        let state = { prayerToday: [], prayerTomorrow: [], basePlaylist: [], playlist: [], khatibData: null, slideIndex: 0 };
+        let state = { prayerToday: [], prayerTomorrow: [], playlist: [], khatibData: null, slideIndex: 0 };
         const el = (id) => document.getElementById(id);
         const formatYen = (n) => new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(n);
         function createDate(timeStr, addDay = 0) {
@@ -375,15 +432,24 @@
 
                 if (json.khatib && json.khatib.id) state.khatibData = { ...json.khatib };
 
-                let rawPlaylist = [];
-                if (json.pengumuman) rawPlaylist.push(...json.pengumuman.map(p => ({type:'text', ...p})));
-                if (json.galeri) rawPlaylist.push(...json.galeri.map(g => ({type:'image', url:g})));
+                // LOGIKA BARU: ISI PLAYLIST DENGAN ISLAMIC CONTENT (GANTIKAN FOTO)
+                // Kita buat playlist murni dari array ISLAMIC_CONTENT + Pengumuman Text dari Sheet
+                let mixedPlaylist = [];
                 
-                const rndHadith = HADITH_DB[Math.floor(Math.random() * HADITH_DB.length)];
-                rawPlaylist.push({ type: 'hadith', text: rndHadith.text, source: rndHadith.source });
-                
-                state.basePlaylist = rawPlaylist;
-                updatePlaylistContent();
+                // 1. Masukkan Pengumuman dari Google Sheet (Prioritas)
+                if (json.pengumuman) {
+                    json.pengumuman.forEach(p => {
+                        mixedPlaylist.push({ type: 'text', id: p.id, jp: p.jp });
+                    });
+                }
+
+                // 2. Masukkan Ayat & Hadits secara bergantian
+                ISLAMIC_CONTENT.forEach(content => {
+                    mixedPlaylist.push({ type: 'quote', arab: content.arab, indo: content.indo, source: content.source });
+                });
+
+                // Update Playlist Utama
+                updatePlaylistContent(mixedPlaylist);
 
                 if (json.running_text) el('running-text').textContent = json.running_text.map(r => `${r.id} (${r.jp})`).join("  ✦  ");
 
@@ -401,15 +467,17 @@
         }
         fetchData(); setInterval(fetchData, 300000);
 
-        function updatePlaylistContent() {
-            let final = [...(state.basePlaylist || [])];
+        function updatePlaylistContent(newItems) {
+            let final = [...(newItems || state.playlist)];
             const now = new Date();
+            // Jumat 04:00 - 13:00 Tampil Khatib di Paling Depan
             if (now.getDay() === 5 && now.getHours() >= 4 && now.getHours() < 13 && state.khatibData) {
                 final.unshift({ type: 'khatib', ...state.khatibData });
             }
             state.playlist = final;
         }
 
+        // --- ROTASI SLIDE BARU (TANPA FOTO PECAH) ---
         function rotateSlide() {
             if (!state.playlist || state.playlist.length === 0) return;
             if (state.slideIndex >= state.playlist.length) state.slideIndex = 0;
@@ -444,26 +512,26 @@
                      }, 100);
                 } else { area.insertAdjacentHTML('beforeend', html); }
 
-            } else if (item.type === 'hadith') {
-                let html = `<div class="hadith-slide"><i class="ph ph-book-open-text hadith-icon"></i><div class="hadith-text">"${item.text}"</div><div class="hadith-source">${item.source}</div></div>`;
+            } else if (item.type === 'quote') {
+                // TAMPILAN BARU: AYAT & HADITS (PENGGANTI FOTO)
+                let html = `
+                    <div class="slide-content" style="justify-content:center;">
+                        <div class="arabic-text">${item.arab}</div>
+                        <div class="translation-text">"${item.indo}"</div>
+                        <div class="source-text">${item.source}</div>
+                    </div>`;
                 area.insertAdjacentHTML('beforeend', html);
 
             } else if (item.type === 'text') {
-                // Tampilan Text (Termasuk Salam awal)
-                let html = `<div class="slide-content">`;
-                // Deteksi jika teks Arab (untuk slide default/salam)
-                if (item.id.includes("السلام")) {
-                    html += `<div class="slide-text-arab">${item.id}</div>`;
-                } else {
-                    html += `<div class="slide-text-id">${item.id}</div>`;
-                }
-                html += `<div class="slide-text-jp">${item.jp}</div></div>`;
-                area.insertAdjacentHTML('beforeend', html);
-
-            } else if (item.type === 'image') {
-                let html = `<img src="${item.url}" class="slide-image" style="display:block; width:100%; height:100%; object-fit:contain;">`;
+                // Tampilan Pengumuman Biasa
+                let html = `<div class="slide-content">
+                                <div style="font-size:2.5rem; font-weight:700; color:var(--primary); margin-bottom:20px;">${item.id}</div>
+                                <div style="font-size:1.8rem; color:var(--text-main);">${item.jp}</div>
+                            </div>`;
                 area.insertAdjacentHTML('beforeend', html);
             }
+            // LOGIKA IMAGE DIHAPUS AGAR TIDAK ADA YANG PECAH
+            
             state.slideIndex = (state.slideIndex + 1) % state.playlist.length;
         }
         setInterval(rotateSlide, CONFIG.SLIDE_TIME);
