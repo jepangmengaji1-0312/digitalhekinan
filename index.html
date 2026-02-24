@@ -36,10 +36,13 @@
         html, body { height: 100%; width: 100%; overflow: hidden; }
         body {
             background-color: var(--bg-color);
-            background-image: radial-gradient(rgba(251, 191, 36, 0.1) 1px, transparent 1px);
-            background-size: 30px 30px;
+            /* UPDATE: Menambahkan Pola Geometris Islam Tipis */
+            background-image: 
+                linear-gradient(rgba(2, 6, 23, 0.9), rgba(2, 6, 23, 0.95)), /* Lapisan Gelap Penutup */
+                url("https://www.transparenttextures.com/patterns/arabesque.png"); /* Pola Arabesque */
+            background-size: cover, 400px; /* Ukuran pola */
+            
             color: var(--text-main); 
-            /* Tambahkan font Arab di sini */
             font-family: 'Inter', 'Noto Naskh Arabic', 'Noto Sans JP', sans-serif;
             display: flex; flex-direction: column;
             animation: antiBurnIn 600s infinite linear; 
