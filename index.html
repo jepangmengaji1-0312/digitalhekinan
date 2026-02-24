@@ -17,13 +17,13 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
             --bg-color: #020617;   /* Hitam Kebiruan Premium */
-            --primary: #fbbf24;    /* EMAS (Amber 400) - Agar kontras & mewah */
-            --accent: #10b981;     /* Hijau Emerald sebagai aksen */
+            --primary: #fbbf24;    /* EMAS (Amber 400) */
+            --accent: #10b981;     /* Hijau Emerald */
             --text-main: #f8fafc;  
             --text-sub: #94a3b8;   
             --alert: #ef4444;      
             --glass: rgba(15, 23, 42, 0.85); 
-            --border: rgba(251, 191, 36, 0.2); /* Border Emas Tipis */
+            --border: rgba(251, 191, 36, 0.2); 
         }
 
         /* --- 2. ANIMASI & LAYOUT --- */
@@ -36,35 +36,38 @@
         html, body { height: 100%; width: 100%; overflow: hidden; }
         body {
             background-color: var(--bg-color);
-            /* Pattern Background Halus agar tidak kosong */
-            background-image: radial-gradient(rgba(251, 191, 36, 0.15) 1px, transparent 1px);
+            background-image: radial-gradient(rgba(251, 191, 36, 0.1) 1px, transparent 1px);
             background-size: 30px 30px;
             color: var(--text-main); font-family: 'Inter', 'Noto Sans JP', sans-serif;
             display: flex; flex-direction: column;
-            animation: antiBurnIn 600s infinite linear; /* Proteksi Layar */
+            animation: antiBurnIn 600s infinite linear; 
+            transition: background 3s ease;
         }
 
         /* --- 3. HEADER (3 ZONA WAKTU) --- */
         header {
             flex-shrink: 0; display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 25px; background: var(--glass); border-bottom: 2px solid var(--primary);
+            padding: 10px 25px; background: var(--glass); border-bottom: 2px solid var(--primary);
             backdrop-filter: blur(10px); z-index: 10; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
         .header-left { display: flex; align-items: center; gap: 15px; }
-        .logo { width: 65px; height: 65px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.3)); }
+        .logo { width: 70px; height: 70px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.3)); }
         .masjid-name h1 { font-size: 1.8rem; letter-spacing: 0.5px; line-height: 1.1; font-weight: 800; color: var(--primary); text-transform: uppercase; }
         .masjid-name p { color: var(--text-main); font-size: 1rem; font-weight: 700; margin-top: 2px; }
         
-        /* Layout Jam Kanan */
         .header-right { display: flex; flex-direction: column; align-items: flex-end; }
         
-        /* Jam Utama (Hekinan) */
-        .main-clock { text-align: right; margin-bottom: 5px; }
-        #time { font-size: 3.5rem; font-weight: 800; line-height: 0.9; color: var(--text-main); font-variant-numeric: tabular-nums; text-shadow: 0 0 20px rgba(251, 191, 36, 0.2); }
-        .date-row { font-size: 1rem; color: var(--primary); font-weight: 600; letter-spacing: 1px; margin-top: 4px; }
+        /* Jam Utama (Hekinan) - FIX FORMAT */
+        .main-clock { text-align: right; margin-bottom: 2px; }
+        #time { 
+            font-size: 4rem; font-weight: 800; line-height: 0.9; color: var(--text-main); 
+            font-variant-numeric: tabular-nums; text-shadow: 0 0 20px rgba(251, 191, 36, 0.2); 
+            font-family: 'Inter', sans-serif;
+        }
+        .date-row { font-size: 1.1rem; color: var(--primary); font-weight: 600; letter-spacing: 1px; margin-top: 5px; }
 
-        /* Jam Kecil (Jakarta & Mekkah) */
-        .world-clocks { display: flex; gap: 15px; background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 8px; border: 1px solid var(--border); margin-top: 5px; }
+        /* Jam Kecil */
+        .world-clocks { display: flex; gap: 15px; background: rgba(255,255,255,0.05); padding: 4px 12px; border-radius: 8px; border: 1px solid var(--border); margin-top: 5px; }
         .w-clock-item { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: var(--text-sub); }
         .w-clock-item i { color: var(--accent); }
         .w-time { font-weight: 700; color: var(--text-main); font-variant-numeric: tabular-nums; }
@@ -76,7 +79,6 @@
             gap: 20px; padding: 20px; overflow: hidden; min-height: 0; 
         }
 
-        /* CARD DESIGN DENGAN ORNAMEN SUDUT */
         .card {
             background: rgba(15, 23, 42, 0.6);
             border: 1px solid var(--border); border-radius: 12px; padding: 16px;
@@ -84,17 +86,9 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             backdrop-filter: blur(12px); height: 100%; position: relative;
         }
-        /* ORNAMEN SIKU EMAS (BIAR KEREN) */
-        .card::before {
-            content: ""; position: absolute; top: -1px; left: -1px; width: 25px; height: 25px;
-            border-top: 3px solid var(--primary); border-left: 3px solid var(--primary);
-            border-radius: 12px 0 0 0;
-        }
-        .card::after {
-            content: ""; position: absolute; bottom: -1px; right: -1px; width: 25px; height: 25px;
-            border-bottom: 3px solid var(--primary); border-right: 3px solid var(--primary);
-            border-radius: 0 0 12px 0;
-        }
+        /* Ornamen Siku Emas */
+        .card::before { content: ""; position: absolute; top: -1px; left: -1px; width: 20px; height: 20px; border-top: 3px solid var(--primary); border-left: 3px solid var(--primary); border-radius: 12px 0 0 0; }
+        .card::after { content: ""; position: absolute; bottom: -1px; right: -1px; width: 20px; height: 20px; border-bottom: 3px solid var(--primary); border-right: 3px solid var(--primary); border-radius: 0 0 12px 0; }
 
         .card-header { text-align: center; border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-bottom: 12px; }
         .card-header h2 { font-size: 1.4rem; margin-bottom: 2px; color: var(--primary); }
@@ -131,6 +125,7 @@
         .cd-label { font-size: 1.1rem; color: var(--text-sub); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
         .cd-timer { font-size: 4.5rem; font-weight: 800; color: var(--primary); font-variant-numeric: tabular-nums; line-height: 1; text-shadow: 0 0 25px rgba(251, 191, 36, 0.3); }
 
+        /* SLIDE AREA - FIX ID DISINI */
         .slide-area {
             flex-grow: 1; background: rgba(0,0,0,0.3);
             border-radius: 12px; border: 1px solid var(--border);
@@ -166,16 +161,15 @@
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
         /* OVERLAYS */
-        #adzan-overlay {
-            position: fixed; inset: 0; background: rgba(2, 6, 23, 0.98); z-index: 999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
-        }
+        #adzan-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.98); z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
         #adzan-overlay.active { opacity: 1; pointer-events: auto; }
         .overlay-title { font-size: 2.5rem; color: var(--text-sub); letter-spacing: 3px; }
         .overlay-prayer { font-size: 7rem; font-weight: 800; color: var(--primary); margin: 10px 0; text-transform: uppercase; text-shadow: 0 0 50px rgba(251, 191, 36, 0.4); }
         .overlay-msg { font-size: 1.8rem; color: white; margin-top: 20px; }
         
+        /* Indikator Offline */
+        #offline-indicator { display: none; position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: #ef4444; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; z-index: 2000; box-shadow: 0 4px 10px rgba(0,0,0,0.5); animation: pulseAlert 2s infinite; }
+
         body.jumat-mode main, body.jumat-mode header, body.jumat-mode footer { opacity: 0; pointer-events: none; transition: opacity 1s; }
         body.jumat-mode { background: #000; background-image: none; animation: none; }
         #khutbah-msg { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #333; z-index: 1001; }
@@ -189,14 +183,16 @@
         .sunnah-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 0.8rem; }
         .sunnah-item i { font-size: 1.5rem; color: var(--primary); margin-bottom: 5px; border: 1px solid var(--primary); padding: 8px; border-radius: 50%; }
         
-        .hadith-text { font-size: 1.6rem; font-style: italic; margin-bottom: 15px; line-height: 1.4; }
-        .hadith-source { color: var(--accent); font-weight: bold; }
+        .hadith-text { font-size: 1.6rem; font-style: italic; margin-bottom: 15px; line-height: 1.4; color: var(--text-main); }
+        .hadith-source { color: var(--accent); font-weight: bold; font-size: 1.2rem; }
+        .hadith-icon { font-size: 3rem; color: var(--primary); margin-bottom: 15px; opacity: 0.8; }
     </style>
 </head>
 <body>
 
     <audio id="audio-chime" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
-    
+    <div id="offline-indicator">🔴 OFFLINE - CEK INTERNET</div>
+
     <div id="adzan-overlay">
         <h1 class="overlay-title">MASUK WAKTU SHOLAT</h1>
         <h2 class="overlay-prayer" id="overlay-prayer-name">MAGHRIB</h2>
@@ -220,12 +216,12 @@
         
         <div class="header-right">
             <div class="main-clock">
-                <div id="time">00:00</div>
+                <div id="time">00:00:00</div>
                 <div class="date-row"><span id="date">...</span> • <span id="hijri-date">...</span></div>
             </div>
             <div class="world-clocks">
-                <div class="w-clock-item" title="Waktu Indonesia Barat"><i class="ph ph-house-line"></i> Jakarta: <span id="time-jkt" class="w-time">--:--</span></div>
-                <div class="w-clock-item" title="Waktu Arab Saudi"><i class="ph ph-mosque"></i> Mekkah: <span id="time-makkah" class="w-time">--:--</span></div>
+                <div class="w-clock-item" title="Waktu Indonesia Barat"><i class="ph ph-house-line"></i> JKT: <span id="time-jkt" class="w-time">--:--</span></div>
+                <div class="w-clock-item" title="Waktu Arab Saudi"><i class="ph ph-mosque"></i> MEK: <span id="time-makkah" class="w-time">--:--</span></div>
             </div>
         </div>
     </header>
@@ -249,7 +245,7 @@
                 <div class="cd-timer" id="cd-timer">--:--:--</div>
             </div>
             
-            <div class="slide-area">
+            <div class="slide-area" id="slide-area">
                 <div id="slide-content" class="slide-content">
                     <div class="slide-text-id" id="announce-id">Selamat Datang</div>
                     <div class="slide-text-jp" id="announce-jp">Welcome</div>
@@ -286,7 +282,6 @@
             SLIDE_TIME: 15000
         };
 
-        // DATABASE HADITS SHAHIH (DIJAMIN)
         const HADITH_DB = [
             { text: "Barangsiapa membangun masjid karena Allah, maka Allah akan membangunkan baginya rumah di surga.", source: "HR. Bukhari & Muslim" },
             { text: "Shalat berjamaah lebih utama 27 derajat daripada shalat sendirian.", source: "HR. Bukhari & Muslim" },
@@ -304,32 +299,36 @@
             const d = new Date(); d.setDate(d.getDate() + addDay); d.setHours(h, m, 0, 0); return d;
         }
 
-        // --- 1. JAM & 3 ZONA WAKTU ---
+        window.addEventListener('offline', () => { el('offline-indicator').style.display = 'block'; });
+        window.addEventListener('online', () => { el('offline-indicator').style.display = 'none'; });
+
+        // --- 1. JAM PERBAIKAN FORMAT (HH:MM:SS) ---
         function updateClock() {
             const now = new Date();
-            // Jam Lokal (Hekinan)
-            el('time').textContent = now.toLocaleTimeString('id-ID', { hour12: false, hour: '2-digit', minute:'2-digit' });
+            // FIX: Menggunakan en-GB agar format 24 jam dengan titik dua (:)
+            el('time').textContent = now.toLocaleTimeString('en-GB', { hour12: false });
             el('date').textContent = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
             
-            // Jam Jakarta (WIB - UTC+7)
-            el('time-jkt').textContent = now.toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour12: false, hour: '2-digit', minute:'2-digit' });
-            
-            // Jam Mekkah (UTC+3)
-            el('time-makkah').textContent = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Riyadh', hour12: false, hour: '2-digit', minute:'2-digit' });
+            // Jam Dunia (Tetap simpel HH:MM)
+            el('time-jkt').textContent = now.toLocaleTimeString('en-GB', { timeZone: 'Asia/Jakarta', hour: '2-digit', minute:'2-digit' });
+            el('time-makkah').textContent = now.toLocaleTimeString('en-GB', { timeZone: 'Asia/Riyadh', hour: '2-digit', minute:'2-digit' });
 
-            // Auto Reload jam 2 Pagi
             if (now.getHours() === 2 && now.getMinutes() === 0 && now.getSeconds() < 2) window.location.reload();
 
-            // Mode Jumat
-            const isFriday = now.getDay() === 5;
+            // Atmosphere Mode
             const hour = now.getHours(); const min = now.getMinutes();
+            document.body.className = ''; 
+            if (hour >= 4 && hour < 6) document.body.classList.add('atmos-subuh');
+            else if (hour >= 15 && hour < 18) document.body.classList.add('atmos-sore');
+            else if (hour >= 18 || hour < 4) document.body.classList.add('atmos-malam');
+
+            const isFriday = now.getDay() === 5;
+            const isKhotbahTime = (hour === 12 && min >= 15) || (hour === 13 && min < 0);
+            
             if (isFriday) el('label-dzuhur').innerHTML = 'Jumat <span>ジュマ</span>';
             else el('label-dzuhur').innerHTML = 'Dzuhur <span>ズフール</span>';
             
-            // Layar Mati saat Khotbah (12:15 - 13:00)
-            const isKhotbahTime = (hour === 12 && min >= 15) || (hour === 13 && min < 0);
             if (isFriday && isKhotbahTime) document.body.classList.add('jumat-mode');
-            else document.body.classList.remove('jumat-mode');
         }
         setInterval(updateClock, 1000);
 
@@ -377,7 +376,6 @@
                 if (json.pengumuman) rawPlaylist.push(...json.pengumuman.map(p => ({type:'text', ...p})));
                 if (json.galeri) rawPlaylist.push(...json.galeri.map(g => ({type:'image', url:g})));
                 
-                // Tambah Hadits Random
                 const rndHadith = HADITH_DB[Math.floor(Math.random() * HADITH_DB.length)];
                 rawPlaylist.push({ type: 'hadith', text: rndHadith.text, source: rndHadith.source });
                 
@@ -403,37 +401,36 @@
         function updatePlaylistContent() {
             let final = [...(state.basePlaylist || [])];
             const now = new Date();
-            // Jumat 04:00 - 13:00 Tampil Khatib
             if (now.getDay() === 5 && now.getHours() >= 4 && now.getHours() < 13 && state.khatibData) {
                 final.unshift({ type: 'khatib', ...state.khatibData });
             }
             state.playlist = final;
         }
 
-        // --- 4. ROTASI SLIDE ---
+        // --- 4. ROTASI SLIDE (DIPERBAIKI) ---
         function rotateSlide() {
             if (!state.playlist || state.playlist.length === 0) return;
             if (state.slideIndex >= state.playlist.length) state.slideIndex = 0;
             const item = state.playlist[state.slideIndex];
-            const area = el('slide-area'); 
-            const txtDiv = el('slide-content'); 
-            const imgEl = el('slide-img');
-            const prog = el('slide-prog');
+            
+            // FIX: Mengambil elemen dengan ID yang BENAR
+            const area = document.getElementById('slide-area'); 
+            const prog = document.getElementById('slide-prog');
 
             // Reset Animation
             prog.style.animation = 'none'; prog.offsetHeight; 
             prog.style.animation = `progressRun ${CONFIG.SLIDE_TIME}ms linear`;
 
-            // Clear display
-            txtDiv.style.display = 'none'; imgEl.style.display = 'none'; area.innerHTML = '';
-            area.appendChild(prog); // Keep progress bar
+            // Bersihkan area tapi selamatkan progress bar
+            area.innerHTML = '';
+            area.appendChild(prog);
 
             if (item.type === 'khatib') {
                 let html = `
                 <div class="khatib-slide">
                     <div class="khatib-label">KHATIB JUMAT HARI INI</div>
                     <div class="khatib-name">${item.id}</div>
-                    <div style="color:var(--primary); font-weight:bold;">${item.jp}</div>
+                    <div style="color:var(--primary); font-weight:bold; font-size:1.5rem; margin-bottom:15px;">${item.jp}</div>
                     <div class="sunnah-row">
                         <div class="sunnah-item"><i class="ph ph-shower"></i>Mandi</div>
                         <div class="sunnah-item"><i class="ph ph-scissors"></i>Kuku</div>
@@ -441,21 +438,25 @@
                     </div>
                 </div>`;
                 if(item.link) {
-                     html += `<div style="margin-top:15px; background:white; padding:5px; border-radius:8px;"><div id="qr-khatib"></div></div>`;
+                     html += `<div style="margin-top:15px; background:white; padding:10px; border-radius:12px; display:inline-block;"><div id="qr-khatib"></div><div style="color:black; font-weight:bold; font-size:0.8rem; margin-top:5px;">Materi</div></div>`;
                      area.insertAdjacentHTML('beforeend', html);
-                     new QRCode(document.getElementById("qr-khatib"), { text: item.link, width: 80, height: 80 });
+                     // Delay render QR agar elemen ada dulu
+                     setTimeout(() => {
+                         new QRCode(document.getElementById("qr-khatib"), { text: item.link, width: 100, height: 100 });
+                     }, 100);
                 } else { area.insertAdjacentHTML('beforeend', html); }
 
             } else if (item.type === 'hadith') {
-                let html = `<div class="hadith-slide"><div class="hadith-text">"${item.text}"</div><div class="hadith-source">${item.source}</div></div>`;
+                let html = `<div class="hadith-slide"><i class="ph ph-book-open-text hadith-icon"></i><div class="hadith-text">"${item.text}"</div><div class="hadith-source">${item.source}</div></div>`;
                 area.insertAdjacentHTML('beforeend', html);
 
             } else if (item.type === 'text') {
-                txtDiv.style.display = 'block'; area.appendChild(txtDiv);
-                el('announce-id').innerText = item.id; el('announce-jp').innerText = item.jp;
+                let html = `<div class="slide-content"><div class="slide-text-id">${item.id}</div><div class="slide-text-jp">${item.jp}</div></div>`;
+                area.insertAdjacentHTML('beforeend', html);
 
             } else if (item.type === 'image') {
-                imgEl.src = item.url; imgEl.style.display = 'block'; area.appendChild(imgEl);
+                let html = `<img src="${item.url}" class="slide-image" style="display:block; width:100%; height:100%; object-fit:contain;">`;
+                area.insertAdjacentHTML('beforeend', html);
             }
             state.slideIndex = (state.slideIndex + 1) % state.playlist.length;
         }
@@ -484,7 +485,7 @@
                 
                 if (type === "iqamah") {
                     el('cd-label').textContent = `IQAMAH ${pName}`;
-                    if (diff < 120000) { el('cd-box').classList.add('alert'); if (diff < 15000 && diff > 14000) playAudio(); } 
+                    if (diff < 120000) { el('cd-box').classList.add('alert'); el('cd-label').textContent = "LURUSKAN SHAF"; if (diff < 15000 && diff > 14000) playAudio(); } 
                     else el('cd-box').classList.remove('alert');
                 } else {
                     el('cd-label').textContent = `MENUJU ${pName}`; el('cd-box').classList.remove('alert');
