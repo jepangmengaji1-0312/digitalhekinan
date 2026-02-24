@@ -301,14 +301,14 @@
 
     <script>
         // --- KONFIGURASI PENTING ---
-        // GANTI URL INI DENGAN URL DEPLOYMENT BARU ANDA (PASTIKAN DIAKHIRI /exec)
+        // PASTIKAN URL INI ADALAH URL DEPLOYMENT TERBARU (Web App URL)
         const CONFIG = {
             API_URL: "https://script.google.com/macros/s/AKfycbwqV6GmVbvtAR6drC38u0WEumYvBi9Atz0r89iXnQz682Kg8iQHRChoeRyfnfXpRXUi/exec", 
             LAT: 34.8819, LONG: 136.9956,
             SLIDE_TIME: 15000
         };
 
-        // DATABASE INTERNAL (Backup jika sheet error)
+        // DATABASE INTERNAL (Backup jika sheet error/kosong)
         const ISLAMIC_CONTENT = [
             { arab: "السلام عليكم ورحمة الله وبركاته", indo: "Selamat Datang di Masjid As-Sunnah Hekinan", source: "Sapaan" },
             { arab: "مَنْ بَنَى مَسْجِدًا لِلَّهِ بَنَى اللَّهُ لَهُ فِي الْجَنَّةِ مِثْلَهُ", indo: "Barangsiapa membangun masjid karena Allah, maka Allah akan membangunkan baginya rumah di surga.", source: "HR. Bukhari & Muslim" },
@@ -354,7 +354,7 @@
         }
         fetchWeather(); setInterval(fetchWeather, 1800000);
 
-        // --- FETCH ALL DATA ---
+        // --- FETCH ALL DATA (PERBAIKAN LOGIC) ---
         async function fetchAllData() {
             try {
                 // 1. PRAYER API
@@ -364,13 +364,10 @@
                 const t = dataPrayer.data.timings;
                 el('hijri-date').innerText = `${dataPrayer.data.date.hijri.day} ${dataPrayer.data.date.hijri.month.en} ${dataPrayer.data.date.hijri.year}H`;
 
-                // 2. GOOGLE SHEET FETCH (Penting!)
+                // 2. GOOGLE SHEET FETCH
                 const resSheet = await fetch(CONFIG.API_URL + "?v=" + new Date().getTime());
                 const jsonSheet = await resSheet.json();
                 
-                // Debugging (cek di Console browser jika perlu)
-                console.log("Data Sheet:", jsonSheet);
-
                 // 3. RENDER JADWAL
                 const nameMap = { 
                     Fajr: { id: 'Subuh', jp: 'ファジル' }, 
@@ -433,41 +430,52 @@
                     new QRCode(el('qrcode-wakaf'), { text: "https://assunnahhekinan.org/donasi", width: 130, height: 130 });
                 }
 
-                // 5. PLAYLIST LOGIC (Update)
+                // 5. PLAYLIST LOGIC (DIPERBAIKI: FILTER DATA KOSONG)
                 if (jsonSheet.khatib && jsonSheet.khatib.id) state.khatibData = { ...jsonSheet.khatib };
                 
                 let newPlaylist = [];
-                // Prioritas 1: Pengumuman dari Sheet
+                // Filter Pengumuman: Jangan masukkan jika ID-nya kosong
                 if(jsonSheet.pengumuman && jsonSheet.pengumuman.length > 0) {
-                    jsonSheet.pengumuman.forEach(p => newPlaylist.push({ type:'text', title:p.id, sub:p.jp }));
+                    jsonSheet.pengumuman.forEach(p => {
+                        if(p.id && p.id.trim() !== "") newPlaylist.push({ type:'text', title:p.id, sub:p.jp });
+                    });
                 }
-                // Prioritas 2: Gambar Galeri
+                // Filter Galeri: Jangan masukkan jika URL-nya kosong atau terlalu pendek
                 if(jsonSheet.galeri && jsonSheet.galeri.length > 0) {
-                    jsonSheet.galeri.forEach(g => newPlaylist.push({ type:'image', url:g }));
+                    jsonSheet.galeri.forEach(g => {
+                        if(g && typeof g === 'string' && g.trim().length > 5) newPlaylist.push({ type:'image', url:g });
+                    });
                 }
-                // Prioritas 3: Hadits (Selalu ditambahkan agar tidak kosong)
+                // Hadits Selalu Dimasukkan
                 ISLAMIC_CONTENT.forEach(q => newPlaylist.push({ type:'quote', ...q }));
+                
+                // Jika Playlist berubah ukuran drastis, reset index agar aman
+                if (newPlaylist.length !== state.playlist.length) state.slideIndex = 0;
                 
                 state.playlist = newPlaylist;
 
                 // 6. RUNNING TEXT
                 if(jsonSheet.running_text && jsonSheet.running_text.length > 0) {
-                     el('running-text').innerText = jsonSheet.running_text.map(r => `${r.id} (${r.jp})`).join("  ✦  ");
+                    const validRT = jsonSheet.running_text.filter(r => r.id && r.id.trim() !== "");
+                    el('running-text').innerText = validRT.map(r => `${r.id} (${r.jp})`).join("  ✦  ");
                 }
 
             } catch (e) { 
                 console.log("Fetch Error atau Data Sheet Kosong:", e); 
-                // Jika error, jangan hapus playlist default (Hadits)
             }
         }
         fetchAllData(); setInterval(fetchAllData, 300000); 
 
         // --- SLIDE LOGIC ---
         function rotateSlide() {
-            if(state.playlist.length === 0) return;
+            // Pastikan playlist ada isinya
+            if(!state.playlist || state.playlist.length === 0) {
+                // Fallback darurat jika semua kosong
+                state.playlist = [...ISLAMIC_CONTENT];
+            }
             
             const now = new Date();
-            // Tampilan Khusus Khatib Jumat (Jumat 04:00 - 13:00)
+            // Tampilan Khusus Khatib Jumat
             if (now.getDay() === 5 && now.getHours() >= 4 && now.getHours() < 13 && state.khatibData) {
                 const item = state.khatibData;
                 el('slide-area').innerHTML = `
@@ -482,6 +490,10 @@
             state.slideIndex = (state.slideIndex + 1) % state.playlist.length;
             const item = state.playlist[state.slideIndex];
             const area = el('slide-area');
+            
+            // Cek jika item valid
+            if (!item) return;
+
             area.innerHTML = ''; 
 
             if(item.type === 'text') {
@@ -489,7 +501,8 @@
             } else if(item.type === 'quote') {
                 area.innerHTML = `<div class="slide-content"><div class="arabic-text">${item.arab}</div><div class="indo-text">"${item.indo}"</div><div class="source-text">${item.source}</div></div>`;
             } else if(item.type === 'image') {
-                area.innerHTML = `<img src="${item.url}" class="slide-image">`;
+                // Tambahkan onerror untuk menyembunyikan gambar rusak
+                area.innerHTML = `<img src="${item.url}" class="slide-image" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=slide-content><h2 style=color:#666>Gambar Tidak Dapat Dimuat</h2></div>'">`;
             }
         }
         setInterval(rotateSlide, 15000);
