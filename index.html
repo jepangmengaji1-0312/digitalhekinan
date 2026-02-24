@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -91,7 +91,7 @@
         .panel-header h2 { font-size: 1.3rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
         .panel-header p { font-size: 0.8rem; color: #aaa; font-weight: 600; margin-top: 2px; }
 
-        /* JADWAL SHOLAT LIST */
+        /* JADWAL SHOLAT LIST (BILINGUAL & IQAMAH) */
         .prayer-list { display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; }
         .prayer-item {
             display: flex; justify-content: space-between; align-items: center;
@@ -103,14 +103,15 @@
             background: linear-gradient(90deg, rgba(212, 175, 55, 0.25), transparent);
             border-left: 3px solid var(--gold);
         }
+        .prayer-info { text-align: left; }
         .prayer-name { font-size: 1.2rem; font-weight: 700; line-height: 1.1; }
-        .prayer-jp { display: block; font-size: 0.75rem; color: #aaa; font-family: 'Noto Sans JP', sans-serif; margin-top: 2px; }
+        .prayer-jp { display: block; font-size: 0.8rem; color: #aaa; font-weight: 600; font-family: 'Noto Sans JP', sans-serif; margin-top: 2px; }
         
         .times-wrap { text-align: right; }
         .prayer-time { font-size: 1.4rem; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; line-height: 1; }
-        .prayer-iqamah { font-size: 0.9rem; color: var(--accent); font-weight: 600; margin-top: 2px; display: block; }
+        .prayer-iqamah { font-size: 0.9rem; color: var(--accent); font-weight: 600; margin-top: 4px; display: block; }
 
-        /* CENTER SLIDER */
+        /* CENTER SLIDER (Paling Penting) */
         .center-area { display: flex; flex-direction: column; gap: 20px; height: 100%; }
         
         /* Countdown */
@@ -122,7 +123,7 @@
         .cd-label { font-size: 1.2rem; color: #ccc; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
         .cd-timer { font-size: 5.5rem; font-weight: 800; color: var(--gold); line-height: 1; text-shadow: 0 0 30px rgba(212, 175, 55, 0.4); font-variant-numeric: tabular-nums; }
 
-        /* Slide Konten */
+        /* Slide Konten (PASTI PAS TENGAH) */
         .slide-container {
             flex-grow: 1; position: relative; overflow: hidden; border-radius: 20px;
             display: flex; align-items: center; justify-content: center;
@@ -135,6 +136,7 @@
             animation: fadeUp 0.8s ease; 
         }
         
+        /* Font Khusus Slide */
         .arabic-text { 
             font-family: 'Noto Naskh Arabic', serif; font-size: 2.8rem; color: var(--gold); 
             line-height: 1.6; margin-bottom: 25px; text-shadow: 0 4px 15px rgba(0,0,0,0.5);
@@ -147,11 +149,11 @@
             color: var(--accent); border-radius: 50px; font-size: 1rem; font-weight: 700; 
         }
         
-        /* Style Pengumuman Teks */
+        /* Style Pengumuman Teks Biasa */
         .announce-title { font-size: 2.5rem; font-weight: 800; color: var(--gold); margin-bottom: 20px; text-transform: uppercase; }
         .announce-body { font-size: 1.8rem; color: #fff; line-height: 1.4; }
 
-        /* WAKAF */
+        /* WAKAF (SIMETRIS FIXED) */
         .wakaf-stats { display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; gap: 10px; }
         .stat-group h3 { font-size: 2rem; color: var(--gold); font-weight: 800; margin-top: 5px; line-height: 1; }
         .stat-group p { color: #aaa; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
@@ -165,7 +167,7 @@
         }
         #qrcode-wakaf { display: flex; justify-content: center; } 
 
-        /* FOOTER */
+        /* FOOTER (GELAP PEKAT) */
         footer {
             background: #020617; border-top: 1px solid var(--gold);
             padding: 12px 0; z-index: 20; color: var(--gold); font-weight: 600; font-size: 1.2rem; flex-shrink: 0;
@@ -382,7 +384,7 @@
         }
         fetchPrayer(); setInterval(fetchPrayer, 3600000);
 
-        // 3. AMBIL DATA GOOGLE SHEET (LOGIKA IQAMAH DIKEMBALIKAN)
+        // 3. AMBIL DATA GOOGLE SHEET (DENGAN PENGUMUMAN & IQAMAH)
         async function fetchSheet() {
             try {
                 const res = await fetch(CONFIG.API_URL + "?v=" + new Date().getTime());
@@ -401,14 +403,15 @@
                 if (json.khatib && json.khatib.id) state.khatibData = { ...json.khatib };
 
                 let newPlaylist = [];
-                // Text Pengumuman
+                // --- PENTING: AMBIL PENGUMUMAN DARI SHEET ---
                 if(json.pengumuman) {
                     json.pengumuman.forEach(p => newPlaylist.push({ type:'text', title:p.id, sub:p.jp }));
                 }
-                // Hadits
+                
+                // SISIPKAN HADITS AGAR LEBIH BANYAK KONTEN TEKS (GANTI GAMBAR)
                 ISLAMIC_CONTENT.forEach(q => newPlaylist.push({ type:'quote', ...q }));
 
-                if(newPlaylist.length > 0) state.playlist = newPlaylist;
+                state.playlist = newPlaylist; // UPDATE PLAYLIST
                 if(json.running_text) el('running-text').innerText = json.running_text.map(r => `${r.id} (${r.jp})`).join("  ✦  ");
 
                 // --- PENTING: UPDATE JAM IQAMAH DARI SHEET ---
@@ -432,10 +435,11 @@
         }
         fetchSheet(); setInterval(fetchSheet, 60000);
 
-        // 4. ROTASI SLIDE
+        // 4. ROTASI SLIDE (PASTI PAS TENGAH)
         function rotateSlide() {
             if(state.playlist.length === 0) return;
             
+            // Logika Khatib Jumat (Jumat 04:00 - 13:00)
             const now = new Date();
             if (now.getDay() === 5 && now.getHours() >= 4 && now.getHours() < 13 && state.khatibData) {
                 const item = state.khatibData;
@@ -454,14 +458,14 @@
             area.innerHTML = ''; 
 
             if(item.type === 'text') {
-                area.innerHTML = `<div class="slide-content"><h1 style="font-size:2.5rem; color:var(--gold); margin-bottom:20px;">${item.title}</h1><p style="font-size:1.5rem;">${item.sub}</p></div>`;
+                area.innerHTML = `<div class="slide-content"><div class="announce-title">${item.title}</div><div class="announce-body">${item.sub}</div></div>`;
             } else if(item.type === 'quote') {
                 area.innerHTML = `<div class="slide-content"><div class="arabic-text">${item.arab}</div><div class="indo-text">"${item.indo}"</div><div class="source-text">${item.source}</div></div>`;
             }
         }
         setInterval(rotateSlide, 15000);
 
-        // 5. COUNTDOWN
+        // 5. COUNTDOWN & LOGIC
         function updateLogic() {
             const now = new Date();
             let nextPrayer = null;
