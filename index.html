@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
         /* --- RESET & VARIABLES --- */
@@ -21,33 +22,29 @@
             --text-main: #f1f5f9;  /* Putih Tulang */
             --text-sub: #94a3b8;   /* Abu-abu Muda */
             --alert: #ef4444;      /* Merah (Peringatan) */
-            --glass: rgba(15, 23, 42, 0.85); /* Efek Kaca */
+            --glass: rgba(15, 23, 42, 0.9); /* Efek Kaca Lebih Gelap */
             --border: rgba(255, 255, 255, 0.1);
         }
 
         /* --- LAYOUT FIX (FULL SCREEN) --- */
         html, body {
             height: 100%; width: 100%;
-            overflow: hidden; /* Hilangkan scrollbar */
+            overflow: hidden; 
         }
 
         body {
             background-color: var(--bg-color);
-            /* Pattern Background Halus */
             background-image: 
                 radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.15) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(251, 191, 36, 0.1) 0px, transparent 50%);
             color: var(--text-main);
             font-family: 'Inter', 'Noto Sans JP', sans-serif;
-            
-            /* FLEXBOX SYSTEM: Kunci agar layout penuh atas-bawah */
-            display: flex;
-            flex-direction: column; 
+            display: flex; flex-direction: column; 
         }
 
         /* --- HEADER --- */
         header {
-            flex-shrink: 0; /* Header tidak boleh mengecil */
+            flex-shrink: 0; 
             display: flex; justify-content: space-between; align-items: center;
             padding: 15px 25px;
             background: var(--glass);
@@ -69,67 +66,46 @@
             padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(251, 191, 36, 0.3);
         }
 
-        /* Clock & Weather Section */
         .clock-container { text-align: right; }
         #time { font-size: 3.2rem; font-weight: 700; line-height: 1; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
         #date { font-size: 1.1rem; color: var(--text-sub); margin-top: 4px; font-weight: 500; }
-        
-        .info-row { 
-            display: flex; justify-content: flex-end; align-items: center; gap: 15px; 
-            margin-top: 6px; font-size: 1rem; font-weight: 600; 
-        }
-        .weather-badge {
-            display: flex; align-items: center; gap: 6px;
-            background: rgba(255,255,255,0.1); padding: 4px 10px;
-            border-radius: 20px; color: var(--accent);
-        }
+        .info-row { display: flex; justify-content: flex-end; align-items: center; gap: 15px; margin-top: 6px; font-size: 1rem; font-weight: 600; }
+        .weather-badge { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 20px; color: var(--accent); }
         .weather-badge i { font-size: 1.2rem; }
         #hijri-date { color: var(--primary); }
 
-        /* --- MAIN CONTENT (GRID SYSTEM) --- */
+        /* --- MAIN CONTENT --- */
         main {
-            flex-grow: 1; /* Main akan mengisi sisa ruang kosong */
+            flex-grow: 1; 
             display: grid;
-            grid-template-columns: 280px 1fr 320px; /* Kiri - Tengah - Kanan */
-            gap: 20px;
-            padding: 20px;
-            overflow: hidden; /* Konten tidak boleh bocor keluar */
-            min-height: 0; /* Fix untuk Firefox/Grid overflow */
+            grid-template-columns: 280px 1fr 320px; 
+            gap: 20px; padding: 20px;
+            overflow: hidden; min-height: 0; 
         }
 
-        /* Card Container Styling */
         .card {
             background: rgba(30, 41, 59, 0.7);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 16px;
+            border-radius: 16px; padding: 16px;
             display: flex; flex-direction: column;
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
             backdrop-filter: blur(12px);
-            height: 100%; /* Paksa card setinggi kolom grid */
+            height: 100%; 
         }
-        .card-header {
-            text-align: center; border-bottom: 2px solid var(--primary);
-            padding-bottom: 10px; margin-bottom: 12px;
-        }
+        .card-header { text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 12px; }
         .card-header h2 { font-size: 1.4rem; margin-bottom: 2px; }
         .card-header p { color: var(--primary); font-size: 0.9rem; font-weight: 600; }
 
-        /* JADWAL SHOLAT (KIRI) */
+        /* JADWAL SHOLAT */
         .prayer-list { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
         .prayer-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 14px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            border-left: 5px solid transparent;
+            padding: 12px 14px; background: rgba(255,255,255,0.03);
+            border-radius: 10px; transition: all 0.3s ease; border-left: 5px solid transparent;
         }
         .prayer-item.active {
-            background: rgba(16, 185, 129, 0.2);
-            border-left: 5px solid var(--accent);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transform: translateX(5px);
+            background: rgba(16, 185, 129, 0.2); border-left: 5px solid var(--accent);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); transform: translateX(5px);
         }
         .prayer-name { font-size: 1.3rem; font-weight: 700; }
         .prayer-name span { display: block; font-size: 0.75rem; color: var(--text-sub); font-weight: 400; margin-top: -2px; }
@@ -137,28 +113,20 @@
         .adhan-time { font-size: 1.5rem; font-weight: 800; color: var(--primary); line-height: 1; }
         .iqamah-time { font-size: 0.85rem; color: var(--accent); font-weight: 600; margin-top: 2px; }
 
-        /* TENGAH (COUNTDOWN & SLIDE) */
+        /* CENTER COLUMN */
         .center-column { display: flex; flex-direction: column; gap: 20px; height: 100%; min-height: 0; }
-        
         .countdown-box {
-            flex-shrink: 0;
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
-            border: 2px solid var(--border);
-            border-radius: 16px; padding: 15px;
+            flex-shrink: 0; background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+            border: 2px solid var(--border); border-radius: 16px; padding: 15px;
             text-align: center; position: relative;
         }
-        .countdown-box.alert {
-            border-color: var(--alert); background: rgba(239, 68, 68, 0.15);
-            animation: pulseAlert 1.5s infinite;
-        }
+        .countdown-box.alert { border-color: var(--alert); background: rgba(239, 68, 68, 0.15); animation: pulseAlert 1.5s infinite; }
         @keyframes pulseAlert { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 100% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); } }
-
         .cd-label { font-size: 1.2rem; color: var(--text-sub); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
         .cd-timer { font-size: 4.5rem; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1; text-shadow: 0 0 30px rgba(251, 191, 36, 0.2); }
 
         .slide-area {
-            flex-grow: 1; /* Isi sisa ruang */
-            background: rgba(0,0,0,0.2);
+            flex-grow: 1; background: rgba(0,0,0,0.2);
             border-radius: 16px; border: 1px solid var(--border);
             overflow: hidden; position: relative;
             display: flex; align-items: center; justify-content: center;
@@ -169,36 +137,29 @@
         .slide-image { width: 100%; height: 100%; object-fit: contain; display: none; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* WAKAF (KANAN) */
+        /* WAKAF */
         .wakaf-card { border-top: 4px solid var(--accent); justify-content: space-between;}
         .wakaf-stats { display: flex; flex-direction: column; gap: 15px; flex-grow: 1; justify-content: center; }
         .stat-item p { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 4px; }
         .stat-item h3 { font-size: 1.8rem; color: var(--text-main); font-weight: 800; }
-        
         .progress-container { background: rgba(255,255,255,0.1); height: 15px; border-radius: 20px; overflow: hidden; margin: 10px 0; position: relative; }
         .progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary), #34d399); width: 0%; transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .progress-label { position: absolute; right: 5px; top: -1px; font-size: 0.7rem; color: white; font-weight: bold; text-shadow: 1px 1px 2px black;}
-
         .qr-wrapper { text-align: center; margin-top: auto; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; }
         .qr-code { width: 140px; height: 140px; background: white; padding: 5px; border-radius: 8px; object-fit: contain; }
         .qr-wrapper p { margin-top: 8px; color: var(--accent); font-size: 0.95rem; font-weight: 700; }
 
-        /* --- FOOTER --- */
+        /* FOOTER */
         footer {
-            flex-shrink: 0; /* Footer fix di bawah */
-            background: var(--primary);
-            color: #064e3b;
-            padding: 12px 0;
-            font-size: 1.5rem; font-weight: 700;
-            overflow: hidden; white-space: nowrap;
-            border-top: 4px solid #059669;
+            flex-shrink: 0; background: var(--primary); color: #064e3b;
+            padding: 12px 0; font-size: 1.5rem; font-weight: 700;
+            overflow: hidden; white-space: nowrap; border-top: 4px solid #059669;
             box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
         }
         .marquee-content { display: inline-block; padding-left: 100%; animation: marquee 35s linear infinite; }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* --- OVERLAYS --- */
-        /* 1. Adzan Overlay */
+        /* OVERLAYS */
         #adzan-overlay {
             position: fixed; inset: 0; background: rgba(15, 23, 42, 0.98); z-index: 999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -208,16 +169,32 @@
         .overlay-title { font-size: 3rem; color: var(--text-sub); letter-spacing: 3px; }
         .overlay-prayer { font-size: 8rem; font-weight: 800; color: var(--accent); margin: 10px 0; text-transform: uppercase; }
         .overlay-msg { font-size: 2rem; color: white; margin-top: 20px; }
-        
-        /* 2. Khutbah Jumat Mode (Layar Hitam) */
+
         body.jumat-mode main, body.jumat-mode header, body.jumat-mode footer { opacity: 0; pointer-events: none; transition: opacity 1s; }
         body.jumat-mode { background: #000; background-image: none; }
-        #khutbah-msg { 
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            text-align: center; color: #333; z-index: 1001; 
-        }
+        #khutbah-msg { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #333; z-index: 1001; }
         body.jumat-mode #khutbah-msg { display: block; }
 
+        /* --- STYLE KHATIB (IDE 1, 2, 3) --- */
+        .khatib-slide { display: flex; flex-direction: row; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 40px; padding: 20px; animation: fadeIn 0.8s ease; }
+        .khatib-info { text-align: left; }
+        .khatib-label { font-size: 1rem; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; border-bottom: 2px solid var(--primary); padding-bottom: 5px; display: inline-block;}
+        .khatib-name { font-size: 3rem; font-weight: 800; color: var(--text-main); line-height: 1.2; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .khatib-jp { font-size: 1.6rem; color: var(--primary); margin-top: 5px; font-weight: 700; margin-bottom: 15px; }
+        
+        /* Ide 1: Bendera Bahasa */
+        .lang-badge { font-size: 0.9rem; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); margin-right: 5px; vertical-align: middle; }
+        
+        /* Ide 2: Sunnah Checklist */
+        .sunnah-list { display: flex; gap: 15px; margin-top: 20px; }
+        .sunnah-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: var(--text-sub); }
+        .sunnah-icon { font-size: 1.8rem; color: var(--accent); background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 50%; }
+        .sunnah-text { font-size: 0.75rem; font-weight: 600; }
+
+        /* Ide 3: QR Code Materi */
+        .khatib-qr { text-align: center; background: white; padding: 10px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .khatib-qr-label { color: black; font-weight: bold; font-size: 0.9rem; margin-top: 8px; }
+        #qrcode-khatib { width: 150px; height: 150px; }
     </style>
 </head>
 <body>
@@ -344,19 +321,19 @@
     </footer>
 
     <script>
-       const CONFIG = {
-            // SAYA SUDAH MASUKKAN LINK BARU ANDA DI SINI:
+        const CONFIG = {
             API_URL: "https://script.google.com/macros/s/AKfycbwqV6GmVbvtAR6drC38u0WEumYvBi9Atz0r89iXnQz682Kg8iQHRChoeRyfnfXpRXUi/exec",
             LAT: 34.8819,
             LONG: 136.9956,
             CITY: "Hekinan"
         };
 
-        // State Global
         let state = {
             prayerToday: [],
             prayerTomorrow: [],
+            basePlaylist: [],
             playlist: [],
+            khatibData: null,
             slideIndex: 0
         };
 
@@ -369,21 +346,18 @@
             return d;
         }
 
-        // --- 1. JAM & TANGGAL & MODE JUMAT ---
         function updateClock() {
             const now = new Date();
             el('time').textContent = now.toLocaleTimeString('id-ID', { hour12: false }).replace(/\./g, ':');
             el('date').textContent = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace('Minggu', 'Ahad');
 
-            // Cek Jumat (Ganti Label)
             const isFriday = now.getDay() === 5;
             if (isFriday) el('label-dzuhur').innerHTML = 'Jumat <span>ジュマ</span>';
             else el('label-dzuhur').innerHTML = 'Dzuhur <span>ズフール</span>';
 
-            // MODE KHUSYUK JUMAT (Layar Mati saat Khotbah)
-            // Edit jam di sini: (Contoh: Jam 12:15 - 13:00 Layar Hitam)
             const hour = now.getHours(); 
             const min = now.getMinutes();
+            // Mode Layar Mati (Misal: 12:15 - 13:00)
             const isKhotbahTime = (hour === 12 && min >= 15) || (hour === 13 && min < 0);
             
             if (isFriday && isKhotbahTime) document.body.classList.add('jumat-mode');
@@ -391,36 +365,29 @@
         }
         setInterval(updateClock, 1000);
 
-        // --- 2. CUACA & VISUALISASI ---
         async function fetchWeather() {
             try {
-                // Mengambil Weathercode WMO
                 const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${CONFIG.LAT}&longitude=${CONFIG.LONG}&current_weather=true`);
                 const data = await res.json();
                 const temp = Math.round(data.current_weather.temperature);
                 const code = data.current_weather.weathercode;
                 
                 el('weather-temp').textContent = `${temp}°C`;
-
-                // Mapping WMO Code ke Icon Class (Phosphor Icons)
                 const iconEl = el('weather-icon');
-                let iconClass = "ph-cloud"; // Default
+                let iconClass = "ph-cloud"; 
 
-                if (code === 0) iconClass = "ph-sun"; // Cerah
-                else if (code >= 1 && code <= 3) iconClass = "ph-cloud-sun"; // Berawan
-                else if (code >= 45 && code <= 48) iconClass = "ph-cloud-fog"; // Kabut
-                else if (code >= 51 && code <= 67) iconClass = "ph-cloud-rain"; // Hujan
-                else if (code >= 71 && code <= 77) iconClass = "ph-snowflake"; // Salju
-                else if (code >= 95) iconClass = "ph-cloud-lightning"; // Petir
+                if (code === 0) iconClass = "ph-sun"; 
+                else if (code >= 1 && code <= 3) iconClass = "ph-cloud-sun"; 
+                else if (code >= 45 && code <= 48) iconClass = "ph-cloud-fog"; 
+                else if (code >= 51 && code <= 67) iconClass = "ph-cloud-rain"; 
+                else if (code >= 71 && code <= 77) iconClass = "ph-snowflake"; 
+                else if (code >= 95) iconClass = "ph-cloud-lightning"; 
 
-                // Hapus class lama, tambah class baru
                 iconEl.className = `ph ${iconClass}`;
-
-            } catch (e) { console.error("Weather error", e); }
+            } catch (e) { }
         }
-        fetchWeather(); setInterval(fetchWeather, 1800000); // 30 menit
+        fetchWeather(); setInterval(fetchWeather, 1800000);
 
-        // --- 3. JADWAL SHOLAT ---
         async function fetchPrayer() {
             try {
                 const nowUnix = Math.floor(Date.now() / 1000);
@@ -448,80 +415,91 @@
         }
         fetchPrayer(); setInterval(fetchPrayer, 3600000);
 
-        // --- 4. DATA GOOGLE SHEET ---
         async function fetchData() {
             try {
-                // Ambil data terbaru (anti-cache)
                 const res = await fetch(CONFIG.API_URL + "?v=" + new Date().getTime());
                 const json = await res.json();
-                
                 if(json.error) return;
 
-                // 1. UPDATE WAKAF
+                // 1. WAKAF
                 const w = json.wakaf || {terkumpul: 0, target: 1};
                 const terkumpul = Number(w.terkumpul) || 0;
                 const target = Number(w.target) || 1;
-
                 if(el('wakaf-terkumpul')) el('wakaf-terkumpul').textContent = formatYen(terkumpul);
                 if(el('wakaf-target')) el('wakaf-target').textContent = formatYen(target);
-                
                 const pct = Math.min((terkumpul / target) * 100, 100).toFixed(1) + "%";
                 if(el('wakaf-bar')) el('wakaf-bar').style.width = pct;
                 if(el('wakaf-percent')) el('wakaf-percent').textContent = pct;
 
-                // 2. UPDATE PLAYLIST
-                let newPl = [];
-                // Info Khatib (Disimpan dulu, logika tampil ada di slide)
+                // 2. DATA KHATIB (Termasuk Link Materi untuk QR)
                 if (json.khatib && json.khatib.id) {
-                     // Mas Wahyu bisa menambahkan logika slide khusus khatib di sini jika mau
+                    state.khatibData = {
+                        id: json.khatib.id,
+                        jp: json.khatib.jp,
+                        link: json.khatib.link || "" // Pastikan di backend (code.gs) juga ambil kolom ke-3
+                    };
                 }
 
-                if (json.pengumuman) newPl.push(...json.pengumuman.map(p => ({type:'text', ...p})));
-                if (json.galeri) newPl.push(...json.galeri.map(g => ({type:'image', url:g})));
-                if (newPl.length > 0) state.playlist = newPl;
+                // 3. PLAYLIST DASAR
+                let rawPlaylist = [];
+                if (json.pengumuman) rawPlaylist.push(...json.pengumuman.map(p => ({type:'text', ...p})));
+                if (json.galeri) rawPlaylist.push(...json.galeri.map(g => ({type:'image', url:g})));
+                state.basePlaylist = rawPlaylist; 
+                
+                // Segera update playlist gabungan
+                updatePlaylistContent();
 
-                // 3. RUNNING TEXT
+                // 4. RUNNING TEXT
                 if (json.running_text && json.running_text.length > 0) {
                     const rtContent = json.running_text.map(r => `${r.id} (${r.jp})`).join("  ✦  ");
                     if(el('running-text')) el('running-text').textContent = rtContent;
                 }
 
-                // --- 4. IQAMAH TIME (LOGIKA BARU: WEEKEND & JUMAT) ---
+                // 5. IQAMAH
                 if (json.iqamah) {
-                    // Cek Hari Ini
                     const now = new Date();
-                    const day = now.getDay(); // 0 = Ahad, 6 = Sabtu, 5 = Jumat
+                    const day = now.getDay(); 
                     const isWeekend = (day === 0 || day === 6);
 
-                    // A. Update Subuh, Ashar, Maghrib (Standard)
                     if(el('iq-Subuh')) el('iq-Subuh').textContent = json.iqamah.Subuh || "--:--";
                     if(el('iq-Ashar')) el('iq-Ashar').textContent = json.iqamah.Ashar || "--:--";
                     if(el('iq-Maghrib')) el('iq-Maghrib').textContent = json.iqamah.Maghrib || "--:--";
 
-                    // B. Logika ISYA (Pilih Biasa atau Weekend)
-                    // Jika Weekend -> Ambil 'Isya_Weekend', Jika tidak -> Ambil 'Isya_Biasa'
                     let isyaTime = isWeekend ? json.iqamah.Isya_Weekend : json.iqamah.Isya_Biasa;
-                    if (!isyaTime) isyaTime = json.iqamah.Isya_Biasa; // Jaga-jaga fallback
-                    
+                    if (!isyaTime) isyaTime = json.iqamah.Isya_Biasa;
                     if(el('iq-Isya')) el('iq-Isya').textContent = isyaTime;
 
-                    // C. Logika JUMAT vs DZUHUR
                     if (day === 5 && json.iqamah.Jumat) {
-                        // Jika hari Jumat, tampilkan waktu Jumat
                         if(el('iq-Dzuhur')) el('iq-Dzuhur').textContent = json.iqamah.Jumat;
                     } else {
-                        // Selain Jumat, tampilkan Dzuhur
                         if(el('iq-Dzuhur')) el('iq-Dzuhur').textContent = json.iqamah.Dzuhur || "--:--";
                     }
                 }
 
-            } catch (e) {
-                console.error("Gagal mengambil data:", e);
-            }
+            } catch (e) { console.error("Gagal data:", e); }
         }
-        fetchData(); setInterval(fetchData, 300000); // 5 menit
+        fetchData(); setInterval(fetchData, 300000);
 
-        // --- 5. LOGIC COUNTDOWN & OVERLAY ---
+        function updatePlaylistContent() {
+            let finalPlaylist = [...(state.basePlaylist || [])];
+            const now = new Date();
+            const day = now.getDay(); 
+            const hour = now.getHours();
+
+            // Tampilkan Khatib HANYA Jumat, 04:00 - 13:00
+            // TEST MODE: Hapus 'day === 5' jika ingin ngetes hari ini
+            if (day === 5 && hour >= 4 && hour < 13) {
+                if (state.khatibData) {
+                    finalPlaylist.unshift({
+                        type: 'khatib',
+                        ...state.khatibData
+                    });
+                }
+            }
+            state.playlist = finalPlaylist;
+        }
+        setInterval(updatePlaylistContent, 60000);
+
         function updateLogic() {
             const now = new Date();
             let target = null; let type = ""; let pName = ""; let activeId = "";
@@ -529,12 +507,9 @@
             const all = [...state.prayerToday, ...state.prayerTomorrow];
             for (let p of all) {
                 if (p.name === 'Syuruq') continue;
-                
-                // Prioritas 1: Menunggu Iqamah
                 if (p.iqamah && now >= p.adzan && now < p.iqamah) {
                     target = p.iqamah; type = "iqamah"; pName = p.name; activeId = `row-${p.name}`; break;
                 }
-                // Prioritas 2: Menunggu Adzan
                 if (now < p.adzan) {
                     target = p.adzan; type = "adzan"; pName = p.name; activeId = `row-${p.name}`; break;
                 }
@@ -552,7 +527,7 @@
 
                 if (type === "iqamah") {
                     el('cd-label').textContent = `IQAMAH ${pName}`;
-                    if (diff < 120000) { // < 2 menit
+                    if (diff < 120000) { 
                         el('cd-box').classList.add('alert');
                         el('cd-label').textContent = "LURUSKAN SHAF";
                         if (diff < 15000 && diff > 14000) playAudio();
@@ -573,11 +548,10 @@
             state.prayerToday.forEach(p => {
                 if (p.name === 'Syuruq') return;
                 let diff = now - p.adzan;
-                if (diff >= 0 && diff < 180000) { // Durasi overlay 3 menit
+                if (diff >= 0 && diff < 180000) { 
                     isAdzan = true; name = p.name;
                 }
             });
-            
             const ov = el('adzan-overlay');
             if (isAdzan) {
                 if(!ov.classList.contains('active')) {
@@ -594,21 +568,63 @@
             a.play().catch(() => {});
         }
 
-        // --- 6. SLIDESHOW ---
         function rotateSlide() {
-            if (state.playlist.length === 0) return;
-            const item = state.playlist[state.slideIndex];
-            const txt = el('slide-text'); const img = el('slide-img');
+            if (!state.playlist || state.playlist.length === 0) return;
+            if (state.slideIndex >= state.playlist.length) state.slideIndex = 0;
             
-            txt.style.display = 'none'; img.style.display = 'none';
-            if (item.type === 'text') {
-                txt.style.display = 'block';
-                el('announce-id').textContent = item.id;
-                el('announce-jp').textContent = item.jp;
-            } else {
-                img.style.display = 'block';
-                img.src = item.url;
+            const item = state.playlist[state.slideIndex];
+            const slideArea = document.querySelector('.slide-area');
+            slideArea.innerHTML = ''; 
+
+            if (item.type === 'khatib') {
+                // Tampilan KHATIB (Lengkap dengan QR & Sunnah)
+                let qrHtml = '';
+                // Jika ada link materi, tampilkan kotak QR
+                if (item.link) {
+                    qrHtml = `
+                    <div class="khatib-qr">
+                        <div id="qrcode-khatib"></div>
+                        <div class="khatib-qr-label">SCAN MATERI</div>
+                    </div>`;
+                }
+
+                slideArea.innerHTML = `
+                    <div class="khatib-slide">
+                        <div class="khatib-info">
+                            <div class="khatib-label"><span class="lang-badge">🇮🇩 / 🇯🇵</span>KHATIB JUMAT HARI INI</div>
+                            <div class="khatib-name">${item.id}</div>
+                            <div class="khatib-jp">${item.jp}</div>
+                            
+                            <div class="sunnah-list">
+                                <div class="sunnah-item"><i class="ph ph-shower sunnah-icon"></i><span class="sunnah-text">Mandi</span></div>
+                                <div class="sunnah-item"><i class="ph ph-scissors sunnah-icon"></i><span class="sunnah-text">Potong Kuku</span></div>
+                                <div class="sunnah-item"><i class="ph ph-drop sunnah-icon"></i><span class="sunnah-text">Parfum</span></div>
+                                <div class="sunnah-item"><i class="ph ph-book-open sunnah-icon"></i><span class="sunnah-text">Al-Kahfi</span></div>
+                            </div>
+                        </div>
+                        ${qrHtml}
+                    </div>
+                `;
+
+                // Generate QR Code jika ada link
+                if (item.link) {
+                    new QRCode(document.getElementById("qrcode-khatib"), {
+                        text: item.link,
+                        width: 150,
+                        height: 150
+                    });
+                }
+
+            } else if (item.type === 'text') {
+                slideArea.innerHTML = `
+                    <div class="slide-content">
+                        <div class="slide-text-id">${item.id}</div>
+                        <div class="slide-text-jp">${item.jp}</div>
+                    </div>`;
+            } else if (item.type === 'image') {
+                slideArea.innerHTML = `<img src="${item.url}" class="slide-image" style="display:block; width:100%; height:100%; object-fit:contain;">`;
             }
+
             state.slideIndex = (state.slideIndex + 1) % state.playlist.length;
         }
         setInterval(rotateSlide, 15000);
