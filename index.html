@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
     
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -26,9 +26,9 @@
 
         body {
             background-color: var(--bg-deep);
-            /* Background Image Mewah (Masjid/Pattern) */
+            /* Background Image Mewah */
             background-image: 
-                linear-gradient(rgba(5, 30, 24, 0.8), rgba(5, 30, 24, 0.95)),
+                linear-gradient(rgba(5, 30, 24, 0.85), rgba(5, 30, 24, 0.95)),
                 url("https://www.transparenttextures.com/patterns/arabesque.png");
             background-size: 300px;
             color: var(--text);
@@ -38,7 +38,7 @@
             overflow: hidden;
         }
 
-        /* ORNAMEN POJOK (HIASAN AGAR TIDAK KAKU) */
+        /* ORNAMEN POJOK */
         .corner-ornament {
             position: fixed; width: 150px; height: 150px;
             background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Arabesque-pattern.svg/1200px-Arabesque-pattern.svg.png'); 
@@ -49,11 +49,11 @@
         .bottom-left { bottom: 0; left: 0; transform: rotate(-90deg); }
         .bottom-right { bottom: 0; right: 0; transform: rotate(180deg); }
 
-        /* --- 2. HEADER ELEGAN (DENGAN JAM DUNIA KEMBALI) --- */
+        /* --- 2. HEADER ELEGAN --- */
         header {
             flex-shrink: 0; display: flex; justify-content: space-between; align-items: flex-start;
             padding: 20px 30px; z-index: 10;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent); /* Gradasi Halus */
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
         }
         .header-left { display: flex; align-items: center; gap: 15px; }
         .logo { width: 70px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)); }
@@ -61,25 +61,23 @@
         .masjid-name p { font-size: 1rem; color: #aaa; letter-spacing: 1px; }
 
         .header-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
-        #time { font-size: 3.8rem; font-weight: 800; line-height: 1; color: var(--text); text-shadow: 0 0 20px rgba(74, 222, 128, 0.3); font-variant-numeric: tabular-nums; }
-        #date { font-size: 1rem; color: var(--gold); font-weight: 600; margin-top: 5px; text-transform: uppercase; margin-bottom: 8px; }
+        #time { font-size: 4rem; font-weight: 800; line-height: 1; color: var(--text); text-shadow: 0 0 20px rgba(74, 222, 128, 0.3); font-variant-numeric: tabular-nums; }
+        #date { font-size: 1.1rem; color: var(--gold); font-weight: 600; margin-top: 5px; text-transform: uppercase; margin-bottom: 8px; }
         
-        /* Style Jam Dunia Kecil */
-        .world-clocks { display: flex; gap: 15px; background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.2); }
-        .w-clock-item { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #aaa; font-weight: 600; }
+        /* Jam Dunia Kecil */
+        .world-clocks { display: flex; gap: 15px; background: rgba(255,255,255,0.08); padding: 6px 15px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); }
+        .w-clock-item { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: #ddd; font-weight: 600; }
         .w-clock-item i { color: var(--gold); }
-        .w-time { color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums;}
+        .w-time { color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums;}
 
-
-        /* --- 3. MAIN LAYOUT (GLASSMORPHISM) --- */
+        /* --- 3. MAIN LAYOUT --- */
         main {
             flex-grow: 1; display: grid;
             grid-template-columns: 280px 1fr 300px;
             gap: 25px; padding: 10px 30px 20px;
-            z-index: 5; min-height: 0; /* Penting untuk flex stretch */
+            z-index: 5; min-height: 0;
         }
 
-        /* CARD STYLE - KACA TRANSPARAN */
         .glass-panel {
             background: var(--glass);
             border-radius: 20px;
@@ -88,7 +86,7 @@
             padding: 20px;
             display: flex; flex-direction: column;
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            transition: transform 0.3s; height: 100%;
+            height: 100%;
         }
         
         .panel-header {
@@ -98,7 +96,7 @@
         .panel-header h2 { font-size: 1.3rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
         .panel-header p { font-size: 0.85rem; color: #aaa; font-weight: 600; margin-top: 2px; }
 
-        /* JADWAL SHOLAT LIST (DENGAN JEPANG) */
+        /* JADWAL SHOLAT LIST */
         .prayer-list { display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; }
         .prayer-item {
             display: flex; justify-content: space-between; align-items: center;
@@ -110,55 +108,69 @@
             background: linear-gradient(90deg, rgba(212, 175, 55, 0.25), transparent);
             border-left: 3px solid var(--gold);
         }
-        .prayer-name { font-size: 1.1rem; font-weight: 700; line-height: 1.1; }
+        .prayer-name { font-size: 1.2rem; font-weight: 700; line-height: 1.1; }
         .prayer-jp { display: block; font-size: 0.75rem; color: #aaa; font-weight: 600; margin-top: 2px; }
-        .prayer-time { font-size: 1.3rem; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; }
+        .prayer-time { font-size: 1.4rem; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; }
 
-        /* CENTER SLIDER (Paling Penting) */
+        /* CENTER SLIDER */
         .center-area { display: flex; flex-direction: column; gap: 20px; height: 100%; }
         
-        /* Countdown Besar */
+        /* Countdown */
         .countdown-display {
             text-align: center; padding: 20px;
             background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
             border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.3); flex-shrink: 0;
         }
         .cd-label { font-size: 1.2rem; color: #ccc; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
-        .cd-timer { font-size: 5rem; font-weight: 800; color: var(--gold); line-height: 1; text-shadow: 0 0 30px rgba(212, 175, 55, 0.4); font-variant-numeric: tabular-nums; }
+        .cd-timer { font-size: 5.5rem; font-weight: 800; color: var(--gold); line-height: 1; text-shadow: 0 0 30px rgba(212, 175, 55, 0.4); font-variant-numeric: tabular-nums; }
 
-        /* Slide Konten */
+        /* Slide Konten (PERBAIKAN CENTERING) */
         .slide-container {
             flex-grow: 1; position: relative; overflow: hidden; border-radius: 20px;
+            /* FLEXBOX MAGIC AGAR PAS TENGAH */
             display: flex; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.2); min-height: 0;
+            background: rgba(0,0,0,0.3); min-height: 0;
         }
-        .slide-content { width: 100%; padding: 30px; text-align: center; animation: fadeUp 0.8s ease; }
+        .slide-content { 
+            width: 100%; padding: 20px; text-align: center; 
+            /* Pastikan konten di dalam juga center */
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100%; /* Ambil tinggi penuh container */
+            animation: fadeUp 0.8s ease; 
+        }
         
         .arabic-text { 
-            font-family: 'Noto Naskh Arabic', serif; font-size: 2.8rem; color: var(--gold); 
-            line-height: 1.5; margin-bottom: 20px; text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            font-family: 'Noto Naskh Arabic', serif; font-size: 3rem; color: var(--gold); 
+            line-height: 1.6; margin-bottom: 20px; text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            max-width: 90%; /* Agar tidak nabrak pinggir */
         }
-        .indo-text { font-size: 1.5rem; font-weight: 600; color: #fff; line-height: 1.4; }
+        .indo-text { font-size: 1.6rem; font-weight: 600; color: #fff; line-height: 1.4; max-width: 80%; }
         .source-text { 
-            display: inline-block; margin-top: 20px; padding: 5px 15px; 
+            display: inline-block; margin-top: 25px; padding: 5px 20px; 
             background: rgba(74, 222, 128, 0.1); border: 1px solid var(--accent); 
-            color: var(--accent); border-radius: 50px; font-size: 0.9rem; font-weight: 700; 
+            color: var(--accent); border-radius: 50px; font-size: 1rem; font-weight: 700; 
         }
 
-        /* WAKAF - PERBAIKAN SIMETRIS */
+        /* WAKAF */
         .wakaf-stats { display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; gap: 10px; }
-        .stat-group h3 { font-size: 2rem; color: var(--gold); font-weight: 800; margin-top: 2px; line-height: 1; }
-        .stat-group p { color: #aaa; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .stat-group h3 { font-size: 2rem; color: var(--gold); font-weight: 800; margin-top: 5px; line-height: 1; }
+        .stat-group p { color: #aaa; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
         .progress-track { height: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin: 10px 0 5px; }
         .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), #fff); width: 0%; transition: width 1.5s ease; }
-        /* QR Area yang Simetris */
-        .qr-area { display: flex; flex-direction: column; align-items: center; justify-content: center; background: white; padding: 12px; border-radius: 15px; margin-top: auto; }
-        #qrcode-wakaf img { margin: 0 auto; } /* Pastikan QR di tengah */
+        
+        /* QR Area Simetris */
+        .qr-area { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            background: white; padding: 15px; border-radius: 15px; margin-top: auto; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        #qrcode-wakaf { display: flex; justify-content: center; } /* Kunci QR di tengah */
 
-        /* FOOTER */
+        /* FOOTER (Background Gelap Pekat) */
         footer {
-            background: rgba(0,0,0,0.8); border-top: 1px solid rgba(255,255,255,0.1);
-            padding: 12px 0; z-index: 10; color: var(--gold); font-weight: 600; font-size: 1.2rem; flex-shrink: 0;
+            background: #020617; /* Gelap pekat, tidak transparan */
+            border-top: 1px solid var(--gold);
+            padding: 12px 0; z-index: 20; color: var(--gold); font-weight: 600; font-size: 1.2rem; flex-shrink: 0;
         }
         .marquee { white-space: nowrap; overflow: hidden; }
         .marquee span { display: inline-block; padding-left: 100%; animation: scroll 35s linear infinite; }
@@ -175,6 +187,12 @@
         .adzan-title { font-size: 8rem; font-weight: 900; color: var(--gold); animation: pulse 2s infinite; }
         .adzan-sub { font-size: 2.5rem; color: #fff; margin-top: 20px; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        /* Style Khatib Khusus */
+        .khatib-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+        .khatib-label { color: var(--accent); font-size: 1.2rem; font-weight: 700; border-bottom: 2px solid var(--accent); margin-bottom: 10px; }
+        .khatib-name { font-size: 3rem; font-weight: 800; color: var(--text); margin-bottom: 5px; }
+        .khatib-jp { font-size: 1.5rem; color: #aaa; }
 
     </style>
 </head>
@@ -276,7 +294,7 @@
             { arab: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", indo: "Sebaik-baik kalian adalah yang mempelajari Al-Qur'an dan mengajarkannya.", source: "HR. Bukhari" }
         ];
 
-        let state = { prayerToday: [], playlist: [], slideIndex: 0 };
+        let state = { prayerToday: [], playlist: [], slideIndex: 0, khatibData: null };
         const el = (id) => document.getElementById(id);
         const formatYen = (n) => new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(n);
         function createDate(timeStr, addDay = 0) {
@@ -285,7 +303,7 @@
             const d = new Date(); d.setDate(d.getDate() + addDay); d.setHours(h, m, 0, 0); return d;
         }
 
-        // 1. JAM DIGITAL (Termasuk JKT & MEK Kembali)
+        // 1. JAM DIGITAL & JAM DUNIA
         function updateClock() {
             const now = new Date();
             el('time').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
@@ -297,7 +315,7 @@
         }
         setInterval(updateClock, 1000);
 
-        // 2. JADWAL SHOLAT (Bilingual Kembali)
+        // 2. JADWAL SHOLAT (BILINGUAL KEMBALI)
         async function fetchPrayer() {
             try {
                 const nowUnix = Math.floor(Date.now() / 1000);
@@ -358,13 +376,14 @@
                     new QRCode(el('qrcode-wakaf'), { text: "https://assunnahhekinan.org/donasi", width: 110, height: 110 });
                 }
 
+                if (json.khatib && json.khatib.id) state.khatibData = { ...json.khatib };
+
                 let newPlaylist = [];
                 if(json.pengumuman) {
                     json.pengumuman.forEach(p => newPlaylist.push({ type:'text', title:p.id, sub:p.jp }));
                 }
-                if(json.galeri) {
-                    json.galeri.forEach(g => newPlaylist.push({ type:'image', url:g }));
-                }
+                
+                // SISIPKAN HADITS AGAR LEBIH BANYAK KONTEN TEKS
                 ISLAMIC_CONTENT.forEach(q => newPlaylist.push({ type:'quote', ...q }));
 
                 state.playlist = newPlaylist;
@@ -374,9 +393,23 @@
         }
         fetchSheet(); setInterval(fetchSheet, 60000);
 
-        // 4. ROTASI SLIDE
+        // 4. ROTASI SLIDE (PASTI PAS TENGAH)
         function rotateSlide() {
             if(state.playlist.length === 0) return;
+            
+            // Logika Khatib Jumat (Jumat 04:00 - 13:00)
+            const now = new Date();
+            if (now.getDay() === 5 && now.getHours() >= 4 && now.getHours() < 13 && state.khatibData) {
+                const item = state.khatibData;
+                el('slide-area').innerHTML = `
+                    <div class="slide-content khatib-wrapper">
+                        <div class="khatib-label">KHATIB JUMAT HARI INI</div>
+                        <div class="khatib-name">${item.id}</div>
+                        <div class="khatib-jp">${item.jp}</div>
+                    </div>`;
+                return;
+            }
+
             state.slideIndex = (state.slideIndex + 1) % state.playlist.length;
             const item = state.playlist[state.slideIndex];
             const area = el('slide-area');
@@ -390,7 +423,7 @@
                 area.innerHTML = `<img src="${item.url}" style="width:100%; height:100%; object-fit:contain; border-radius:10px;">`;
             }
         }
-        setInterval(rotateSlide, 10000);
+        setInterval(rotateSlide, 15000);
 
         // 5. COUNTDOWN & LOGIC
         function updateLogic() {
