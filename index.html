@@ -13,58 +13,81 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
-        /* --- RESET & VARIABLES --- */
+        /* --- 1. RESET & VARIABLES --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
-            --bg-color: #0f172a;   /* Biru Gelap Malam */
-            --primary: #10b981;    /* Hijau Emerald (Islami) */
-            --accent: #fbbf24;     /* Kuning Emas (Highlight) */
-            --text-main: #f1f5f9;  /* Putih Tulang */
-            --text-sub: #94a3b8;   /* Abu-abu Muda */
-            --alert: #ef4444;      /* Merah (Peringatan) */
-            --glass: rgba(15, 23, 42, 0.9); /* Efek Kaca Lebih Gelap */
+            --bg-color: #0f172a;   
+            --primary: #10b981;    /* Hijau Emerald Default */
+            --accent: #fbbf24;     
+            --text-main: #f1f5f9;  
+            --text-sub: #94a3b8;   
+            --alert: #ef4444;      
+            --glass: rgba(15, 23, 42, 0.85); 
             --border: rgba(255, 255, 255, 0.1);
+            --burn-offset: 0px; /* Untuk animasi pixel shift */
         }
 
-        /* --- LAYOUT FIX (FULL SCREEN) --- */
+        /* --- 2. ATMOSPHERE MODE (LATAR BELAKANG DINAMIS) --- */
+        /* Default (Siang): Hijau Emerald Tenang */
+        body { 
+            background: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.2) 0px, transparent 50%),
+                        radial-gradient(at 100% 100%, rgba(251, 191, 36, 0.1) 0px, transparent 50%),
+                        #0f172a;
+            transition: background 3s ease, color 1s ease;
+        }
+        /* Subuh (Fajar): Ungu Kebiruan (Syahdu) */
+        body.atmos-subuh {
+            background: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.25) 0px, transparent 60%),
+                        radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 60%),
+                        #1e1b4b; /* Indigo gelap */
+            --primary: #818cf8; /* Ubah warna utama jadi Indigo muda */
+        }
+        /* Sore (Maghrib/Senja): Oranye Keemasan (Hangat) */
+        body.atmos-sore {
+            background: radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.2) 0px, transparent 60%),
+                        radial-gradient(at 100% 100%, rgba(180, 83, 9, 0.2) 0px, transparent 60%),
+                        #451a03; /* Coklat gelap */
+            --primary: #fbbf24; /* Ubah warna utama jadi Emas */
+        }
+        /* Malam (Isya): Biru Sangat Gelap (Khusyuk) */
+        body.atmos-malam {
+            background: #020617; /* Hampir hitam */
+            --glass: rgba(2, 6, 23, 0.95);
+        }
+
+        /* --- 3. ANIMASI ANTI-BURN IN (PIXEL SHIFT) --- */
+        @keyframes antiBurnIn {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(2px, 1px); }
+            50% { transform: translate(-1px, 2px); }
+            75% { transform: translate(-2px, -1px); }
+            100% { transform: translate(0, 0); }
+        }
+
         html, body {
-            height: 100%; width: 100%;
-            overflow: hidden; 
+            height: 100%; width: 100%; overflow: hidden;
         }
 
         body {
-            background-color: var(--bg-color);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(251, 191, 36, 0.1) 0px, transparent 50%);
             color: var(--text-main);
             font-family: 'Inter', 'Noto Sans JP', sans-serif;
-            display: flex; flex-direction: column; 
+            display: flex; flex-direction: column;
+            
+            /* AKTIFKAN PROTEKSI LAYAR */
+            animation: antiBurnIn 600s infinite linear; /* Bergeser halus setiap 10 menit */
         }
 
-        /* --- HEADER --- */
+        /* --- 4. HEADER --- */
         header {
-            flex-shrink: 0; 
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 25px;
-            background: var(--glass);
-            border-bottom: 3px solid var(--primary);
-            backdrop-filter: blur(10px);
-            z-index: 10;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            flex-shrink: 0; display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 25px; background: var(--glass); border-bottom: 3px solid var(--primary);
+            backdrop-filter: blur(10px); z-index: 10; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
         .header-left { display: flex; align-items: center; gap: 15px; }
-        .logo { 
-            width: 65px; height: 65px; object-fit: contain; 
-            filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); 
-        }
+        .logo { width: 65px; height: 65px; object-fit: contain; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); }
         .masjid-name h1 { font-size: 1.8rem; letter-spacing: 0.5px; line-height: 1.1; font-weight: 800; }
         .masjid-name p { color: var(--primary); font-size: 1rem; font-weight: 700; margin-top: 2px; }
-        .website { 
-            display: inline-block; margin-top: 4px; font-size: 0.8rem; 
-            color: var(--accent); background: rgba(251, 191, 36, 0.15); 
-            padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(251, 191, 36, 0.3);
-        }
+        .website { display: inline-block; margin-top: 4px; font-size: 0.8rem; color: var(--accent); background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
 
         .clock-container { text-align: right; }
         #time { font-size: 3.2rem; font-weight: 700; line-height: 1; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
@@ -74,23 +97,18 @@
         .weather-badge i { font-size: 1.2rem; }
         #hijri-date { color: var(--primary); }
 
-        /* --- MAIN CONTENT --- */
+        /* --- 5. MAIN LAYOUT --- */
         main {
-            flex-grow: 1; 
-            display: grid;
+            flex-grow: 1; display: grid;
             grid-template-columns: 280px 1fr 320px; 
-            gap: 20px; padding: 20px;
-            overflow: hidden; min-height: 0; 
+            gap: 20px; padding: 20px; overflow: hidden; min-height: 0; 
         }
 
         .card {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid var(--border);
-            border-radius: 16px; padding: 16px;
-            display: flex; flex-direction: column;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            backdrop-filter: blur(12px);
-            height: 100%; 
+            background: rgba(30, 41, 59, 0.6); /* Lebih transparan agar background dinamis terlihat */
+            border: 1px solid var(--border); border-radius: 16px; padding: 16px;
+            display: flex; flex-direction: column; box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            backdrop-filter: blur(15px); height: 100%; 
         }
         .card-header { text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 12px; }
         .card-header h2 { font-size: 1.4rem; margin-bottom: 2px; }
@@ -104,7 +122,7 @@
             border-radius: 10px; transition: all 0.3s ease; border-left: 5px solid transparent;
         }
         .prayer-item.active {
-            background: rgba(16, 185, 129, 0.2); border-left: 5px solid var(--accent);
+            background: rgba(255, 255, 255, 0.15); border-left: 5px solid var(--accent);
             box-shadow: 0 4px 15px rgba(0,0,0,0.2); transform: translateX(5px);
         }
         .prayer-name { font-size: 1.3rem; font-weight: 700; }
@@ -116,11 +134,11 @@
         /* CENTER COLUMN */
         .center-column { display: flex; flex-direction: column; gap: 20px; height: 100%; min-height: 0; }
         .countdown-box {
-            flex-shrink: 0; background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+            flex-shrink: 0; background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
             border: 2px solid var(--border); border-radius: 16px; padding: 15px;
             text-align: center; position: relative;
         }
-        .countdown-box.alert { border-color: var(--alert); background: rgba(239, 68, 68, 0.15); animation: pulseAlert 1.5s infinite; }
+        .countdown-box.alert { border-color: var(--alert); background: rgba(239, 68, 68, 0.2); animation: pulseAlert 1.5s infinite; }
         @keyframes pulseAlert { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 100% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); } }
         .cd-label { font-size: 1.2rem; color: var(--text-sub); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
         .cd-timer { font-size: 4.5rem; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1; text-shadow: 0 0 30px rgba(251, 191, 36, 0.2); }
@@ -128,8 +146,7 @@
         .slide-area {
             flex-grow: 1; background: rgba(0,0,0,0.2);
             border-radius: 16px; border: 1px solid var(--border);
-            overflow: hidden; position: relative;
-            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center;
         }
         .slide-content { width: 100%; text-align: center; padding: 30px; animation: fadeIn 0.8s ease; }
         .slide-text-id { font-size: 2.2rem; font-weight: 800; margin-bottom: 15px; line-height: 1.3; }
@@ -153,7 +170,7 @@
         footer {
             flex-shrink: 0; background: var(--primary); color: #064e3b;
             padding: 12px 0; font-size: 1.5rem; font-weight: 700;
-            overflow: hidden; white-space: nowrap; border-top: 4px solid #059669;
+            overflow: hidden; white-space: nowrap; border-top: 4px solid rgba(255,255,255,0.2);
             box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
         }
         .marquee-content { display: inline-block; padding-left: 100%; animation: marquee 35s linear infinite; }
@@ -171,30 +188,32 @@
         .overlay-msg { font-size: 2rem; color: white; margin-top: 20px; }
 
         body.jumat-mode main, body.jumat-mode header, body.jumat-mode footer { opacity: 0; pointer-events: none; transition: opacity 1s; }
-        body.jumat-mode { background: #000; background-image: none; }
+        body.jumat-mode { background: #000; background-image: none; animation: none; } /* Matikan burn-in anim saat jumat */
         #khutbah-msg { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #333; z-index: 1001; }
         body.jumat-mode #khutbah-msg { display: block; }
 
-        /* --- STYLE KHATIB (IDE 1, 2, 3) --- */
+        /* --- STYLE KHATIB (PROFESSIONAL) --- */
         .khatib-slide { display: flex; flex-direction: row; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 40px; padding: 20px; animation: fadeIn 0.8s ease; }
-        .khatib-info { text-align: left; }
+        .khatib-info { text-align: left; max-width: 60%; }
         .khatib-label { font-size: 1rem; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; border-bottom: 2px solid var(--primary); padding-bottom: 5px; display: inline-block;}
-        .khatib-name { font-size: 3rem; font-weight: 800; color: var(--text-main); line-height: 1.2; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-        .khatib-jp { font-size: 1.6rem; color: var(--primary); margin-top: 5px; font-weight: 700; margin-bottom: 15px; }
+        .khatib-name { font-size: 2.8rem; font-weight: 800; color: var(--text-main); line-height: 1.1; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .khatib-jp { font-size: 1.5rem; color: var(--primary); margin-top: 5px; font-weight: 700; margin-bottom: 15px; }
         
-        /* Ide 1: Bendera Bahasa */
-        .lang-badge { font-size: 0.9rem; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); margin-right: 5px; vertical-align: middle; }
+        /* Indikator Bahasa */
+        .lang-badge { font-size: 0.9rem; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); margin-right: 5px; vertical-align: middle; border: 1px solid var(--border); }
         
-        /* Ide 2: Sunnah Checklist */
+        /* Sunnah Checklist */
         .sunnah-list { display: flex; gap: 15px; margin-top: 20px; }
         .sunnah-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: var(--text-sub); }
-        .sunnah-icon { font-size: 1.8rem; color: var(--accent); background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 50%; }
+        .sunnah-icon { font-size: 1.8rem; color: var(--accent); background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 50%; border: 1px solid rgba(251, 191, 36, 0.3); }
         .sunnah-text { font-size: 0.75rem; font-weight: 600; }
 
-        /* Ide 3: QR Code Materi */
-        .khatib-qr { text-align: center; background: white; padding: 10px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        /* QR Code Materi */
+        .khatib-qr { text-align: center; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: slideInRight 1s ease; }
         .khatib-qr-label { color: black; font-weight: bold; font-size: 0.9rem; margin-top: 8px; }
-        #qrcode-khatib { width: 150px; height: 150px; }
+        #qrcode-khatib { width: 140px; height: 140px; display: flex; justify-content: center; align-items: center; }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
     </style>
 </head>
 <body>
@@ -328,6 +347,7 @@
             CITY: "Hekinan"
         };
 
+        // State Global
         let state = {
             prayerToday: [],
             prayerTomorrow: [],
@@ -346,6 +366,7 @@
             return d;
         }
 
+        // --- 1. CLOCK & ATMOSPHERE CONTROL ---
         function updateClock() {
             const now = new Date();
             el('time').textContent = now.toLocaleTimeString('id-ID', { hour12: false }).replace(/\./g, ':');
@@ -357,37 +378,39 @@
 
             const hour = now.getHours(); 
             const min = now.getMinutes();
-            // Mode Layar Mati (Misal: 12:15 - 13:00)
+
+            // LOGIKA ATMOSPHERE (Background Dinamis)
+            document.body.className = ''; // Reset class
+            if (hour >= 4 && hour < 6) document.body.classList.add('atmos-subuh');
+            else if (hour >= 15 && hour < 18) document.body.classList.add('atmos-sore');
+            else if (hour >= 18 || hour < 4) document.body.classList.add('atmos-malam');
+            // Default (Siang 06-15) tidak perlu class (pake default body style)
+
+            // Mode Jumat (Layar Mati saat Khotbah: 12:15 - 13:00)
             const isKhotbahTime = (hour === 12 && min >= 15) || (hour === 13 && min < 0);
-            
             if (isFriday && isKhotbahTime) document.body.classList.add('jumat-mode');
-            else document.body.classList.remove('jumat-mode');
         }
         setInterval(updateClock, 1000);
 
+        // --- 2. CUACA ---
         async function fetchWeather() {
             try {
                 const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${CONFIG.LAT}&longitude=${CONFIG.LONG}&current_weather=true`);
                 const data = await res.json();
-                const temp = Math.round(data.current_weather.temperature);
-                const code = data.current_weather.weathercode;
+                el('weather-temp').textContent = `${Math.round(data.current_weather.temperature)}°C`;
                 
-                el('weather-temp').textContent = `${temp}°C`;
+                const code = data.current_weather.weathercode;
                 const iconEl = el('weather-icon');
-                let iconClass = "ph-cloud"; 
-
-                if (code === 0) iconClass = "ph-sun"; 
-                else if (code >= 1 && code <= 3) iconClass = "ph-cloud-sun"; 
-                else if (code >= 45 && code <= 48) iconClass = "ph-cloud-fog"; 
-                else if (code >= 51 && code <= 67) iconClass = "ph-cloud-rain"; 
-                else if (code >= 71 && code <= 77) iconClass = "ph-snowflake"; 
-                else if (code >= 95) iconClass = "ph-cloud-lightning"; 
-
-                iconEl.className = `ph ${iconClass}`;
+                let icon = "ph-cloud"; 
+                if (code === 0) icon = "ph-sun"; 
+                else if (code >= 1 && code <= 3) icon = "ph-cloud-sun"; 
+                else if (code >= 51) icon = "ph-cloud-rain"; 
+                iconEl.className = `ph ${icon}`;
             } catch (e) { }
         }
         fetchWeather(); setInterval(fetchWeather, 1800000);
 
+        // --- 3. JADWAL SHOLAT (API) ---
         async function fetchPrayer() {
             try {
                 const nowUnix = Math.floor(Date.now() / 1000);
@@ -415,47 +438,40 @@
         }
         fetchPrayer(); setInterval(fetchPrayer, 3600000);
 
+        // --- 4. DATA GOOGLE SHEET (Backend) ---
         async function fetchData() {
             try {
                 const res = await fetch(CONFIG.API_URL + "?v=" + new Date().getTime());
                 const json = await res.json();
                 if(json.error) return;
 
-                // 1. WAKAF
+                // Wakaf
                 const w = json.wakaf || {terkumpul: 0, target: 1};
                 const terkumpul = Number(w.terkumpul) || 0;
                 const target = Number(w.target) || 1;
-                if(el('wakaf-terkumpul')) el('wakaf-terkumpul').textContent = formatYen(terkumpul);
-                if(el('wakaf-target')) el('wakaf-target').textContent = formatYen(target);
-                const pct = Math.min((terkumpul / target) * 100, 100).toFixed(1) + "%";
-                if(el('wakaf-bar')) el('wakaf-bar').style.width = pct;
-                if(el('wakaf-percent')) el('wakaf-percent').textContent = pct;
+                el('wakaf-terkumpul').textContent = formatYen(terkumpul);
+                el('wakaf-target').textContent = formatYen(target);
+                el('wakaf-bar').style.width = Math.min((terkumpul/target)*100, 100).toFixed(1) + "%";
+                el('wakaf-percent').textContent = Math.min((terkumpul/target)*100, 100).toFixed(1) + "%";
 
-                // 2. DATA KHATIB (Termasuk Link Materi untuk QR)
+                // Khatib Data (Simpan dulu)
                 if (json.khatib && json.khatib.id) {
-                    state.khatibData = {
-                        id: json.khatib.id,
-                        jp: json.khatib.jp,
-                        link: json.khatib.link || "" // Pastikan di backend (code.gs) juga ambil kolom ke-3
-                    };
+                    state.khatibData = { id: json.khatib.id, jp: json.khatib.jp, link: json.khatib.link || "" };
                 }
 
-                // 3. PLAYLIST DASAR
+                // Playlist Base
                 let rawPlaylist = [];
                 if (json.pengumuman) rawPlaylist.push(...json.pengumuman.map(p => ({type:'text', ...p})));
                 if (json.galeri) rawPlaylist.push(...json.galeri.map(g => ({type:'image', url:g})));
-                state.basePlaylist = rawPlaylist; 
-                
-                // Segera update playlist gabungan
-                updatePlaylistContent();
+                state.basePlaylist = rawPlaylist;
+                updatePlaylistContent(); // Gabungkan
 
-                // 4. RUNNING TEXT
-                if (json.running_text && json.running_text.length > 0) {
-                    const rtContent = json.running_text.map(r => `${r.id} (${r.jp})`).join("  ✦  ");
-                    if(el('running-text')) el('running-text').textContent = rtContent;
+                // Running Text
+                if (json.running_text) {
+                    el('running-text').textContent = json.running_text.map(r => `${r.id} (${r.jp})`).join("  ✦  ");
                 }
 
-                // 5. IQAMAH
+                // Iqamah (Logic Isya Weekend)
                 if (json.iqamah) {
                     const now = new Date();
                     const day = now.getDay(); 
@@ -476,10 +492,11 @@
                     }
                 }
 
-            } catch (e) { console.error("Gagal data:", e); }
+            } catch (e) { console.error("Sheet Error", e); }
         }
         fetchData(); setInterval(fetchData, 300000);
 
+        // --- 5. LOGIKA PLAYLIST KHATIB ---
         function updatePlaylistContent() {
             let finalPlaylist = [...(state.basePlaylist || [])];
             const now = new Date();
@@ -487,24 +504,65 @@
             const hour = now.getHours();
 
             // Tampilkan Khatib HANYA Jumat, 04:00 - 13:00
-            // TEST MODE: Hapus 'day === 5' jika ingin ngetes hari ini
             if (day === 5 && hour >= 4 && hour < 13) {
                 if (state.khatibData) {
-                    finalPlaylist.unshift({
-                        type: 'khatib',
-                        ...state.khatibData
-                    });
+                    finalPlaylist.unshift({ type: 'khatib', ...state.khatibData });
                 }
             }
             state.playlist = finalPlaylist;
         }
         setInterval(updatePlaylistContent, 60000);
 
+        // --- 6. LOGIKA SLIDESHOW ---
+        function rotateSlide() {
+            if (!state.playlist || state.playlist.length === 0) return;
+            if (state.slideIndex >= state.playlist.length) state.slideIndex = 0;
+            
+            const item = state.playlist[state.slideIndex];
+            const slideArea = document.querySelector('.slide-area');
+            slideArea.innerHTML = ''; 
+
+            if (item.type === 'khatib') {
+                // RENDER KHATIB SLIDE
+                let qrHtml = '';
+                if (item.link) {
+                    qrHtml = `<div class="khatib-qr"><div id="qrcode-khatib"></div><div class="khatib-qr-label">SCAN MATERI</div></div>`;
+                }
+                slideArea.innerHTML = `
+                    <div class="khatib-slide">
+                        <div class="khatib-info">
+                            <div class="khatib-label"><span class="lang-badge">🇮🇩 / 🇯🇵</span>KHATIB JUMAT HARI INI</div>
+                            <div class="khatib-name">${item.id}</div>
+                            <div class="khatib-jp">${item.jp}</div>
+                            <div class="sunnah-list">
+                                <div class="sunnah-item"><i class="ph ph-shower sunnah-icon"></i><span class="sunnah-text">Mandi</span></div>
+                                <div class="sunnah-item"><i class="ph ph-scissors sunnah-icon"></i><span class="sunnah-text">Kuku</span></div>
+                                <div class="sunnah-item"><i class="ph ph-drop sunnah-icon"></i><span class="sunnah-text">Parfum</span></div>
+                                <div class="sunnah-item"><i class="ph ph-book-open sunnah-icon"></i><span class="sunnah-text">Al-Kahfi</span></div>
+                            </div>
+                        </div>
+                        ${qrHtml}
+                    </div>`;
+                if (item.link) {
+                    new QRCode(document.getElementById("qrcode-khatib"), { text: item.link, width: 140, height: 140 });
+                }
+            } else if (item.type === 'text') {
+                // RENDER TEXT SLIDE
+                slideArea.innerHTML = `<div class="slide-content"><div class="slide-text-id">${item.id}</div><div class="slide-text-jp">${item.jp}</div></div>`;
+            } else if (item.type === 'image') {
+                // RENDER IMAGE SLIDE
+                slideArea.innerHTML = `<img src="${item.url}" class="slide-image" style="display:block; width:100%; height:100%; object-fit:contain;">`;
+            }
+            state.slideIndex = (state.slideIndex + 1) % state.playlist.length;
+        }
+        setInterval(rotateSlide, 15000);
+
+        // --- 7. COUNTDOWN & OVERLAY ---
         function updateLogic() {
             const now = new Date();
             let target = null; let type = ""; let pName = ""; let activeId = "";
-
             const all = [...state.prayerToday, ...state.prayerTomorrow];
+            
             for (let p of all) {
                 if (p.name === 'Syuruq') continue;
                 if (p.iqamah && now >= p.adzan && now < p.iqamah) {
@@ -514,7 +572,6 @@
                     target = p.adzan; type = "adzan"; pName = p.name; activeId = `row-${p.name}`; break;
                 }
             }
-
             document.querySelectorAll('.prayer-item').forEach(e => e.classList.remove('active'));
             if(activeId && el(activeId)) el(activeId).classList.add('active');
 
@@ -524,16 +581,14 @@
                 let m = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
                 let s = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
                 el('cd-timer').textContent = `${h}:${m}:${s}`;
-
+                
                 if (type === "iqamah") {
                     el('cd-label').textContent = `IQAMAH ${pName}`;
                     if (diff < 120000) { 
                         el('cd-box').classList.add('alert');
                         el('cd-label').textContent = "LURUSKAN SHAF";
                         if (diff < 15000 && diff > 14000) playAudio();
-                    } else {
-                        el('cd-box').classList.remove('alert');
-                    }
+                    } else el('cd-box').classList.remove('alert');
                 } else {
                     el('cd-label').textContent = `MENUJU ${pName}`;
                     el('cd-box').classList.remove('alert');
@@ -548,87 +603,20 @@
             state.prayerToday.forEach(p => {
                 if (p.name === 'Syuruq') return;
                 let diff = now - p.adzan;
-                if (diff >= 0 && diff < 180000) { 
-                    isAdzan = true; name = p.name;
-                }
+                if (diff >= 0 && diff < 180000) { isAdzan = true; name = p.name; }
             });
             const ov = el('adzan-overlay');
             if (isAdzan) {
                 if(!ov.classList.contains('active')) {
-                    el('overlay-prayer-name').textContent = name;
-                    ov.classList.add('active');
-                    playAudio();
+                    el('overlay-prayer-name').textContent = name; ov.classList.add('active'); playAudio();
                 }
-            } else { ov.classList.remove('active'); }
+            } else ov.classList.remove('active');
         }
         setInterval(checkOverlay, 1000);
 
         function playAudio() {
-            const a = el('audio-chime'); a.currentTime = 0;
-            a.play().catch(() => {});
+            const a = el('audio-chime'); a.currentTime = 0; a.play().catch(() => {});
         }
-
-        function rotateSlide() {
-            if (!state.playlist || state.playlist.length === 0) return;
-            if (state.slideIndex >= state.playlist.length) state.slideIndex = 0;
-            
-            const item = state.playlist[state.slideIndex];
-            const slideArea = document.querySelector('.slide-area');
-            slideArea.innerHTML = ''; 
-
-            if (item.type === 'khatib') {
-                // Tampilan KHATIB (Lengkap dengan QR & Sunnah)
-                let qrHtml = '';
-                // Jika ada link materi, tampilkan kotak QR
-                if (item.link) {
-                    qrHtml = `
-                    <div class="khatib-qr">
-                        <div id="qrcode-khatib"></div>
-                        <div class="khatib-qr-label">SCAN MATERI</div>
-                    </div>`;
-                }
-
-                slideArea.innerHTML = `
-                    <div class="khatib-slide">
-                        <div class="khatib-info">
-                            <div class="khatib-label"><span class="lang-badge">🇮🇩 / 🇯🇵</span>KHATIB JUMAT HARI INI</div>
-                            <div class="khatib-name">${item.id}</div>
-                            <div class="khatib-jp">${item.jp}</div>
-                            
-                            <div class="sunnah-list">
-                                <div class="sunnah-item"><i class="ph ph-shower sunnah-icon"></i><span class="sunnah-text">Mandi</span></div>
-                                <div class="sunnah-item"><i class="ph ph-scissors sunnah-icon"></i><span class="sunnah-text">Potong Kuku</span></div>
-                                <div class="sunnah-item"><i class="ph ph-drop sunnah-icon"></i><span class="sunnah-text">Parfum</span></div>
-                                <div class="sunnah-item"><i class="ph ph-book-open sunnah-icon"></i><span class="sunnah-text">Al-Kahfi</span></div>
-                            </div>
-                        </div>
-                        ${qrHtml}
-                    </div>
-                `;
-
-                // Generate QR Code jika ada link
-                if (item.link) {
-                    new QRCode(document.getElementById("qrcode-khatib"), {
-                        text: item.link,
-                        width: 150,
-                        height: 150
-                    });
-                }
-
-            } else if (item.type === 'text') {
-                slideArea.innerHTML = `
-                    <div class="slide-content">
-                        <div class="slide-text-id">${item.id}</div>
-                        <div class="slide-text-jp">${item.jp}</div>
-                    </div>`;
-            } else if (item.type === 'image') {
-                slideArea.innerHTML = `<img src="${item.url}" class="slide-image" style="display:block; width:100%; height:100%; object-fit:contain;">`;
-            }
-
-            state.slideIndex = (state.slideIndex + 1) % state.playlist.length;
-        }
-        setInterval(rotateSlide, 15000);
-
     </script>
 </body>
 </html>
