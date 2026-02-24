@@ -451,46 +451,33 @@
         // --- 4. DATA GOOGLE SHEET ---
         async function fetchData() {
             try {
-                // Tambahkan ?v=... agar browser tidak menggunakan data lama (no-cache)
+                // Ambil data terbaru (anti-cache)
                 const res = await fetch(CONFIG.API_URL + "?v=" + new Date().getTime());
                 const json = await res.json();
                 
-                // Cek di Console browser (Tekan F12) jika ingin melihat datanya
-                console.log("Data diterima:", json);
-
-                if(json.error) {
-                    console.error("Script Error:", json.message);
-                    return;
-                }
+                if(json.error) return;
 
                 // 1. UPDATE WAKAF
-                // Pastikan data wakaf ada, jika tidak pakai default 0
                 const w = json.wakaf || {terkumpul: 0, target: 1};
-                
-                // Konversi ke angka (jaga-jaga jika dari sheet terbacanya teks string)
                 const terkumpul = Number(w.terkumpul) || 0;
                 const target = Number(w.target) || 1;
 
                 if(el('wakaf-terkumpul')) el('wakaf-terkumpul').textContent = formatYen(terkumpul);
                 if(el('wakaf-target')) el('wakaf-target').textContent = formatYen(target);
                 
-                // Hitung persen
                 const pct = Math.min((terkumpul / target) * 100, 100).toFixed(1) + "%";
                 if(el('wakaf-bar')) el('wakaf-bar').style.width = pct;
                 if(el('wakaf-percent')) el('wakaf-percent').textContent = pct;
 
                 // 2. UPDATE PLAYLIST
                 let newPl = [];
-                // Info Khatib
+                // Info Khatib (Disimpan dulu, logika tampil ada di slide)
                 if (json.khatib && json.khatib.id) {
-                     // Masukkan info khatib jika ada
-                     // (Logika hari jumat ada di bagian lain, tapi kita simpan datanya dulu)
+                     // Mas Wahyu bisa menambahkan logika slide khusus khatib di sini jika mau
                 }
 
                 if (json.pengumuman) newPl.push(...json.pengumuman.map(p => ({type:'text', ...p})));
                 if (json.galeri) newPl.push(...json.galeri.map(g => ({type:'image', url:g})));
-                
-                // Hanya update jika playlist tidak kosong
                 if (newPl.length > 0) state.playlist = newPl;
 
                 // 3. RUNNING TEXT
@@ -499,17 +486,37 @@
                     if(el('running-text')) el('running-text').textContent = rtContent;
                 }
 
-                // 4. IQAMAH TIME
+                // --- 4. IQAMAH TIME (LOGIKA BARU: WEEKEND & JUMAT) ---
                 if (json.iqamah) {
-                    for(let k in json.iqamah) {
-                        // Pastikan ID elemen ada sebelum diisi (mencegah error null)
-                        if(el(`iq-${k}`)) el(`iq-${k}`).textContent = json.iqamah[k];
+                    // Cek Hari Ini
+                    const now = new Date();
+                    const day = now.getDay(); // 0 = Ahad, 6 = Sabtu, 5 = Jumat
+                    const isWeekend = (day === 0 || day === 6);
+
+                    // A. Update Subuh, Ashar, Maghrib (Standard)
+                    if(el('iq-Subuh')) el('iq-Subuh').textContent = json.iqamah.Subuh || "--:--";
+                    if(el('iq-Ashar')) el('iq-Ashar').textContent = json.iqamah.Ashar || "--:--";
+                    if(el('iq-Maghrib')) el('iq-Maghrib').textContent = json.iqamah.Maghrib || "--:--";
+
+                    // B. Logika ISYA (Pilih Biasa atau Weekend)
+                    // Jika Weekend -> Ambil 'Isya_Weekend', Jika tidak -> Ambil 'Isya_Biasa'
+                    let isyaTime = isWeekend ? json.iqamah.Isya_Weekend : json.iqamah.Isya_Biasa;
+                    if (!isyaTime) isyaTime = json.iqamah.Isya_Biasa; // Jaga-jaga fallback
+                    
+                    if(el('iq-Isya')) el('iq-Isya').textContent = isyaTime;
+
+                    // C. Logika JUMAT vs DZUHUR
+                    if (day === 5 && json.iqamah.Jumat) {
+                        // Jika hari Jumat, tampilkan waktu Jumat
+                        if(el('iq-Dzuhur')) el('iq-Dzuhur').textContent = json.iqamah.Jumat;
+                    } else {
+                        // Selain Jumat, tampilkan Dzuhur
+                        if(el('iq-Dzuhur')) el('iq-Dzuhur').textContent = json.iqamah.Dzuhur || "--:--";
                     }
                 }
 
             } catch (e) {
                 console.error("Gagal mengambil data:", e);
-                // Jangan kosongkan layar, biarkan data lama tetap tampil
             }
         }
         fetchData(); setInterval(fetchData, 300000); // 5 menit
