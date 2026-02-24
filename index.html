@@ -15,21 +15,22 @@
     <style>
         /* --- 1. RESET & VARIABLES --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-      :root {
-    --bg-color: #042f2e;   /* Hijau Gelap Sekali (Teal 950) - Ganti biru jadi hijau botol gelap */
-    --primary: #34d399;    /* Hijau Emerald Lembut (Emerald 400) */
-    --accent: #fcd34d;     /* Kuning pucat */
-    --text-main: #ecfdf5;  /* Putih kehijauan */
-    --text-sub: #a7f3d0;   /* Hijau muda pudar */
+    :root {
+    --bg-color: #020617;   /* Hitam Kebiruan (Slate 950) */
+    --primary: #fbbf24;    /* Ubah Hijau jadi EMAS (Amber 400) */
+    --accent: #10b981;     /* Hijau hanya sebagai pemanis kecil */
+    --text-main: #f8fafc;  /* Putih bersih */
+    --text-sub: #94a3b8;   /* Abu-abu silver */
     --alert: #ef4444;      
-    --glass: rgba(6, 78, 59, 0.6); 
-    --border: rgba(52, 211, 153, 0.2);
+    --glass: rgba(15, 23, 42, 0.7); /* Transparansi lebih gelap */
+    --border: rgba(251, 191, 36, 0.2); /* Garis pinggir emas tipis */
 }
 
+/* Tambahan: Footer jadi gelap agar elegan */
 footer {
-    background: rgba(6, 78, 59, 0.9) !important;
-    color: #fff !important;
-    border-top: 3px solid #34d399 !important;
+    background: #0f172a !important; /* Biru gelap */
+    color: #fbbf24 !important; /* Teks Emas */
+    border-top: 2px solid #fbbf24 !important;
 }
 
         /* --- 2. ATMOSPHERE MODE --- */
@@ -106,6 +107,21 @@ footer {
         .card-header h2 { font-size: 1.4rem; margin-bottom: 2px; }
         .card-header p { color: var(--primary); font-size: 0.9rem; font-weight: 600; }
 
+/* Efek Glow Halus di belakang Card */
+.card {
+    /* Tambahkan shadow yang berwarna, bukan hitam biasa */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3), 
+                0 0 15px rgba(16, 185, 129, 0.1); /* Glow hijau tipis */
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Border sangat tipis */
+}
+
+/* Card Wakaf diberi Glow Emas */
+.wakaf-card {
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3), 
+                0 0 20px rgba(251, 191, 36, 0.15) !important; /* Glow emas */
+    border: 1px solid rgba(251, 191, 36, 0.3) !important;
+}
+        
         /* JADWAL SHOLAT */
         .prayer-list { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
         .prayer-item {
